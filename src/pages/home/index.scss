@@ -1,0 +1,173 @@
+@import "../../variables.scss";
+@import "../../reset.scss";
+
+.home-page {
+  .top-section {
+    position: relative;
+    height: 720px;
+    background-image: linear-gradient(0deg, $startColor 0%, $endColor 100%);
+    .vertical-middle {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      box-sizing: border-box;
+      width: 100%;
+      text-align: center;
+      padding: 0 20px;
+    }
+    .product-name {
+      position: relative;
+      display: inline-block;
+      h2 {
+        font-family: Avenir-Heavy;
+        font-size: 46px;
+        color: #fff;
+        text-align: center;
+        word-break: break-word;
+        margin: 0;
+      }
+    }
+    .product-desc {
+      opacity: 0.6;
+      font-family: Avenir-Medium;
+      font-size: 24px;
+      color: #fff;
+      text-align: center;
+      margin: 12px auto 0;
+      max-width: 730px;
+    }
+    .button-area {
+      text-align: center;
+      margin-top: 40px;
+      .button {
+        margin-right: 20px;
+      }
+      .button:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+  .introduction-section {
+    .introduction-body {
+      max-width: $contentWidth;
+      box-sizing: border-box;
+      margin: 0 auto;
+      min-height: 640px;
+      padding: 0 40px;
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      .introduction {
+        display: inline-block;
+        width: calc(100% - 726px);
+        min-width: 300px;
+        max-width: 590px;
+        h3 {
+          font-family: Avenir-Heavy;
+          font-size: 36px;
+          color: #333;
+          margin-bottom: 40px;
+          word-break: break-word;
+        }
+        p {
+          opacity: 0.56;
+          font-family: Avenir-Medium;
+          font-size: 18px;
+          color: #999;
+        }
+      }
+      img {
+        width: 562px;
+        margin: 0 82px;
+        max-width: 100%;
+        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.05);
+      }
+      @media screen and (max-width: 1106px) {
+        .introduction {
+          display: inline-block;
+          width: 100%;
+          max-width: 100%;
+        }
+        img {
+          margin: 0;
+        }
+      }
+    }
+  }
+  .feature-section {
+    background: #F9FAFA;
+    .feature-body {
+      box-sizing: border-box;
+      max-width: $contentWidth;
+      margin: 0 auto;
+      position: relative;
+      padding: 80px 40px 40px;
+      h3 {
+        font-family: Avenir-Medium;
+        font-weight: 700;
+        font-size: 36px;
+        color: #333;
+        text-align: center;
+        margin: 0 0 60px;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        li {
+          vertical-align: top;
+          display: inline-block;
+          margin-bottom: 40px;
+          width: 50%;
+          .docsite-icon {
+            vertical-align: top;
+            margin-right: 20px;
+            &::before {
+              vertical-align: top;
+            }
+          }
+          div {
+            display: inline-block;
+            width: 80%;
+            h4 {
+              font-family: Avenir-Medium;
+              font-weight: 700;
+              font-size: 20px;
+              color: #333;
+              margin: 10px 0 20px;
+            }
+            p {
+              font-family: Avenir-Medium;
+              font-size: 14px;
+              line-height: 20px;
+              color: #999;
+            }
+          }
+        }
+        @media screen and (max-width: 768px){
+          li {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+  @media screen and (max-width: $mobileWidth) {
+    .introduction-section {
+      padding: 0 20px;
+      &::before {
+        left: 20px;
+      }
+      &::after {
+        left: 19px;
+      }
+    }
+    .feature-section {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+}

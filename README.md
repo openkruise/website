@@ -1,4 +1,4 @@
-# Sentinel Website
+# Kruise Website
 
 ## Build
 
@@ -11,7 +11,7 @@ npm i -g docsite
 - Clone the website repository and local install:
 
 ```bash
-cd sentinel-website
+cd website
 npm i
 ```
 
