@@ -41,6 +41,7 @@ class Home extends Language {
     return (
       <div className="home-page">
         <section className="top-section" id="top-section">
+          <div className="mask" />
           <Header
             currentKey="home"
             type={headerType}
