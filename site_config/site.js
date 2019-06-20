@@ -4,7 +4,7 @@ export default {
   port: 8080, // 本地开发服务器的启动端口
   domain: 'openkruise.io', // 站点部署域名，无需协议和path等
   defaultSearch: 'google', // 默认搜索引擎，baidu或者google
-  defaultLanguage: 'zh-cn',
+  defaultLanguage: 'en-us',
   'en-us': {
     pageMenu: [
       {
@@ -26,7 +26,7 @@ export default {
     ],
     disclaimer: {
       title: 'Disclaimer',
-      content: 'Sentinel is an open-source project under Apache License 2.0.',
+      content: 'OpenKruise is an open-source project under Apache License 2.0.',
     },
     documentation: {
       title: 'Documentation',
@@ -50,7 +50,7 @@ export default {
       list: [
       ],
     },
-    copyright: 'Copyright © 2018 The Sentinel Authors | An Alibaba Middleware (Aliware) Project',
+    copyright: 'Copyright © 2019 The OpenKruise Authors, The Kubernetes Authors',
   },
   'zh-cn': {
     pageMenu: [
@@ -73,7 +73,7 @@ export default {
     ],
     disclaimer: {
       title: 'Disclaimer',
-      content: 'Sentinel is an open-source project under Apache License 2.0.',
+      content: 'OpenKruise is an open-source project under Apache License 2.0.',
     },
     documentation: {
       title: '文档',
@@ -97,6 +97,6 @@ export default {
       list: [
       ],
     },
-    copyright: 'Copyright © 2018 The Sentinel Authors | An Alibaba Middleware (Aliware) Project',
+    copyright: 'Copyright © 2019 The OpenKruise Authors, The Kubernetes Authors',
   },
 };
