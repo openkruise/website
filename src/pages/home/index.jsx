@@ -5,7 +5,7 @@ import Header from '../../components/header';
 import Button from '../../components/button';
 import Footer from '../../components/footer';
 import Language from '../../components/language';
-import Item from './featureItem';
+// import Item from './featureItem';
 import homeConfig from '../../../site_config/home';
 import './index.scss';
 
@@ -37,7 +37,7 @@ class Home extends Language {
     const language = this.getLanguage();
     const dataSource = homeConfig[language];
     const { headerType } = this.state;
-    const headerLogo = headerType === 'primary' ? '/img/sentinel_white.png' : '/img/sentinel_colorful.png';
+    const headerLogo = headerType === 'primary' ? '/img/kruise_white.png' : '/img/kruise_colorful.png';
     return (
       <div className="home-page">
         <section className="top-section" id="top-section">
@@ -70,7 +70,7 @@ class Home extends Language {
             <img src={getLink(dataSource.introduction.img)} />
           </div>
         </section>
-        <section className="feature-section">
+        {/* <section className="feature-section">
           <div className="feature-body">
             <h3>{dataSource.features.title}</h3>
             <ul>
@@ -81,8 +81,8 @@ class Home extends Language {
             }
             </ul>
           </div>
-        </section>
-        <Footer logo="/img/sentinel_gray.png" language={language} />
+          </section> */}
+        <Footer logo="/img/kruise_gray.png" language={language} />
       </div>
     );
   }

@@ -39,10 +39,10 @@ export default {
           text: 'Quick start',
           link: '/en-us/docs/quick-start.html',
         },
-        {
-          text: 'Developer guide',
-          link: '/en-us/docs/dir/demo3.html',
-        },
+        // {
+        //   text: 'Developer guide',
+        //   link: '/en-us/docs/dir/demo3.html',
+        // },
       ],
     },
     resources: {
@@ -86,10 +86,10 @@ export default {
           text: '快速开始',
           link: '/zh-cn/docs/quick-start.html',
         },
-        {
-          text: '开发者指南',
-          link: '/zh-cn/docs/contribution/contribution-guideline.html',
-        },
+        // {
+        //   text: '开发者指南',
+        //   link: '/zh-cn/docs/contribution/contribution-guideline.html',
+        // },
       ],
     },
     resources: {

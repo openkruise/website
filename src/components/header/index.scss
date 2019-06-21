@@ -21,8 +21,8 @@
     line-height: $headerHeight;
     .logo {
       margin-left: 40px;
-      width: 96px;
-      vertical-align: sub;
+      width: 140px;
+      vertical-align: middle;
     }
     .header-menu {
       float: right;
@@ -85,8 +85,9 @@
       }
     }
     .language-switch {
+      // 暂时隐藏
+      display: none;
       float: right;
-      display: inline-block;
       box-sizing: border-box;
       width: 24px;
       height: 24px;
