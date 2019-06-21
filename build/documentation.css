@@ -163,18 +163,18 @@
       display: inline-block;
       width: 100%; }
     .header-container .header-body .header-menu-open li:hover {
-      background: #1D3EB3; }
+      background: #0A1FAD; }
       .header-container .header-body .header-menu-open li:hover a {
         color: #fff;
         opacity: 1; }
   .header-container .header-body .header-menu-open .menu-item-primary-active, .header-container .header-body .header-menu-open .menu-item-normal-active {
-    background: #1D3EB3; }
+    background: #0A1FAD; }
     .header-container .header-body .header-menu-open .menu-item-primary-active a, .header-container .header-body .header-menu-open .menu-item-normal-active a {
       color: #fff;
       opacity: 1; } }
 .bar {
   margin-top: 66px;
-  background-image: linear-gradient(-90deg, #3383EF 0%, #1D3EB3 100%); }
+  background-image: linear-gradient(-90deg, #1E35C1 0%, #0A1FAD 100%); }
   .bar .bar-body {
     max-width: 1280px;
     margin: 0 auto;
@@ -248,7 +248,7 @@
     top: 0;
     width: 4px;
     height: 100%;
-    background-image: linear-gradient(0deg, #3383EF 0%, #1D3EB3 100%); }
+    background-image: linear-gradient(0deg, #1E35C1 0%, #0A1FAD 100%); }
   .sidemenu .menu-item-level-1 > span {
     font-family: Avenir-Heavy;
     font-size: 18px;
@@ -271,7 +271,7 @@
           top: 0;
           width: 4px;
           height: 100%;
-          background-image: linear-gradient(0deg, #3383EF 0%, #1D3EB3 100%); }
+          background-image: linear-gradient(0deg, #1E35C1 0%, #0A1FAD 100%); }
   .sidemenu .menu-item-level-2 > span, .sidemenu .menu-item-level-2 > a {
     padding-left: 40px;
     height: 36px;
@@ -349,7 +349,7 @@
           color: #999;
           margin: 10px 0; }
         .footer-container .footer-body .cols-container dd a:hover {
-          color: #3383EF; }
+          color: #1E35C1; }
     .footer-container .footer-body .copyright {
       border-top: 1px solid #ccc;
       min-height: 60px;
