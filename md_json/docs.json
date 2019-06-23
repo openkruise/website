@@ -1,6 +1,11 @@
 {
   "en-us": [
     {
+      "filename": "advanced_statefulset.md",
+      "link": "/en-us/docs/advanced_statefulset.html",
+      "meta": {}
+    },
+    {
       "filename": "basic-api-resource-rule.md",
       "link": "/en-us/docs/basic-api-resource-rule.html",
       "meta": {}
@@ -11,8 +16,18 @@
       "meta": {}
     },
     {
+      "filename": "broadcastjob.md",
+      "link": "/en-us/docs/broadcastjob.html",
+      "meta": {}
+    },
+    {
       "filename": "circuit-breaking.md",
       "link": "/en-us/docs/circuit-breaking.html",
+      "meta": {}
+    },
+    {
+      "filename": "contribution.md",
+      "link": "/en-us/docs/contribution.html",
       "meta": {}
     },
     {
@@ -26,6 +41,11 @@
       "meta": {}
     },
     {
+      "filename": "guestbook.md",
+      "link": "/en-us/docs/guestbook.html",
+      "meta": {}
+    },
+    {
       "filename": "introduction.md",
       "link": "/en-us/docs/introduction.html",
       "meta": {}
@@ -33,6 +53,11 @@
     {
       "filename": "quick-start.md",
       "link": "/en-us/docs/quick-start.html",
+      "meta": {}
+    },
+    {
+      "filename": "sidecarset.md",
+      "link": "/en-us/docs/sidecarset.html",
       "meta": {}
     },
     {
