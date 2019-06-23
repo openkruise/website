@@ -22,7 +22,7 @@ export default {
       desc: 'Kruise是OpenKruise项目的核心。它是一组控制器，可在应用程序工作负载管理上扩展和补充Kubernetes核心控制器。',
       img: '/img/kruise-overall.png',
     },
-    features:{
+    features: {
       title: '',
       list: []
     }
@@ -34,7 +34,7 @@ export default {
       buttons: [
         {
           text: 'GET STARTED',
-          link: '/en-us/docs/quick-start.html',
+          link: 'https://github.com/openkruise/kruise/tree/master/docs/tutorial',
           type: 'primary',
         },
         {
@@ -50,11 +50,9 @@ export default {
       desc: 'OpenKruise is a suite that provides multiple solutions to automate workload management in Kubernetes. Kruise, the core of OpenKruise suite, is a set of controllers which extend and complement Kubernetes core controllers on workload management.',
       img: '/img/kruise-overall.png',
     },
-    
-    features:{
+    features: {
       title: '',
       list: []
     }
-
   },
 };
