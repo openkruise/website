@@ -65,7 +65,7 @@ export default {
             {
                 key: 'docs',
                 text: '文档',
-                link: '/zh-cn/docs/introduction.html',
+                link: 'https://github.com/openkruise/kruise/tree/master/docs',
             },
             {
                 key: 'slack',
@@ -83,11 +83,11 @@ export default {
             list: [
                 {
                     text: '概览',
-                    link: '/zh-cn/docs/introduction.html',
+                    link: 'https://github.com/openkruise/kruise/tree/master/docs',
                 },
                 {
                     text: '快速开始',
-                    link: '/zh-cn/docs/quick-start.html',
+                    link: 'https://github.com/openkruise/kruise/tree/master/docs/tutorial',
                 },
                 // {
                 //   text: '开发者指南',

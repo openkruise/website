@@ -6,7 +6,7 @@ export default {
       buttons: [
         {
           text: '快速开始',
-          link: '/zh-cn/docs/quick-start.html',
+          link: 'https://github.com/openkruise/kruise/tree/master/docs/tutorial',
           type: 'primary',
         },
         {
