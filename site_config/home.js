@@ -49,8 +49,8 @@ export default {
       title: 'What is OpenKruise',
       desc: 'OpenKruise is a suite that provides multiple solutions to automate cloud native applications in Kubernetes.' +
 	    'It is built primarily based on Kubernetes CRD extensions. There are three major categories that OpenKruise ' +
-	    'is going to focus on : workload management, autoscaling and QoS. As shown in the figure, we use code name Kruise to ' +
-	    'represent all the workload controllers that OpenKruise provides. As name suggests, we expect Kruise is going to be the ' +
+	    'is going to focus on: workload management, autoscaling and QoS. As shown in the figure, we use the code name Kruise to ' +
+	    'represent all of the workload controllers that OpenKruise provides. As the name suggests, we expect Kruise to be the ' +
 	    'core of OpenKruise. Kruise is currently released with three initial controllers. Please check the documentation ' +
 	    'for details. We are going to release the controllers for autoscaling and QoS soon, stay tuned!',
       img: '/img/kruise-overall.png',
