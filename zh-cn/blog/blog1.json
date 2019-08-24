@@ -1,0 +1,10 @@
+{
+  "filename": "blog1.md",
+  "__html": "<p>文章内容</p>\n",
+  "link": "/zh-cn/blog/blog1.html",
+  "meta": {
+    "title": "文章标题",
+    "keywords": "文章关键字，逗号分隔",
+    "description": "文章内容简单描述"
+  }
+}
