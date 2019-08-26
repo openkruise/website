@@ -1,0 +1,10 @@
+{
+  "filename": "blog2.md",
+  "__html": "<p>Blog content</p>\n",
+  "link": "/en-us/blog/blog2.html",
+  "meta": {
+    "title": "Blog title",
+    "keywords": "Blog keywords",
+    "description": "Blog description"
+  }
+}
