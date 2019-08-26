@@ -19,7 +19,7 @@ export default {
 			},
 			{
         key: 'blog',
-        text: 'Blog',
+        text: 'BLOG',
         link: '/en-us/blog/index.html'
       },
       {
