@@ -4,9 +4,10 @@
       "filename": "blog1.md",
       "link": "/en-us/blog/blog1.html",
       "meta": {
-        "title": "Blog title",
-        "keywords": "Blog keywords",
-        "description": "Blog description"
+        "title": "Kruise Controller Classification Guidance",
+        "keywords": "Kubernetes, controller, Pod, StatefulSet",
+        "description": "This blog describes how Kruise classifies different controllers. This can help",
+        "Kruise users to identify the best workload for their applications.": ""
       }
     },
     {

@@ -4,10 +4,10 @@ export default {
     postsTitle: 'All posts',
     list: [
       {
-        title: 'Title1',
+        title: 'Kruise Workload Classification Guidance',
         author: '@Fei-Guo',
-        dateStr: 'Sept 20th, 2019',
-        desc: 'Blog description',
+        dateStr: 'Oct 10th, 2019',
+        desc: 'This blog describes how Kruise classifies different controllers. This can help Kruise users to identify the best workload controllers for their applications.',
         link: '/en-us/blog/blog1.html'
       },
     ]
