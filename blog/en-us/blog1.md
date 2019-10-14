@@ -107,7 +107,7 @@ More details will be available when `CloneSet` is released (planned in
 | Max unavailable | Yes | Yes |
 | Selective deletion | No | Yes |
 | Selective upgrade | No | Yes |
-| Seize existing Pod | No | Yes |
+| Change Pod ownership | No | Yes |
 
 Certainly, Kruise will continue to improve `Advanced StatefulSet` for stateful applications.
 However, had `CloneSet` been ready, a clear recommendation to Kruise users would be if your
