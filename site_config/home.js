@@ -6,7 +6,7 @@ export default {
       buttons: [
         {
           text: '快速开始',
-          link: '/zh-cn/docs/quick-start.html',
+          link: 'https://github.com/openkruise/kruise/tree/master/docs/tutorial',
           type: 'primary',
         },
         {
@@ -22,7 +22,7 @@ export default {
       desc: 'Kruise是OpenKruise项目的核心。它是一组控制器，可在应用程序工作负载管理上扩展和补充Kubernetes核心控制器。',
       img: '/img/kruise-overall.png',
     },
-    features:{
+    features: {
       title: '',
       list: []
     }
@@ -34,7 +34,7 @@ export default {
       buttons: [
         {
           text: 'GET STARTED',
-          link: '/en-us/docs/quick-start.html',
+          link: 'https://github.com/openkruise/kruise/tree/master/docs/tutorial',
           type: 'primary',
         },
         {
@@ -47,14 +47,17 @@ export default {
     },
     introduction: {
       title: 'What is OpenKruise',
-      desc: 'OpenKruise is a suite that provides multiple solutions to automate workload management in Kubernetes. Kruise, the core of OpenKruise suite, is a set of controllers which extend and complement Kubernetes core controllers on workload management.',
+      desc: 'OpenKruise is a suite that provides multiple solutions to automate cloud native applications in Kubernetes.' +
+	    'It is built primarily based on Kubernetes CRD extensions. There are three major categories that OpenKruise ' +
+	    'is going to focus on : workload management, autoscaling and QoS. As shown in the figure, we use code name Kruise to ' +
+	    'represent all the workload controllers that OpenKruise provides. As name suggests, we expect Kruise is going to be the ' +
+	    'core of OpenKruise. Kruise is currently released with three initial controllers. Please check the documentation ' +
+	    'for details. We are going to release the controllers for autoscaling and QoS soon, stay tuned!',
       img: '/img/kruise-overall.png',
     },
-    
-    features:{
+    features: {
       title: '',
       list: []
     }
-
   },
 };
