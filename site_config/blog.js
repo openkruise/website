@@ -13,7 +13,7 @@ export default {
       {
         title: 'Learning Concurrent Reconciling',
         author: '@Fei-Guo',
-        dateStr: 'Oct 15th, 2019',
+        dateStr: 'Nov 10th, 2019',
         desc: 'This blog presents some learnings about kubernetes controller runtime.',
         link: '/en-us/blog/blog2.html'
       },	    
