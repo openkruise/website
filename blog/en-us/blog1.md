@@ -6,6 +6,7 @@ Kruise users to identify the best workload for their applications.
 ---
 
 # Kruise Controller Classification Guidance
+By FEI GUO (Alibaba), OCTOBOR 10 2019, 8 MINUTE READ
 
 Kubernetes does not provide a clear guidance about which controller is the best fit for
 a user application. Sometimes, this does not seem to be a big problem if users understand

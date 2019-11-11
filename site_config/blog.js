@@ -10,6 +10,13 @@ export default {
         desc: 'This blog describes how Kruise classifies different controllers. This can help Kruise users to identify the best workload controllers for their applications.',
         link: '/en-us/blog/blog1.html'
       },
+      {
+        title: 'Learning Concurrent Reconciling',
+        author: '@Fei-Guo',
+        dateStr: 'Oct 15th, 2019',
+        desc: 'This blog presents some learnings about kubernetes controller runtime.',
+        link: '/en-us/blog/blog2.html'
+      },	    
     ]
   },
   'zh-cn': {

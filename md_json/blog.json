@@ -14,9 +14,9 @@
       "filename": "blog2.md",
       "link": "/en-us/blog/blog2.html",
       "meta": {
-        "title": "Blog title",
-        "keywords": "Blog keywords",
-        "description": "Blog description"
+        "title": "Learning Concurrent Reconciling",
+        "keywords": "Kubernetes, controller",
+        "description": "This blog presents some learnings about kubernetes controller runtime library."
       }
     }
   ],
