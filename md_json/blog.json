@@ -18,6 +18,15 @@
         "keywords": "Kubernetes, controller",
         "description": "This blog presents some learnings about kubernetes controller runtime library."
       }
+    },
+    {
+      "filename": "blog3.md",
+      "link": "/en-us/blog/blog3.html",
+      "meta": {
+        "title": "UnitedDeploymemt - Supporting Multi-domain Workload Management",
+        "keywords": "Kubernetes, controller",
+        "description": ""
+      }
     }
   ],
   "zh-cn": [

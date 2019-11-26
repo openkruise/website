@@ -16,7 +16,14 @@ export default {
         dateStr: 'Nov 10th, 2019',
         desc: 'This blog presents some learnings about kubernetes controller runtime.',
         link: '/en-us/blog/blog2.html'
-      },	    
+      },
+      { 
+        title: 'UnitedDeployment - Supporting Multi-domain Workload Management',
+        author: '@Fei-Guo',
+        dateStr: 'Nov 20th, 2019',
+        desc: 'This blog introduces UnitedDeployment, a new controller to ochestrate multi-domain workload management.',
+        link: '/en-us/blog/blog3.html'
+      }
     ]
   },
   'zh-cn': {
