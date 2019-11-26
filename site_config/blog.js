@@ -21,7 +21,7 @@ export default {
         title: 'UnitedDeployment - Supporting Multi-domain Workload Management',
         author: '@Fei-Guo',
         dateStr: 'Nov 20th, 2019',
-        desc: 'This blog introduces UnitedDeployment, a new controller to ochestrate multi-domain workload management.',
+        desc: 'This blog introduces UnitedDeployment, a new controller to orchestrate multi-domain workload management.',
         link: '/en-us/blog/blog3.html'
       }
     ]

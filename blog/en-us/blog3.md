@@ -1,7 +1,6 @@
 ---
 title: UnitedDeploymemt - Supporting Multi-domain Workload Management
 keywords: Kubernetes, controller
-description: 
 ---
 
 # UnitedDeploymemt - Supporting Multi-domain Workload Management
@@ -26,7 +25,7 @@ application can be evenly distributed across failure domains such as AZs, region
 
 In Kruise, **UnitedDeploymemt** provides an alternative to achieve high availability in
 a cluster that spans over multiple fault domains - that is, managing multiple homogeneous 
-workloads each manage Pods within a single `Subset`. Pod distribution across AZs are
+workloads each manages Pods within a single `Subset`. Pod distribution across AZs are
 determined by the replica number of each workload. 
 Since each `Subset` is associated with a workload, UnitedDeployment can support
 finer-grained rollout and deployment strategies. 
@@ -100,14 +99,14 @@ type ManualUpdate struct {
 ```
 
 Now, it is fairly easy to implement subset-grained canary roll out for application
-whose instances spread over multiple subsets.
+whose instance Pods are spread over multiple subsets.
 
 ## Multi-Cluster application management (In future)
 
 UnitedDeployment can potentially be extended to support multi-cluster workload
 management with additional API support. The idea is that `Subset` can not only
 be used to specify a domain within the cluster, but also be used to specify
-a domain in another cluster. More specifically, a domain topology also includes
+a domain in another cluster. More specifically, the domain topology adds
 a `ClusterRegistryQuerySpec`, which describes the clusters that UnitedDeployment
 may access. The cluster CRs are managed by a ClusterRegistry controller that
 implements the Kubernetes [cluster registry API](https://github.com/kubernetes/cluster-registry).
@@ -179,10 +178,10 @@ controller.
 ## Summary
 
 This blog post introduces UnitedDeployment, a new workload which helps managing 
-application spread over multiple domains (in arbitrary clusters). By reading this post,
-I wish readers would understand that UnitedDeployment does more than just evenly
-distributing Pods over AZs, which can be done more efficiently by using the new Pod
-Topology Spread Constraint APIs in Kubernetes 1.16 if it is the only user concern.
+application spread over multiple domains (in arbitrary clusters). 
+It does more than just evenly distributing Pods over AZs, which can be done more
+efficiently by using the new Pod Topology Spread Constraint APIs in
+Kubernetes 1.16 if it is the only user concern.
 
 
 

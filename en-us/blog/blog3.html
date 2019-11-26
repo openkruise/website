@@ -31,7 +31,7 @@ was invented. Users now can add new constraints in the Pod Spec to ensure the Po
 application can be evenly distributed across failure domains such as AZs, regions or nodes.</p>
 <p>In Kruise, <strong>UnitedDeploymemt</strong> provides an alternative to achieve high availability in
 a cluster that spans over multiple fault domains - that is, managing multiple homogeneous
-workloads each manage Pods within a single <code>Subset</code>. Pod distribution across AZs are
+workloads each manages Pods within a single <code>Subset</code>. Pod distribution across AZs are
 determined by the replica number of each workload.
 Since each <code>Subset</code> is associated with a workload, UnitedDeployment can support
 finer-grained rollout and deployment strategies.
@@ -94,12 +94,12 @@ type ManualUpdate struct {
 }
 </code></pre>
 <p>Now, it is fairly easy to implement subset-grained canary roll out for application
-whose instances spread over multiple subsets.</p>
+whose instance Pods are spread over multiple subsets.</p>
 <h2>Multi-Cluster application management (In future)</h2>
 <p>UnitedDeployment can potentially be extended to support multi-cluster workload
 management with additional API support. The idea is that <code>Subset</code> can not only
 be used to specify a domain within the cluster, but also be used to specify
-a domain in another cluster. More specifically, a domain topology also includes
+a domain in another cluster. More specifically, the domain topology adds
 a <code>ClusterRegistryQuerySpec</code>, which describes the clusters that UnitedDeployment
 may access. The cluster CRs are managed by a ClusterRegistry controller that
 implements the Kubernetes <a href="https://github.com/kubernetes/cluster-registry">cluster registry API</a>.</p>
@@ -164,10 +164,10 @@ above, cluster-grained application canary roll can be easily achieved by a rollo
 controller.</p>
 <h2>Summary</h2>
 <p>This blog post introduces UnitedDeployment, a new workload which helps managing
-application spread over multiple domains (in arbitrary clusters). By reading this post,
-I wish readers would understand that UnitedDeployment does more than just evenly
-distributing Pods over AZs, which can be done more efficiently by using the new Pod
-Topology Spread Constraint APIs in Kubernetes 1.16 if it is the only user concern.</p>
+application spread over multiple domains (in arbitrary clusters).
+It does more than just evenly distributing Pods over AZs, which can be done more
+efficiently by using the new Pod Topology Spread Constraint APIs in
+Kubernetes 1.16 if it is the only user concern.</p>
 </section><footer class="footer-container"><div class="footer-body"><img src="/img/kruise_gray.png"/><div class="cols-container"><div class="col col-12"><h3>Disclaimer</h3><p>OpenKruise is an open-source project under Apache License 2.0.</p></div><div class="col col-6"><dl><dt>Documentation</dt><dd><a href="https://github.com/openkruise/kruise/tree/master/docs" target="_self">Overview</a></dd><dd><a href="https://github.com/openkruise/kruise/tree/master/docs/tutorial" target="_self">Tutorial</a></dd><dd><a href="https://github.com/openkruise/kruise/tree/master/docs/concepts" target="_self">Concepts</a></dd></dl></div><div class="col col-6"><dl><dt>Resources</dt></dl></div></div><div class="copyright"><span>Copyright © 2019 The OpenKruise Authors, The Kubernetes Authors</span></div></div></footer></div></div>
 	<script src="https://f.alicdn.com/react/15.4.1/react-with-addons.min.js"></script>
 	<script src="https://f.alicdn.com/react/15.4.1/react-dom.min.js"></script>

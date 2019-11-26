@@ -24,8 +24,7 @@
       "link": "/en-us/blog/blog3.html",
       "meta": {
         "title": "UnitedDeploymemt - Supporting Multi-domain Workload Management",
-        "keywords": "Kubernetes, controller",
-        "description": ""
+        "keywords": "Kubernetes, controller"
       }
     }
   ],
