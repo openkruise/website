@@ -98,8 +98,8 @@ type ManualUpdate struct {
 
 ![multi-cluster controller](/img/uniteddeployment-1.png)
 
-This makes it fairly easy to coordinate multiple subset rollout. For example,
-as illstrated in Figure 1, assuming UnitedDeployment manages three subsets and
+This makes it fairly easy to coordinate multiple subsets rollout. For example,
+as illustrated in Figure 1, assuming UnitedDeployment manages three subsets and
 their replica numbers are 4, 2, 2 respectively, a rollout out 
 controller can realize a canary release plan of upgrading 50% of Pods in each
 subset at a time by setting subset partitions to 2, 1, 1 respectively. 
@@ -173,7 +173,7 @@ but it isn't. The fundamental difference is that Kubefed focuses on propagating 
 object types to remote clusters instead of managing an application across clusters. 
 In this example, had a Kubefed style controller been used, each `StatefulSet` workload in
 individual cluster would have a replica of 100. UnitedDeployment focuses more on
-providing the ability to manage multiple workloads in multiple clusters on behalf
+providing the ability of managing multiple workloads in multiple clusters on behalf
 of one application, which is absent in Kubernetes community to the best of our
 knowledge.
 
