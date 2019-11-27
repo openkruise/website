@@ -16,41 +16,41 @@
 <p>By FEI GUO (Alibaba), NOVEMBER 20 2019, 6 MINUTE READ</p>
 <p>Ironically, probably every cloud user knew (or should realized that) failures in Cloud resources
 are inevitable. Hence, high availability is probably one of the most desirable features that
-Cloud Provider offers to cloud users. For example, in AWS, each geographic region has
+Cloud Provider offers for cloud users. For example, in AWS, each geographic region has
 multiple isolated locations known as Availability Zones (AZs).
 AWS provides various AZ-aware solutions to allow the compute or storage resources of the user
 applications to be distributed across multiple AZs in order to tolerate AZ failure, which indeed
 happened in the past.</p>
 <p>In Kubernetes, the concept of AZ is not realized by an API object. Instead,
-an AZ is usually represented by a set of hosts that have the same location label.
+an AZ is usually represented by a group of hosts that have the same location label.
 Although hosts within the same AZ can be identified by labels, the capability of distributing Pods across
-multiple AZs was missing in Kubernetes default scheduler. Hence it was difficult to use single
-<code>StatefulSet</code> or <code>Deployment</code> to perform  AZ-aware workload management. Fortunately,
+AZs was missing in Kubernetes default scheduler. Hence it was difficult to use single
+<code>StatefulSet</code> or <code>Deployment</code> to perform  AZ-aware Pods deployment. Fortunately,
 in Kubernetes 1.16, a new feature called <a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/">&quot;Pod Topology Spread Constraints&quot;</a>
-was invented. Users now can add new constraints in the Pod Spec to ensure the Pods of an
-application can be evenly distributed across failure domains such as AZs, regions or nodes.</p>
+was introduced. Users now can add new constraints in the Pod Spec, and scheduler
+will enforce the constraints so that Pods can be distributed across failure
+domains such as AZs, regions or nodes, in a uniform fashion.</p>
 <p>In Kruise, <strong>UnitedDeploymemt</strong> provides an alternative to achieve high availability in
-a cluster that spans over multiple fault domains - that is, managing multiple homogeneous
-workloads each manages Pods within a single <code>Subset</code>. Pod distribution across AZs are
+a cluster that consists of multiple fault domains - that is, managing multiple homogeneous
+workloads, and each workload is dedicated to a single <code>Subset</code>. Pod distribution across AZs is
 determined by the replica number of each workload.
 Since each <code>Subset</code> is associated with a workload, UnitedDeployment can support
 finer-grained rollout and deployment strategies.
-In addition, it can be further extended to support managing
-an application across multiple clusters! Let us reveal how UnitedDeployment is designed.</p>
+In addition, UnitedDeploymemt can be further extended to support
+multiple clusters! Let us reveal how UnitedDeployment is designed.</p>
 <h2>Using <code>Subsets</code> to describe domain topology</h2>
 <p>UnitedDeploymemt uses <code>Subset</code> to represent a failure domain. <code>Subset</code> API
-primarily specifies the nodes that forms the domain and the number of replicas run
-in this domain. UnitedDeploymemt manages subset workloads against a
-specific domain topology, described by a <code>Subset</code> array.</p>
+primarily specifies the nodes that forms the domain and the number of replicas, or
+the percentage of total replicas, run in this domain. UnitedDeployment manages
+subset workloads against a specific domain topology, described by a <code>Subset</code> array.</p>
 <pre><code>type Topology struct {
 	// Contains the details of each subset.
 	Subsets []Subset
 }
 
-// Subset defines the detail of a subset.
 type Subset struct {
 	// Indicates the name of this subset, which will be used to generate
-	// subset workload name in the format '&lt;uniteddeployment-name&gt;-&lt;subset-name&gt;'.
+	// subset workload name prefix in the format '&lt;deployment-name&gt;-&lt;subset-name&gt;-'.
 	Name string
 
 	// Indicates the node select strategy to form the subset.
@@ -58,51 +58,55 @@ type Subset struct {
 
 	// Indicates the number of the subset replicas or percentage of it on the
 	// UnitedDeployment replicas.
-	// If nil, the number of replicas in this subset is determined by controller.
 	Replicas *intstr.IntOrString
 }
 </code></pre>
-<p>The specification of the subset workload is specified in <code>Spec.Template</code>. UnitedDeployment
-only supports <code>StatefulSet</code> subset workload as of now. An interesting use case of <code>Subset</code>
-is that now user can specify <strong>customized Pod distribution</strong> across AZs, which is not
+<p>The specification of the subset workload is saved in <code>Spec.Template</code>. UnitedDeployment
+only supports <code>StatefulSet</code> subset workload as of now. An interesting part of <code>Subset</code>
+design is that now user can specify <strong>customized Pod distribution</strong> across AZs, which is not
 necessarily a uniform distribution in some cases. For example, if the AZ
 utilization or capacity are not homogeneous, evenly distributing Pods may lead to Pod deployment
 failure due to lack of resources. If users have prior knowledge about AZ resource capacity/usage,
-UnitedDeployment can help to apply an optimal Pod distribution for a high Pod deployment
-success rate. Of course, if not specified, a uniform Pod distribution will be applied to
-maximize availability.</p>
+UnitedDeployment can help to apply an optimal Pod distribution to ensure overall
+cluster utilization remains balanced. Of course, if not specified, a uniform Pod distribution
+will be applied to maximize availability.</p>
 <h2>Customized subset rollout <code>Partitions</code></h2>
 <p>User can update all the UnitedDeployment subset workloads by providing a
 new version of subset workload template.
-Similar to other Kruise controllers, UnitedDeployment controller does not orchestrate
-the rollout process of all subset workloads, which is typically done by another rollout
-controller built on top of it. To help a rollout controller to realize flexible rollout plans
-like canary or batch release, UnitedDeployment provides <code>ManualUpdate</code> strategy
-which allows user to specify the individual rollout <code>partition</code> of each subset workload.</p>
+Note that UnitedDeployment does not control
+the entire rollout process of all subset workloads, which is typically done by another rollout
+controller built on top of it. Since the replica number in each <code>Subset</code> can be different,
+it will be much more convenient to allow user to specify the individual rollout <code>Partition</code> of each
+subset workload instead of using one <code>Partition</code> to rule all, so that they can be upgraded in the same pace.
+UnitedDeployment provides <code>ManualUpdate</code> strategy to customize per subset rollout <code>Partition</code>.</p>
 <pre><code>type UnitedDeploymentUpdateStrategy struct {
 	// Type of UnitedDeployment update.
 	Type UpdateStrategyType
-	// Indicate the partition of each subset.
+	// Indicates the partition of each subset.
 	ManualUpdate *ManualUpdate
 }
 
-// ManualUpdate is a update strategy which allow users to provide the partition
-// of each subset.
 type ManualUpdate struct {
 	// Indicates number of subset partition.
 	Partitions map[string]int32
 }
 </code></pre>
-<p>Now, it is fairly easy to implement subset-grained canary roll out for application
-whose instance Pods are spread over multiple subsets.</p>
+<p><img src="/img/uniteddeployment-1.png" alt="multi-cluster controller"></p>
+<p>This makes it fairly easy to coordinate multiple subset rollout. For example,
+as illstrated in Figure 1, assuming UnitedDeployment manages three subsets and
+their replica numbers are 4, 2, 2 respectively, a rollout out
+controller can realize a canary release plan of upgrading 50% of Pods in each
+subset at a time by setting subset partitions to 2, 1, 1 respectively.
+The same cannot be easily achieved by using a single workload controller like <code>StatefulSet</code>
+or <code>Deployment</code>.</p>
 <h2>Multi-Cluster application management (In future)</h2>
-<p>UnitedDeployment can potentially be extended to support multi-cluster workload
-management with additional API support. The idea is that <code>Subset</code> can not only
-be used to specify a domain within the cluster, but also be used to specify
-a domain in another cluster. More specifically, the domain topology adds
+<p>UnitedDeployment can be extended to support multi-cluster workload
+management. The idea is that <code>Subsets</code> may not only
+reside in one cluster, but also spread over multiple clusters.
+More specifically, domain topology specification will associate
 a <code>ClusterRegistryQuerySpec</code>, which describes the clusters that UnitedDeployment
-may access. The cluster CRs are managed by a ClusterRegistry controller that
-implements the Kubernetes <a href="https://github.com/kubernetes/cluster-registry">cluster registry API</a>.</p>
+may distribute Pods to. Each cluster is represented by a custom resource managed by a
+ClusterRegistry controller using Kubernetes <a href="https://github.com/kubernetes/cluster-registry">cluster registry APIs</a>.</p>
 <pre><code>type Topology struct {
   // ClusterRegistryQuerySpec is used to find the all the clusters that
   // the workload may be deployed to. 
@@ -113,31 +117,27 @@ implements the Kubernetes <a href="https://github.com/kubernetes/cluster-registr
 }
 
 type ClusterRegistryQuerySpec struct {
-  // Namespaces that the cluster CRDs reside.
+  // Namespaces that the cluster objects reside.
   // If not specified, default namespace is used.
   Namespaces []string
   // Selector is the label matcher to find all qualified clusters.
   Selector   map[string]string
-  // Describe the kind and APIversion of the cluster object
+  // Describe the kind and APIversion of the cluster object.
   ClusterType metav1.TypeMeta
 }
 
 type Subset struct {
-  // Indicate the name of this subset, which will be used to generate 
-  // subset workload name in the format '&lt;deployment-name&gt;-&lt;subset-name&gt;'
   Name string
-    
+
   // The name of target cluster. The controller will validate that
   // the TargetCluster exits based on Topology.ClusterRegistry.
   TargetCluster *TargetCluster
 
   // Indicate the node select strategy in the Subset.TargetCluster.
   // If Subset.TargetCluster is not set, node selector strategy refers to
-  // current cluster. 
+  // current cluster.
   NodeSelector corev1.NodeSelector
 
-  // Indicate the number of pod replicas of this subset.
-  // If nil, the number of replicas in this subset is determined by controller.
   Replicas *intstr.IntOrString 
 }
 
@@ -152,22 +152,24 @@ type TargetCluster struct {
 <code>NodeSelector</code> indicates the node selection logic in the target cluster. Now
 UnitedDeployment controller can distribute application Pods to multiple clusters by
 instantiating a <code>StatefulSet</code> workload in each target cluster with a specific
-replica number, as illustrated in Figure1.</p>
-<p><img src="/img/uniteddeployment.png" alt="multi-cluster	controller"></p>
+replica number (or a percentage of total replica), as illustrated in Figure 2.</p>
+<p><img src="/img/uniteddeployment-2.png" alt="multi-cluster	controller"></p>
 <p>At a first glance, UnitedDeployment looks more like a federation
-controller under <a href="https://github.com/kubernetes-sigs/kubefed">Kubefed</a>, but it isn't.
-The fundamental difference is that Kubefed focuses on propagating arbitrary
-types to remote clusters instead of managing an application across clusters.
-In this example, had Kubefed been used, each <code>StatefulSet</code> workload in individual
-cluster would have a replica of 100. With customized <code>Partition</code> support as described
-above, cluster-grained application canary roll can be easily achieved by a rollout
-controller.</p>
+controller following the design pattern of <a href="https://github.com/kubernetes-sigs/kubefed">Kubefed</a>,
+but it isn't. The fundamental difference is that Kubefed focuses on propagating arbitrary
+object types to remote clusters instead of managing an application across clusters.
+In this example, had a Kubefed style controller been used, each <code>StatefulSet</code> workload in
+individual cluster would have a replica of 100. UnitedDeployment focuses more on
+providing the ability to manage multiple workloads in multiple clusters on behalf
+of one application, which is absent in Kubernetes community to the best of our
+knowledge.</p>
 <h2>Summary</h2>
-<p>This blog post introduces UnitedDeployment, a new workload which helps managing
+<p>This blog post introduces UnitedDeployment, a new controller which helps managing
 application spread over multiple domains (in arbitrary clusters).
-It does more than just evenly distributing Pods over AZs, which can be done more
-efficiently by using the new Pod Topology Spread Constraint APIs in
-Kubernetes 1.16 if it is the only user concern.</p>
+It not only allows evenly distributing Pods over AZs,
+which arguably can be more efficiently done using the new Pod Topology Spread
+Constraint APIs though, but also enables flexible workload deployment/rollout and
+supports multi-cluster use cases in the future.</p>
 </section><footer class="footer-container"><div class="footer-body"><img src="/img/kruise_gray.png"/><div class="cols-container"><div class="col col-12"><h3>Disclaimer</h3><p>OpenKruise is an open-source project under Apache License 2.0.</p></div><div class="col col-6"><dl><dt>Documentation</dt><dd><a href="https://github.com/openkruise/kruise/tree/master/docs" target="_self">Overview</a></dd><dd><a href="https://github.com/openkruise/kruise/tree/master/docs/tutorial" target="_self">Tutorial</a></dd><dd><a href="https://github.com/openkruise/kruise/tree/master/docs/concepts" target="_self">Concepts</a></dd></dl></div><div class="col col-6"><dl><dt>Resources</dt></dl></div></div><div class="copyright"><span>Copyright © 2019 The OpenKruise Authors, The Kubernetes Authors</span></div></div></footer></div></div>
 	<script src="https://f.alicdn.com/react/15.4.1/react-with-addons.min.js"></script>
 	<script src="https://f.alicdn.com/react/15.4.1/react-dom.min.js"></script>
