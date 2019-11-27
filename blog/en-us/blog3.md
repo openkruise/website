@@ -100,7 +100,7 @@ type ManualUpdate struct {
 
 This makes it fairly easy to coordinate multiple subsets rollout. For example,
 as illustrated in Figure 1, assuming UnitedDeployment manages three subsets and
-their replica numbers are 4, 2, 2 respectively, a rollout out 
+their replica numbers are 4, 2, 2 respectively, a rollout 
 controller can realize a canary release plan of upgrading 50% of Pods in each
 subset at a time by setting subset partitions to 2, 1, 1 respectively. 
 The same cannot be easily achieved by using a single workload controller like `StatefulSet`
