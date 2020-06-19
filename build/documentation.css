@@ -53,8 +53,8 @@
     .header-container .header-body .menu-item-normal-active a {
       opacity: 1; }
     .header-container .header-body .language-switch {
-      display: none;
       float: right;
+      display: inline-block;
       box-sizing: border-box;
       width: 24px;
       height: 24px;

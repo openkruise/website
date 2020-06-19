@@ -2,11 +2,11 @@ export default {
   'zh-cn': {
     brand: {
       brandName: 'OpenKruise',
-      briefIntroduction: '一组可在应用程序工作负载管理上扩展和补充Kubernetes核心控制器。',
+      briefIntroduction: '面向自动化场景的 Kubernetes 应用负载扩展控制器',
       buttons: [
         {
           text: '快速开始',
-          link: 'https://github.com/openkruise/kruise/tree/master/docs/tutorial',
+          link: '/zh-cn/docs/quick_start.html',
           type: 'primary',
         },
         {
@@ -34,7 +34,7 @@ export default {
       buttons: [
         {
           text: 'GET STARTED',
-          link: 'https://github.com/openkruise/kruise/tree/master/docs/tutorial',
+          link: '/en-us/docs/quick_start.html',
           type: 'primary',
         },
         {

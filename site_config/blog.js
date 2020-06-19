@@ -30,6 +30,13 @@ export default {
     barText: '博客',
     postsTitle: '所有文章',
     list: [
+      {
+        title: 'Kruise 控制器分类指引',
+        author: '@Fei-Guo, @FillZpp',
+        dateStr: 'Oct 10th, 2019',
+        desc: 'This blog describes how Kruise classifies different controllers. This can help Kruise users to identify the best workload controllers for their applications.',
+        link: '/zh-cn/blog/blog1.html'
+      },
     ]
   }
 };

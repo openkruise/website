@@ -6,53 +6,28 @@
       "meta": {}
     },
     {
-      "filename": "basic-api-resource-rule.md",
-      "link": "/en-us/docs/basic-api-resource-rule.html",
-      "meta": {}
-    },
-    {
-      "filename": "basic-implementation.md",
-      "link": "/en-us/docs/basic-implementation.html",
-      "meta": {}
-    },
-    {
       "filename": "broadcastjob.md",
       "link": "/en-us/docs/broadcastjob.html",
       "meta": {}
     },
     {
-      "filename": "circuit-breaking.md",
-      "link": "/en-us/docs/circuit-breaking.html",
+      "filename": "cloneset.md",
+      "link": "/en-us/docs/cloneset.html",
       "meta": {}
     },
     {
-      "filename": "contribution.md",
-      "link": "/en-us/docs/contribution.html",
+      "filename": "components.md",
+      "link": "/en-us/docs/components.html",
       "meta": {}
     },
     {
-      "filename": "dashboard.md",
-      "link": "/en-us/docs/dashboard.html",
+      "filename": "go_client.md",
+      "link": "/en-us/docs/go_client.html",
       "meta": {}
     },
     {
-      "filename": "flow-control.md",
-      "link": "/en-us/docs/flow-control.html",
-      "meta": {}
-    },
-    {
-      "filename": "guestbook.md",
-      "link": "/en-us/docs/guestbook.html",
-      "meta": {}
-    },
-    {
-      "filename": "introduction.md",
-      "link": "/en-us/docs/introduction.html",
-      "meta": {}
-    },
-    {
-      "filename": "quick-start.md",
-      "link": "/en-us/docs/quick-start.html",
+      "filename": "quick_start.md",
+      "link": "/en-us/docs/quick_start.html",
       "meta": {}
     },
     {
@@ -61,10 +36,61 @@
       "meta": {}
     },
     {
-      "filename": "system-adaptive-protection.md",
-      "link": "/en-us/docs/system-adaptive-protection.html",
+      "filename": "uniteddeployment.md",
+      "link": "/en-us/docs/uniteddeployment.html",
+      "meta": {}
+    },
+    {
+      "filename": "what_is_openkruise.md",
+      "link": "/en-us/docs/what_is_openkruise.html",
       "meta": {}
     }
   ],
-  "zh-cn": []
+  "zh-cn": [
+    {
+      "filename": "advanced_statefulset.md",
+      "link": "/zh-cn/docs/advanced_statefulset.html",
+      "meta": {}
+    },
+    {
+      "filename": "broadcastjob.md",
+      "link": "/zh-cn/docs/broadcastjob.html",
+      "meta": {}
+    },
+    {
+      "filename": "cloneset.md",
+      "link": "/zh-cn/docs/cloneset.html",
+      "meta": {}
+    },
+    {
+      "filename": "components.md",
+      "link": "/zh-cn/docs/components.html",
+      "meta": {}
+    },
+    {
+      "filename": "go_client.md",
+      "link": "/zh-cn/docs/go_client.html",
+      "meta": {}
+    },
+    {
+      "filename": "quick_start.md",
+      "link": "/zh-cn/docs/quick_start.html",
+      "meta": {}
+    },
+    {
+      "filename": "sidecarset.md",
+      "link": "/zh-cn/docs/sidecarset.html",
+      "meta": {}
+    },
+    {
+      "filename": "uniteddeployment.md",
+      "link": "/zh-cn/docs/uniteddeployment.html",
+      "meta": {}
+    },
+    {
+      "filename": "what_is_openkruise.md",
+      "link": "/zh-cn/docs/what_is_openkruise.html",
+      "meta": {}
+    }
+  ]
 }

@@ -6,7 +6,7 @@ Kruise users to identify the best workload for their applications.
 ---
 
 # Kruise Controller Classification Guidance
-By FEI GUO (Alibaba), OCTOBOR 10 2019, 8 MINUTE READ
+By FEI GUO (Alibaba), SIYU WANG (Alibaba), OCTOBOR 10 2019, 8 MINUTE READ
 
 Kubernetes does not provide a clear guidance about which controller is the best fit for
 a user application. Sometimes, this does not seem to be a big problem if users understand
@@ -35,7 +35,7 @@ conventions in Kruise. Note that these conventions are not contradicted with the
 names used in upstream controllers.
 
 * **Set** -suffix names: This type of controller manages Pods directly. Examples
-include `Advanced StatefulSet`, `ReplicaSet` and `SidecarSet`. It supports
+include `CloneSet`, `ReplicaSet` and `SidecarSet`. It supports
 various depolyment/rollout strategies in Pod level.
 
 * **Deployment** -suffix names: This type of controller does not manage Pods
@@ -93,12 +93,10 @@ is done by another controller (e.g., `StatefulSet`).
 
 We found that many containerized applications do not require the `Stateful` property
 of fixing Pod names, and `StatefulSet` is hard to be extended for those
-applications in many cases. To fill the gap, Kruise is going to release a new controller
+applications in many cases. To fill the gap, Kruise has released a new controller
 called `CloneSet` to manage the `Stateless` applications. In a nutshell, `CloneSet`
 provides PVC support and enriched rollout and management capabilities.
 The following table roughly compares Advanced StatefulSet and CloneSet in a few aspects.
-More details will be available when `CloneSet` is released (planned in
-[M4 release](https://github.com/openkruise/kruise/projects)).
 
 | Features   |     Advanced StatefulSet      |  CloneSet |
 |----------|:-------------:|:------:|
@@ -110,10 +108,8 @@ More details will be available when `CloneSet` is released (planned in
 | Selective upgrade | No | Yes |
 | Change Pod ownership | No | Yes |
 
-Certainly, Kruise will continue to improve `Advanced StatefulSet` for stateful applications.
-However, had `CloneSet` been ready, a clear recommendation to Kruise users would be if your
-applications require fixed Pod names, you can start with `Advanced StatefulSet`. Otherwise,
-`CloneSet` is the primary choice of **Set** -suffix controllers (if `DaemonSet` is not
+Now, a clear recommendation to Kruise users is if your applications require fixed Pod names (identities for Pod network and storage), you can start with `Advanced StatefulSet`.
+Otherwise, `CloneSet` is the primary choice of **Set** -suffix controllers (if `DaemonSet` is not
 applicable).
 
 ### Summary

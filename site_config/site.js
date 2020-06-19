@@ -15,20 +15,20 @@ export default {
       {
         key: 'docs',
         text: 'DOCS',
-        link: 'https://github.com/openkruise/kruise/tree/master/docs'
+        link: '/en-us/docs/what_is_openkruise.html'
 			},
 			{
         key: 'blog',
         text: 'BLOG',
         link: '/en-us/blog/index.html'
       },
-      {
-        key: 'slack',
-        text: 'SLACK',
-        link:
-          'https://join.slack.com/t/kruise-workspace/shared_invite/enQtNjU5NzQ0ODcyNjYzLWMzZDI5NTM3ZjM1MGY2Mjg1NzU4ZjBjMDJmNjZmZTEwYTZkMzk4ZTAzNmY5NTczODhkZDU2NzVhM2I2MzNmODc',
-        target: '_blank'
-      }
+      // {
+      //   key: 'slack',
+      //   text: 'SLACK',
+      //   link:
+      //     'https://join.slack.com/t/kruise-workspace/shared_invite/enQtNjU5NzQ0ODcyNjYzLWMzZDI5NTM3ZjM1MGY2Mjg1NzU4ZjBjMDJmNjZmZTEwYTZkMzk4ZTAzNmY5NTczODhkZDU2NzVhM2I2MzNmODc',
+      //   target: '_blank'
+      // }
     ],
     disclaimer: {
       title: 'Disclaimer',
@@ -38,21 +38,17 @@ export default {
       title: 'Documentation',
       list: [
         {
-          text: 'Overview',
-          link: 'https://github.com/openkruise/kruise/tree/master/docs'
+          text: 'What is OpenKruise',
+          link: '/en-us/docs/what_is_openkruise.html'
         },
         {
-          text: 'Tutorial',
-          link: 'https://github.com/openkruise/kruise/tree/master/docs/tutorial'
+          text: 'Components',
+          link: '/en-us/docs/components.html'
         },
         {
-          text: 'Concepts',
-          link: 'https://github.com/openkruise/kruise/tree/master/docs/concepts'
-        }
-        // {
-        //   text: 'Developer guide',
-        //   link: '/en-us/docs/dir/demo3.html',
-        // },
+          text: 'Contribution',
+          link: 'https://github.com/openkruise/kruise/blob/master/CONTRIBUTING.md'
+        },
       ]
     },
     resources: {
@@ -71,20 +67,20 @@ export default {
       {
         key: 'docs',
         text: '文档',
-        link: 'https://github.com/openkruise/kruise/tree/master/docs'
+        link: '/zh-cn/docs/what_is_openkruise.html'
 			},
 			{
         key: 'blog',
         text: '博客',
         link: '/zh-cn/blog/index.html'
       },
-      {
-        key: 'slack',
-        text: 'SLACK',
-        link:
-          'https://join.slack.com/t/kruise-workspace/shared_invite/enQtNjU5NzQ0ODcyNjYzLWMzZDI5NTM3ZjM1MGY2Mjg1NzU4ZjBjMDJmNjZmZTEwYTZkMzk4ZTAzNmY5NTczODhkZDU2NzVhM2I2MzNmODc',
-        target: '_blank'
-      }
+      // {
+      //   key: 'slack',
+      //   text: 'SLACK',
+      //   link:
+      //     'https://join.slack.com/t/kruise-workspace/shared_invite/enQtNjU5NzQ0ODcyNjYzLWMzZDI5NTM3ZjM1MGY2Mjg1NzU4ZjBjMDJmNjZmZTEwYTZkMzk4ZTAzNmY5NTczODhkZDU2NzVhM2I2MzNmODc',
+      //   target: '_blank'
+      // }
     ],
     disclaimer: {
       title: 'Disclaimer',
@@ -94,17 +90,17 @@ export default {
       title: '文档',
       list: [
         {
-          text: '概览',
-          link: 'https://github.com/openkruise/kruise/tree/master/docs'
+          text: 'OpenKruise 是什么',
+          link: '/zh-cn/docs/what_is_openkruise.html'
         },
         {
-          text: '快速开始',
-          link: 'https://github.com/openkruise/kruise/tree/master/docs/tutorial'
-        }
-        // {
-        //   text: '开发者指南',
-        //   link: '/zh-cn/docs/contribution/contribution-guideline.html',
-        // },
+          text: '组件',
+          link: '/zh-cn/docs/components.html'
+        },
+        {
+          text: '贡献指南',
+          link: 'https://github.com/openkruise/kruise/blob/master/CONTRIBUTING.md'
+        },
       ]
     },
     resources: {
