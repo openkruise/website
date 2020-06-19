@@ -33,18 +33,26 @@
       "filename": "blog1.md",
       "link": "/zh-cn/blog/blog1.html",
       "meta": {
-        "title": "文章标题",
-        "keywords": "文章关键字，逗号分隔",
-        "description": "文章内容简单描述"
+        "title": "Kruise 控制器分类指引",
+        "keywords": "Kubernetes, controller, Pod, StatefulSet",
+        "description": "这篇 blog 描述了 Kruise 如何划分不同的控制器，有助于用户为应用选择最合适的 workload 来使用。"
       }
     },
     {
       "filename": "blog2.md",
       "link": "/zh-cn/blog/blog2.html",
       "meta": {
-        "title": "文章标题",
-        "keywords": "文章关键字，逗号分隔",
-        "description": "文章内容简单描述"
+        "title": "学习 Reconciling 并发模式",
+        "keywords": "Kubernetes, controller",
+        "description": "这篇博客分享了针对 Kubernetes controller 运行时的一些经验学习"
+      }
+    },
+    {
+      "filename": "blog3.md",
+      "link": "/zh-cn/blog/blog3.html",
+      "meta": {
+        "title": "UnitedDeploymemt -- 支持跨多个可用区的应用部署",
+        "keywords": "Kubernetes, controller"
       }
     }
   ]

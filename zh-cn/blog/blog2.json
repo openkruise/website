@@ -1,10 +1,10 @@
 {
   "filename": "blog2.md",
-  "__html": "<p>文章内容</p>\n",
+  "__html": "<h1>学习 Reconciling 并发模式</h1>\n<p>By FEI GUO (Alibaba), NOVEMBER 10 2019, 6 MINUTE READ</p>\n<blockquote>\n<p>非常抱歉，这篇博客暂时还没有提供中文版本。</p>\n</blockquote>\n<blockquote>\n<p>如果你有兴趣，我们非常欢迎你能参与编写或翻译博客。\n可以通过给 <a href=\"https://github.com/openkruise/website\">website</a> 提 Pull Request 来参与 OpenKruise 文档和博客的建设。</p>\n</blockquote>\n",
   "link": "/zh-cn/blog/blog2.html",
   "meta": {
-    "title": "文章标题",
-    "keywords": "文章关键字，逗号分隔",
-    "description": "文章内容简单描述"
+    "title": "学习 Reconciling 并发模式",
+    "keywords": "Kubernetes, controller",
+    "description": "这篇博客分享了针对 Kubernetes controller 运行时的一些经验学习"
   }
 }
