@@ -14,7 +14,7 @@ UnitedDeployment 控制器可以提供一个模板来定义应用，并通过管
 apiVersion: apps.kruise.io/v1alpha1
 kind: UnitedDeployment
 metadata:
-  name: sample
+  name: sample-ud
 spec:
   replicas: 6
   revisionHistoryLimit: 10
@@ -27,6 +27,9 @@ spec:
         labels:
           app: sample
       spec:
+        selector:
+          matchLabels:
+            app: sample
         template:
           metadata:
             labels:
@@ -38,31 +41,28 @@ spec:
   topology:
     subsets:
     - name: subset-a
-      nodeSelector:
-        nodeSelectorTerms:
-        - matchExpressions:
-          - key: node
-            operator: In
-            values:
-            - zone-a
+      nodeSelectorTerm:
+        matchExpressions:
+        - key: node
+          operator: In
+          values:
+          - zone-a
       replicas: 1
     - name: subset-b
-      nodeSelector:
-        nodeSelectorTerms:
-        - matchExpressions:
-          - key: node
-            operator: In
-            values:
-            - zone-b
+      nodeSelectorTerm:
+        matchExpressions:
+        - key: node
+          operator: In
+          values:
+          - zone-b
       replicas: 50%
     - name: subset-c
-      nodeSelector:
-        nodeSelectorTerms:
-        - matchExpressions:
-          - key: node
-            operator: In
-            values:
-            - zone-c
+      nodeSelectorTerm:
+        matchExpressions:
+        - key: node
+          operator: In
+          values:
+          - zone-c
   updateStrategy:
     manualUpdate:
       partitions:
@@ -97,9 +97,14 @@ type Subset struct {
 
     // Indicates the node selector to form the subset. Depending on the node selector,
     // pods provisioned could be distributed across multiple groups of nodes.
-    // A subset's nodeSelector is not allowed to be updated.
+    // A subset's nodeSelectorTerm is not allowed to be updated.
     // +optional
-    NodeSelector corev1.NodeSelector `json:"nodeSelector,omitempty"`
+    NodeSelectorTerm corev1.NodeSelectorTerm `json:"nodeSelectorTerm,omitempty"`
+
+    // Indicates the tolerations the pods under this subset have.
+    // A subset's tolerations is not allowed to be updated.
+    // +optional
+    Tolerations []corev1.Toleration `json:"tolerations,omitempty"`
 
     // Indicates the number of the pod to be created under this subset. Replicas could also be
     // percentage like '10%', which means 10% of UnitedDeployment replicas of pods will be distributed
