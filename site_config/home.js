@@ -1,3 +1,5 @@
+import React from 'react';
+
 export default {
   'zh-cn': {
     brand: {
@@ -29,7 +31,12 @@ export default {
     features: {
       title: '',
       list: []
-    }
+    },
+    users: {
+      title: '',
+      desc: '',
+      list: []	    
+    },	  
   },
   'en-us': {
     brand: {
@@ -51,10 +58,11 @@ export default {
     },
     introduction: {
       title: 'Introduction',
-      desc: 'OpenKruise is a suite that provides workload automation solutions in Kubernetes. It fixes the gap between Kubernetes upstream controllers and the real production requirements. ' +
-	    'It is built primarily based on Kubernetes CRD extensions. There are two major categories that OpenKruise ' +
-	    'offers: workload management and controller management. The kruise repo collects all useful workload controllers ' +
-	    'and the platform repo provides a framework to manage multiple controllers in the aspects of upgrading, sharding, tooling, monitoring etc (to be released). ',
+      desc: 'OpenKruise is a suite that provides workload automations in Kubernetes. It fills the gap between the upstream controller capabilities and the real production requirements. ' +
+	    'There are two major categories that OpenKruise ' +
+	    'focuses on: workload management and controller management. The kruise repo collects all useful workload controllers. ' +
+	    'They are built primarily based on Kubernetes CRD extensions. ' +
+	    'The platform repo provides a framework to manage multiple controllers in the aspects of upgrading, sharding, tooling, monitoring etc (to be released). ',
       img: '/img/kruise-overall.png',
     },
     functions: {
@@ -63,7 +71,7 @@ export default {
          {
             img: '/img/inplace.png',
             title: 'Inplace Update',
-            content: 'It is a new methodology to update container image. Unlike the Pod recreation based container image update methodology used in Deployment and StatefulSet, inplace update only restarts the specific container with the new image and the Pod is not recreated. It leads to much faster update process and much less side effects to other sub-systems such as scheduler, CNI or CSI.',
+            content: 'It is a new methodology to update container image. Unlike the Pod recreation based container image update methodology used in Deployment and StatefulSet, inplace update only restarts the specific container with the new image and the Pod will not be recreated. It leads to much faster update process and much less side effects on other sub-systems such as scheduler, CNI or CSI.',
          },
          {
             img: '/img/sidecar.png',
@@ -73,7 +81,7 @@ export default {
 	 {
 	    img: '/img/united.png',
 	    title: 'Multi-Domain Deployment',
-            content: 'UnitedDeployment is a new Custom Resource Definition (CRD) used to achieve high availability in a cluster that consists of multiple domains. It manages multiple homogeneous workloads, and each workload is dedicated to a single domain. Pod distribution across domains is determined by the replica number of each workload. A domain, identified by node label, can be an availability zone (AZ) or a group of homogeneous nodes.',
+            content: 'UnitedDeployment is a new Custom Resource Definition (CRD) used to achieve high availability in a cluster that consists of multiple domains. It manages multiple homogeneous workloads, and each workload is dedicated to a single domain. Pod distribution across domains is determined by the replica number of each workload. A domain, identified by a node label, can be an availability zone (AZ) or a group of homogeneous nodes.',
 	 },
       ], 
     }, 
@@ -92,8 +100,8 @@ export default {
             img: '/img/feature_production_grade.png',
             title: 'Production grade',
             content: [
-		  'Used in production already, managing tens of thousands Pods',
-		  'Support large scale cluster with thousands of nodes',
+		  'Used in production managing tens of thousands Pods',
+		  'Support large scale clusters with thousands of nodes',
 	    ],
          },
          {
@@ -106,15 +114,19 @@ export default {
          },
          {
             img: '/img/feature_rich.png',
-            title: 'Rich set of strategies',
+            title: 'Rich set of management strategies',
             content: [
 		  'Selective Pod upgrade/deletion',
 		  'Upgrade sequence management',
 		  'Graceful Pod offline during upgrade',  
 	    ],
          },
-	      
       ],
+    },
+    users: {
+      title: 'Who is using OpenKruise',
+      desc:  <span>Please provide your information on <a rel="noopener noreferrer" target="_blank" href="https://github.com/openkruise/kruise/issues/289"> Wanted: who is using openkruise</a> to help improving the project.</span>,	    
+      list: [],
     },
   },
 };
