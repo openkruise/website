@@ -1,14 +1,16 @@
 import React from 'react';
-import Icon from '../../components/icon';
+import { getLink } from '../../../utils';
 
 const Item = (props) => {
   const { feature } = props;
   return (
-    <li>
-      <Icon type={feature.icon} />
+    <li className="feature-list-item">
+      <img src={getLink(feature.img)} />
       <div>
         <h4>{feature.title}</h4>
-        <p>{feature.content}</p>
+        <ul>
+        {feature.content.map((c, i) => <li key={i}>{c}</li>)}
+        </ul>
       </div>
     </li>
   );

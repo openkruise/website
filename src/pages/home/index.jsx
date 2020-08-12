@@ -5,7 +5,9 @@ import Header from '../../components/header';
 import Button from '../../components/button';
 import Footer from '../../components/footer';
 import Language from '../../components/language';
-// import Item from './featureItem';
+import Bone from '../../components/bone';
+import FunctionItem from './functionItem';
+import FeatureItem from './featureItem';
 import homeConfig from '../../../site_config/home';
 import './index.scss';
 
@@ -70,18 +72,30 @@ class Home extends Language {
             <img src={getLink(dataSource.introduction.img)} />
           </div>
         </section>
-        {/* <section className="feature-section">
-          <div className="feature-body">
+	<section className="function-section">
+           <h3>{dataSource.functions.title}</h3>
+           <Bone type="dark" />
+           <div>
+               {
+                   dataSource.functions.list.map((func, i) => (
+                   <FunctionItem func={func} key={i} imgFirst={i % 2 === 0} />
+                   ))
+               }
+            </div>
+        </section>    
+        <section className="feature-section">
+          <div className="feature-section-body">
             <h3>{dataSource.features.title}</h3>
-            <ul>
-            {
-              dataSource.features.list.map((feature, i) => (
-                <Item feature={feature} key={i} />
-              ))
-            }
+            <Bone type="light" />
+            <ul className="feature-list">
+               {
+                   dataSource.features.list.map((feature, i) => (
+                   <FeatureItem feature={feature} key={i} />
+                   ))
+               }
             </ul>
           </div>
-          </section> */}
+        </section>
         <Footer logo="/img/kruise_gray.png" language={language} />
       </div>
     );

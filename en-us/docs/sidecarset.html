@@ -53,24 +53,24 @@ The workload template spec will not be updated.</p>
 <span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">SidecarSet</span>
 <span class="hljs-attr">metadata:</span>
-  <span class="hljs-attr">name:</span> <span class="hljs-string">test-sidecarset</span>
+<span class="hljs-attr">  name:</span> <span class="hljs-string">test-sidecarset</span>
 <span class="hljs-attr">spec:</span>
-  <span class="hljs-attr">selector:</span>
-    <span class="hljs-attr">matchLabels:</span>
-      <span class="hljs-attr">app:</span> <span class="hljs-string">nginx</span>
-  <span class="hljs-attr">strategy:</span>
-    <span class="hljs-attr">rollingUpdate:</span>
-      <span class="hljs-attr">maxUnavailable:</span> <span class="hljs-number">2</span>
-  <span class="hljs-attr">containers:</span>
-  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">sidecar1</span>
-    <span class="hljs-attr">image:</span> <span class="hljs-string">centos:6.7</span>
-    <span class="hljs-attr">command:</span> <span class="hljs-string">["sleep",</span> <span class="hljs-string">"999d"</span><span class="hljs-string">]</span> <span class="hljs-comment"># do nothing at all</span>
-    <span class="hljs-attr">volumeMounts:</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">log-volume</span>
-      <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/var/log</span>
-  <span class="hljs-attr">volumes:</span> <span class="hljs-comment"># this field will be merged into pod.spec.volumes</span>
-  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">log-volume</span>
-    <span class="hljs-attr">emptyDir:</span> <span class="hljs-string">{}</span>
+<span class="hljs-attr">  selector:</span>
+<span class="hljs-attr">    matchLabels:</span>
+<span class="hljs-attr">      app:</span> <span class="hljs-string">nginx</span>
+<span class="hljs-attr">  strategy:</span>
+<span class="hljs-attr">    rollingUpdate:</span>
+<span class="hljs-attr">      maxUnavailable:</span> <span class="hljs-number">2</span>
+<span class="hljs-attr">  containers:</span>
+<span class="hljs-attr">  - name:</span> <span class="hljs-string">sidecar1</span>
+<span class="hljs-attr">    image:</span> <span class="hljs-attr">centos:6.7</span>
+<span class="hljs-attr">    command:</span> <span class="hljs-string">["sleep",</span> <span class="hljs-string">"999d"</span><span class="hljs-string">]</span> <span class="hljs-comment"># do nothing at all</span>
+<span class="hljs-attr">    volumeMounts:</span>
+<span class="hljs-attr">    - name:</span> <span class="hljs-string">log-volume</span>
+<span class="hljs-attr">      mountPath:</span> <span class="hljs-string">/var/log</span>
+<span class="hljs-attr">  volumes:</span> <span class="hljs-comment"># this field will be merged into pod.spec.volumes</span>
+<span class="hljs-attr">  - name:</span> <span class="hljs-string">log-volume</span>
+<span class="hljs-attr">    emptyDir:</span> <span class="hljs-string">{}</span>
 </code></pre>
 <p>Create a SidecarSet based on the YAML file:</p>
 <pre><code class="language-shell">kubectl apply -f sidecarset.yaml
@@ -80,13 +80,13 @@ The workload template spec will not be updated.</p>
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">Pod</span>
 <span class="hljs-attr">metadata:</span>
-  <span class="hljs-attr">labels:</span>
-    <span class="hljs-attr">app:</span> <span class="hljs-string">nginx</span> <span class="hljs-comment"># matches the SidecarSet's selector</span>
-  <span class="hljs-attr">name:</span> <span class="hljs-string">test-pod</span>
+<span class="hljs-attr">  labels:</span>
+<span class="hljs-attr">    app:</span> <span class="hljs-string">nginx</span> <span class="hljs-comment"># matches the SidecarSet's selector</span>
+<span class="hljs-attr">  name:</span> <span class="hljs-string">test-pod</span>
 <span class="hljs-attr">spec:</span>
-  <span class="hljs-attr">containers:</span>
-  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">app</span>
-    <span class="hljs-attr">image:</span> <span class="hljs-string">nginx:1.15.1</span>
+<span class="hljs-attr">  containers:</span>
+<span class="hljs-attr">  - name:</span> <span class="hljs-string">app</span>
+<span class="hljs-attr">    image:</span> <span class="hljs-attr">nginx:1.15.1</span>
 </code></pre>
 <p>Create this pod and now you will find it's injected with <code>sidecar1</code>:</p>
 <pre><code class="language-shell"><span class="hljs-meta">$</span><span class="bash"> kubectl get pod</span>

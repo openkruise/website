@@ -266,6 +266,41 @@
     color: #fff;
     background: transparent;
     border: 1px solid #fff; }
+.bone {
+  width: 24px;
+  height: 2px;
+  position: relative; }
+  .bone::before {
+    position: absolute;
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    left: 0;
+    top: -2px; }
+  .bone::after {
+    position: absolute;
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    right: 0;
+    top: -2px; }
+  .bone-dark {
+    background-color: #1161F6; }
+    .bone-dark::before {
+      background-color: #1161F6; }
+    .bone-dark::after {
+      background-color: #1161F6; }
+  .bone-light {
+    background-color: #fff;
+    opacity: 0.8; }
+    .bone-light::before {
+      background-color: #fff;
+      opacity: 0.8; }
+    .bone-light::after {
+      background-color: #fff;
+      opacity: 0.8; }
 @charset "UTF-8";
 @font-face {
   font-family: octicons-link;
@@ -1731,91 +1766,151 @@ h1, h2, h3, h4, h5, h6 {
     .home-page .top-section .button-area .button:last-child {
       margin-right: 0; }
 
-.home-page .introduction-section .introduction-body {
-  max-width: 1280px;
-  box-sizing: border-box;
-  margin: 0 auto;
-  min-height: 640px;
-  padding: 0 40px;
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between; }
-  .home-page .introduction-section .introduction-body .introduction {
-    display: inline-block;
-    width: calc(100% - 726px);
-    min-width: 300px;
-    max-width: 590px; }
-    .home-page .introduction-section .introduction-body .introduction h3 {
-      font-family: Avenir-Heavy;
-      font-size: 36px;
-      color: #333;
-      margin-bottom: 40px;
-      word-break: break-word; }
-    .home-page .introduction-section .introduction-body .introduction p {
-      opacity: 0.56;
-      font-family: Avenir-Medium;
-      font-size: 18px;
-      color: #999; }
-  .home-page .introduction-section .introduction-body img {
-    width: 562px;
-    margin: 0 82px;
-    max-width: 100%;
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.05); }
-  @media screen and (max-width: 1106px) {
+.home-page .introduction-section {
+  background: #F9FAFA; }
+  .home-page .introduction-section .introduction-body {
+    max-width: 1280px;
+    box-sizing: border-box;
+    margin: 0 auto;
+    min-height: 640px;
+    padding: 0 40px;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between; }
     .home-page .introduction-section .introduction-body .introduction {
       display: inline-block;
-      width: 100%;
-      max-width: 100%; }
+      width: calc(100% - 726px);
+      min-width: 300px;
+      max-width: 590px; }
+      .home-page .introduction-section .introduction-body .introduction h3 {
+        font-family: Avenir-Heavy;
+        font-size: 36px;
+        color: #333;
+        margin-bottom: 40px;
+        word-break: break-word; }
+      .home-page .introduction-section .introduction-body .introduction p {
+        opacity: 0.56;
+        font-family: Avenir-Medium;
+        font-size: 18px;
+        color: #333; }
     .home-page .introduction-section .introduction-body img {
-      margin: 0; } }
+      width: 562px;
+      margin: 0 82px;
+      max-width: 100%;
+      box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.05); }
+    @media screen and (max-width: 1106px) {
+      .home-page .introduction-section .introduction-body .introduction {
+        display: inline-block;
+        width: 100%;
+        max-width: 100%; }
+      .home-page .introduction-section .introduction-body img {
+        margin: 0; } }
+
+.home-page .function-section {
+  max-width: 832px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 82px 0; }
+  .home-page .function-section h3 {
+    font-family: Avenir-Heavy;
+    font-size: 36px;
+    text-align: center;
+    font-weight: 400; }
+  .home-page .function-section .bone {
+    margin: 0 auto 45px; }
+  .home-page .function-section .func-item {
+    margin-bottom: 30px;
+    position: relative; }
+    .home-page .function-section .func-item .col {
+      display: inline-flex;
+      align-items: center;
+      vertical-align: middle;
+      margin: 0 auto;
+      width: 50%;
+      max-width: 750px;
+      min-height: 325px; }
+      .home-page .function-section .func-item .col img {
+        margin-top: 40px;
+        width: 325px; }
+      .home-page .function-section .func-item .col h4 {
+        font-weight: 400;
+        font-family: Avenir-Heavy;
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px; }
+      .home-page .function-section .func-item .col p {
+        opacity: 0.8;
+        font-family: Avenir-Medium;
+        font-size: 18px;
+        color: #999;
+        margin: 0; }
+    .home-page .function-section .func-item .img {
+      display: inline-block;
+      text-align: center; }
+    @media screen and (max-width: 830px) {
+      .home-page .function-section .func-item {
+        text-align: center; }
+      .home-page .function-section .func-item .col {
+        width: 100%; }
+      .home-page .function-section .func-item .img {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0.1; } }
 
 .home-page .feature-section {
-  background: #F9FAFA; }
-  .home-page .feature-section .feature-body {
-    box-sizing: border-box;
+  background: #1E35C1; }
+  .home-page .feature-section .feature-section-body {
     max-width: 1280px;
     margin: 0 auto;
     position: relative;
-    padding: 80px 40px 40px; }
-    .home-page .feature-section .feature-body h3 {
-      font-family: Avenir-Medium;
-      font-weight: 700;
+    padding: 80px 40px;
+    color: #fff; }
+    .home-page .feature-section .feature-section-body h3 {
+      font-family: Avenir-Heavy;
       font-size: 36px;
-      color: #333;
       text-align: center;
-      margin: 0 0 60px; }
-    .home-page .feature-section .feature-body ul {
+      margin: 0;
+      font-weight: 400; }
+    .home-page .feature-section .feature-section-body .bone {
+      margin: 0 auto 45px; }
+    .home-page .feature-section .feature-section-body .feature-list {
       list-style: none;
       padding: 0;
       margin: 0; }
-      .home-page .feature-section .feature-body ul li {
+      .home-page .feature-section .feature-section-body .feature-list .feature-list-item {
         vertical-align: top;
         display: inline-block;
-        margin-bottom: 40px;
+        margin-bottom: 48px;
         width: 50%; }
-        .home-page .feature-section .feature-body ul li .docsite-icon {
+        .home-page .feature-section .feature-section-body .feature-list .feature-list-item ul {
+          list-style: disc;
+          padding-left: 14px; }
+          .home-page .feature-section .feature-section-body .feature-list .feature-list-item ul li {
+            font-family: Avenir-Medium;
+            font-size: 18px;
+            color: #999; }
+        .home-page .feature-section .feature-section-body .feature-list .feature-list-item img {
           vertical-align: top;
+          width: 34px;
           margin-right: 20px; }
-          .home-page .feature-section .feature-body ul li .docsite-icon::before {
-            vertical-align: top; }
-        .home-page .feature-section .feature-body ul li div {
+        .home-page .feature-section .feature-section-body .feature-list .feature-list-item div {
           display: inline-block;
           width: 80%; }
-          .home-page .feature-section .feature-body ul li div h4 {
-            font-family: Avenir-Medium;
-            font-weight: 700;
+          .home-page .feature-section .feature-section-body .feature-list .feature-list-item div h4 {
+            font-family: Avenir-Heavy;
             font-size: 20px;
-            color: #333;
-            margin: 10px 0 20px; }
-          .home-page .feature-section .feature-body ul li div p {
+            margin: 5px 0 20px 0; }
+          .home-page .feature-section .feature-section-body .feature-list .feature-list-item div p {
             font-family: Avenir-Medium;
-            font-size: 14px;
+            font-size: 20px;
             line-height: 20px;
             color: #999; }
       @media screen and (max-width: 768px) {
-        .home-page .feature-section .feature-body ul li {
+        .home-page .feature-section .feature-section-body .feature-list .feature-list-item {
           width: 100%; } }
 
 @media screen and (max-width: 640px) {

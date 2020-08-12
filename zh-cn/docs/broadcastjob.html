@@ -62,18 +62,18 @@
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">BroadcastJob</span>
 <span class="hljs-attr">metadata:</span>
-  <span class="hljs-attr">name:</span> <span class="hljs-string">broadcastjob-ttl</span>
+<span class="hljs-attr">  name:</span> <span class="hljs-string">broadcastjob-ttl</span>
 <span class="hljs-attr">spec:</span>
-  <span class="hljs-attr">template:</span>
-    <span class="hljs-attr">spec:</span>
-      <span class="hljs-attr">containers:</span>
-        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">pi</span>
-          <span class="hljs-attr">image:</span> <span class="hljs-string">perl</span>
-          <span class="hljs-attr">command:</span> <span class="hljs-string">["perl",</span>  <span class="hljs-string">"-Mbignum=bpi"</span><span class="hljs-string">,</span> <span class="hljs-string">"-wle"</span><span class="hljs-string">,</span> <span class="hljs-string">"print bpi(2000)"</span><span class="hljs-string">]</span>
-      <span class="hljs-attr">restartPolicy:</span> <span class="hljs-string">Never</span>
-  <span class="hljs-attr">completionPolicy:</span>
-    <span class="hljs-attr">type:</span> <span class="hljs-string">Always</span>
-    <span class="hljs-attr">ttlSecondsAfterFinished:</span> <span class="hljs-number">30</span>
+<span class="hljs-attr">  template:</span>
+<span class="hljs-attr">    spec:</span>
+<span class="hljs-attr">      containers:</span>
+<span class="hljs-attr">        - name:</span> <span class="hljs-string">pi</span>
+<span class="hljs-attr">          image:</span> <span class="hljs-string">perl</span>
+<span class="hljs-attr">          command:</span> <span class="hljs-string">["perl",</span>  <span class="hljs-string">"-Mbignum=bpi"</span><span class="hljs-string">,</span> <span class="hljs-string">"-wle"</span><span class="hljs-string">,</span> <span class="hljs-string">"print bpi(2000)"</span><span class="hljs-string">]</span>
+<span class="hljs-attr">      restartPolicy:</span> <span class="hljs-string">Never</span>
+<span class="hljs-attr">  completionPolicy:</span>
+<span class="hljs-attr">    type:</span> <span class="hljs-string">Always</span>
+<span class="hljs-attr">    ttlSecondsAfterFinished:</span> <span class="hljs-number">30</span>
 </code></pre>
 <h3>使用 <code>activeDeadlineSeconds</code></h3>
 <p>创建 BroadcastJob 配置 <code>activeDeadlineSeconds</code> 为 10。
@@ -81,18 +81,18 @@
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">BroadcastJob</span>
 <span class="hljs-attr">metadata:</span>
-  <span class="hljs-attr">name:</span> <span class="hljs-string">broadcastjob-active-deadline</span>
+<span class="hljs-attr">  name:</span> <span class="hljs-string">broadcastjob-active-deadline</span>
 <span class="hljs-attr">spec:</span>
-  <span class="hljs-attr">template:</span>
-    <span class="hljs-attr">spec:</span>
-      <span class="hljs-attr">containers:</span>
-        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">sleep</span>
-          <span class="hljs-attr">image:</span> <span class="hljs-string">busybox</span>
-          <span class="hljs-attr">command:</span> <span class="hljs-string">["sleep",</span>  <span class="hljs-string">"50000"</span><span class="hljs-string">]</span>
-      <span class="hljs-attr">restartPolicy:</span> <span class="hljs-string">Never</span>
-  <span class="hljs-attr">completionPolicy:</span>
-    <span class="hljs-attr">type:</span> <span class="hljs-string">Always</span>
-    <span class="hljs-attr">activeDeadlineSeconds:</span> <span class="hljs-number">10</span>
+<span class="hljs-attr">  template:</span>
+<span class="hljs-attr">    spec:</span>
+<span class="hljs-attr">      containers:</span>
+<span class="hljs-attr">        - name:</span> <span class="hljs-string">sleep</span>
+<span class="hljs-attr">          image:</span> <span class="hljs-string">busybox</span>
+<span class="hljs-attr">          command:</span> <span class="hljs-string">["sleep",</span>  <span class="hljs-string">"50000"</span><span class="hljs-string">]</span>
+<span class="hljs-attr">      restartPolicy:</span> <span class="hljs-string">Never</span>
+<span class="hljs-attr">  completionPolicy:</span>
+<span class="hljs-attr">    type:</span> <span class="hljs-string">Always</span>
+<span class="hljs-attr">    activeDeadlineSeconds:</span> <span class="hljs-number">10</span>
 </code></pre>
 <h3>使用 <code>Never</code> completionPolicy</h3>
 <p>创建 BroadcastJob 配置 <code>completionPolicy</code> 为 <code>Never</code>。
@@ -100,17 +100,17 @@
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">BroadcastJob</span>
 <span class="hljs-attr">metadata:</span>
-  <span class="hljs-attr">name:</span> <span class="hljs-string">broadcastjob-never-complete</span>
+<span class="hljs-attr">  name:</span> <span class="hljs-string">broadcastjob-never-complete</span>
 <span class="hljs-attr">spec:</span>
-  <span class="hljs-attr">template:</span>
-    <span class="hljs-attr">spec:</span>
-      <span class="hljs-attr">containers:</span>
-        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">sleep</span>
-          <span class="hljs-attr">image:</span> <span class="hljs-string">busybox</span>
-          <span class="hljs-attr">command:</span> <span class="hljs-string">["sleep",</span>  <span class="hljs-string">"5"</span><span class="hljs-string">]</span>
-      <span class="hljs-attr">restartPolicy:</span> <span class="hljs-string">Never</span>
-  <span class="hljs-attr">completionPolicy:</span>
-    <span class="hljs-attr">type:</span> <span class="hljs-string">Never</span>
+<span class="hljs-attr">  template:</span>
+<span class="hljs-attr">    spec:</span>
+<span class="hljs-attr">      containers:</span>
+<span class="hljs-attr">        - name:</span> <span class="hljs-string">sleep</span>
+<span class="hljs-attr">          image:</span> <span class="hljs-string">busybox</span>
+<span class="hljs-attr">          command:</span> <span class="hljs-string">["sleep",</span>  <span class="hljs-string">"5"</span><span class="hljs-string">]</span>
+<span class="hljs-attr">      restartPolicy:</span> <span class="hljs-string">Never</span>
+<span class="hljs-attr">  completionPolicy:</span>
+<span class="hljs-attr">    type:</span> <span class="hljs-string">Never</span>
 </code></pre>
 </div></section><footer class="footer-container"><div class="footer-body"><img src="/img/kruise_gray.png"/><div class="cols-container"><div class="col col-12"><h3>Disclaimer</h3><p>OpenKruise is an open-source project under Apache License 2.0.</p></div><div class="col col-6"><dl><dt>文档</dt><dd><a href="/zh-cn/docs/what_is_openkruise.html" target="_self">OpenKruise 是什么</a></dd><dd><a href="/zh-cn/docs/components.html" target="_self">组件</a></dd><dd><a href="https://github.com/openkruise/kruise/blob/master/CONTRIBUTING.md" target="_self">贡献指南</a></dd></dl></div><div class="col col-6"><dl><dt>资源</dt></dl></div></div><div class="copyright"><span>Copyright © 2019 The OpenKruise Authors, The Kubernetes Authors</span></div></div></footer></div></div>
 	<script src="https://f.alicdn.com/react/15.4.1/react-with-addons.min.js"></script>

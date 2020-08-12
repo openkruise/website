@@ -23,62 +23,62 @@ UnitedDeployment 控制器可以提供一个模板来定义应用，并通过管
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">UnitedDeployment</span>
 <span class="hljs-attr">metadata:</span>
-  <span class="hljs-attr">name:</span> <span class="hljs-string">sample-ud</span>
+<span class="hljs-attr">  name:</span> <span class="hljs-string">sample-ud</span>
 <span class="hljs-attr">spec:</span>
-  <span class="hljs-attr">replicas:</span> <span class="hljs-number">6</span>
-  <span class="hljs-attr">revisionHistoryLimit:</span> <span class="hljs-number">10</span>
-  <span class="hljs-attr">selector:</span>
-    <span class="hljs-attr">matchLabels:</span>
-      <span class="hljs-attr">app:</span> <span class="hljs-string">sample</span>
-  <span class="hljs-attr">template:</span>
-    <span class="hljs-attr">statefulSetTemplate:</span>
-      <span class="hljs-attr">metadata:</span>
-        <span class="hljs-attr">labels:</span>
-          <span class="hljs-attr">app:</span> <span class="hljs-string">sample</span>
-      <span class="hljs-attr">spec:</span>
-        <span class="hljs-attr">selector:</span>
-          <span class="hljs-attr">matchLabels:</span>
-            <span class="hljs-attr">app:</span> <span class="hljs-string">sample</span>
-        <span class="hljs-attr">template:</span>
-          <span class="hljs-attr">metadata:</span>
-            <span class="hljs-attr">labels:</span>
-              <span class="hljs-attr">app:</span> <span class="hljs-string">sample</span>
-          <span class="hljs-attr">spec:</span>
-            <span class="hljs-attr">containers:</span>
-            <span class="hljs-bullet">-</span> <span class="hljs-attr">image:</span> <span class="hljs-string">nginx:alpine</span>
-              <span class="hljs-attr">name:</span> <span class="hljs-string">nginx</span>
-  <span class="hljs-attr">topology:</span>
-    <span class="hljs-attr">subsets:</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">subset-a</span>
-      <span class="hljs-attr">nodeSelectorTerm:</span>
-        <span class="hljs-attr">matchExpressions:</span>
-        <span class="hljs-bullet">-</span> <span class="hljs-attr">key:</span> <span class="hljs-string">node</span>
-          <span class="hljs-attr">operator:</span> <span class="hljs-string">In</span>
-          <span class="hljs-attr">values:</span>
-          <span class="hljs-bullet">-</span> <span class="hljs-string">zone-a</span>
-      <span class="hljs-attr">replicas:</span> <span class="hljs-number">1</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">subset-b</span>
-      <span class="hljs-attr">nodeSelectorTerm:</span>
-        <span class="hljs-attr">matchExpressions:</span>
-        <span class="hljs-bullet">-</span> <span class="hljs-attr">key:</span> <span class="hljs-string">node</span>
-          <span class="hljs-attr">operator:</span> <span class="hljs-string">In</span>
-          <span class="hljs-attr">values:</span>
-          <span class="hljs-bullet">-</span> <span class="hljs-string">zone-b</span>
-      <span class="hljs-attr">replicas:</span> <span class="hljs-number">50</span><span class="hljs-string">%</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">subset-c</span>
-      <span class="hljs-attr">nodeSelectorTerm:</span>
-        <span class="hljs-attr">matchExpressions:</span>
-        <span class="hljs-bullet">-</span> <span class="hljs-attr">key:</span> <span class="hljs-string">node</span>
-          <span class="hljs-attr">operator:</span> <span class="hljs-string">In</span>
-          <span class="hljs-attr">values:</span>
-          <span class="hljs-bullet">-</span> <span class="hljs-string">zone-c</span>
-  <span class="hljs-attr">updateStrategy:</span>
-    <span class="hljs-attr">manualUpdate:</span>
-      <span class="hljs-attr">partitions:</span>
-        <span class="hljs-attr">subset-a:</span> <span class="hljs-number">0</span>
-        <span class="hljs-attr">subset-b:</span> <span class="hljs-number">0</span>
-        <span class="hljs-attr">subset-c:</span> <span class="hljs-number">0</span>
-    <span class="hljs-attr">type:</span> <span class="hljs-string">Manual</span>
+<span class="hljs-attr">  replicas:</span> <span class="hljs-number">6</span>
+<span class="hljs-attr">  revisionHistoryLimit:</span> <span class="hljs-number">10</span>
+<span class="hljs-attr">  selector:</span>
+<span class="hljs-attr">    matchLabels:</span>
+<span class="hljs-attr">      app:</span> <span class="hljs-string">sample</span>
+<span class="hljs-attr">  template:</span>
+<span class="hljs-attr">    statefulSetTemplate:</span>
+<span class="hljs-attr">      metadata:</span>
+<span class="hljs-attr">        labels:</span>
+<span class="hljs-attr">          app:</span> <span class="hljs-string">sample</span>
+<span class="hljs-attr">      spec:</span>
+<span class="hljs-attr">        selector:</span>
+<span class="hljs-attr">          matchLabels:</span>
+<span class="hljs-attr">            app:</span> <span class="hljs-string">sample</span>
+<span class="hljs-attr">        template:</span>
+<span class="hljs-attr">          metadata:</span>
+<span class="hljs-attr">            labels:</span>
+<span class="hljs-attr">              app:</span> <span class="hljs-string">sample</span>
+<span class="hljs-attr">          spec:</span>
+<span class="hljs-attr">            containers:</span>
+<span class="hljs-attr">            - image:</span> <span class="hljs-attr">nginx:alpine</span>
+<span class="hljs-attr">              name:</span> <span class="hljs-string">nginx</span>
+<span class="hljs-attr">  topology:</span>
+<span class="hljs-attr">    subsets:</span>
+<span class="hljs-attr">    - name:</span> <span class="hljs-string">subset-a</span>
+<span class="hljs-attr">      nodeSelectorTerm:</span>
+<span class="hljs-attr">        matchExpressions:</span>
+<span class="hljs-attr">        - key:</span> <span class="hljs-string">node</span>
+<span class="hljs-attr">          operator:</span> <span class="hljs-string">In</span>
+<span class="hljs-attr">          values:</span>
+<span class="hljs-bullet">          -</span> <span class="hljs-string">zone-a</span>
+<span class="hljs-attr">      replicas:</span> <span class="hljs-number">1</span>
+<span class="hljs-attr">    - name:</span> <span class="hljs-string">subset-b</span>
+<span class="hljs-attr">      nodeSelectorTerm:</span>
+<span class="hljs-attr">        matchExpressions:</span>
+<span class="hljs-attr">        - key:</span> <span class="hljs-string">node</span>
+<span class="hljs-attr">          operator:</span> <span class="hljs-string">In</span>
+<span class="hljs-attr">          values:</span>
+<span class="hljs-bullet">          -</span> <span class="hljs-string">zone-b</span>
+<span class="hljs-attr">      replicas:</span> <span class="hljs-number">50</span><span class="hljs-string">%</span>
+<span class="hljs-attr">    - name:</span> <span class="hljs-string">subset-c</span>
+<span class="hljs-attr">      nodeSelectorTerm:</span>
+<span class="hljs-attr">        matchExpressions:</span>
+<span class="hljs-attr">        - key:</span> <span class="hljs-string">node</span>
+<span class="hljs-attr">          operator:</span> <span class="hljs-string">In</span>
+<span class="hljs-attr">          values:</span>
+<span class="hljs-bullet">          -</span> <span class="hljs-string">zone-c</span>
+<span class="hljs-attr">  updateStrategy:</span>
+<span class="hljs-attr">    manualUpdate:</span>
+<span class="hljs-attr">      partitions:</span>
+<span class="hljs-attr">        subset-a:</span> <span class="hljs-number">0</span>
+<span class="hljs-attr">        subset-b:</span> <span class="hljs-number">0</span>
+<span class="hljs-attr">        subset-c:</span> <span class="hljs-number">0</span>
+<span class="hljs-attr">    type:</span> <span class="hljs-string">Manual</span>
 <span class="hljs-string">...</span>
 </code></pre>
 <h2>Pod 分发管理</h2>

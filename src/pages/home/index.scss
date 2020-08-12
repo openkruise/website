@@ -58,6 +58,7 @@
     }
   }
   .introduction-section {
+     background: #F9FAFA; 
     .introduction-body {
       max-width: $contentWidth;
       box-sizing: border-box;
@@ -85,7 +86,7 @@
           opacity: 0.56;
           font-family: Avenir-Medium;
           font-size: 18px;
-          color: #999;
+          color: #333;
         }
       }
       img {
@@ -106,63 +107,158 @@
       }
     }
   }
+
+  .function-section {
+    max-width: 832px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: 82px 0;
+
+    h3 {
+      font-family: Avenir-Heavy;
+      font-size: 36px;
+      text-align: center;
+      font-weight: 400;
+    }
+
+    .bone {
+      margin: 0 auto 45px;
+    }
+
+    .func-item {
+      margin-bottom: 30px;
+      position: relative;
+
+      .col {
+        display: inline-flex;
+        align-items: center;
+        vertical-align: middle;
+        margin: 0 auto;
+        width: 50%;
+        max-width: 750px;
+        min-height: 325px;
+
+        img {
+	  margin-top: 40px;
+          width: 325px;
+        }
+
+        h4 {
+          font-weight: 400;
+          font-family: Avenir-Heavy;
+          font-size: 24px;
+          color: #333;
+          margin-bottom: 20px;
+        }
+
+        p {
+          opacity: 0.8;
+          font-family: Avenir-Medium;
+          font-size: 18px;
+          color: #999;
+          margin: 0;
+        }
+      }
+
+      .img {
+        display: inline-block;
+        text-align: center;
+      }
+
+      @media screen and (max-width: 830px) {
+        & {
+          text-align: center;
+        }
+        .col {
+          width: 100%;
+        }
+        .img {
+          position: absolute;
+          left: 50%;
+          top:  50%;
+          transform: translate(-50%, -50%);
+          opacity: 0.1;
+        }
+      }
+    }
+  }	
+
   .feature-section {
-    background: #F9FAFA;
-    .feature-body {
-      box-sizing: border-box;
+    background: $brandColor;
+   
+   .feature-section-body {
       max-width: $contentWidth;
       margin: 0 auto;
       position: relative;
-      padding: 80px 40px 40px;
+      padding: 80px 40px;
+      color: #fff;
+
       h3 {
-        font-family: Avenir-Medium;
-        font-weight: 700;
+        font-family: Avenir-Heavy;
         font-size: 36px;
-        color: #333;
         text-align: center;
-        margin: 0 0 60px;
+        margin: 0;
+        font-weight: 400;
       }
-      ul {
+
+      .bone {
+        margin: 0 auto 45px;
+      }
+
+      .feature-list {
         list-style: none;
         padding: 0;
         margin: 0;
-        li {
+
+        .feature-list-item {
           vertical-align: top;
           display: inline-block;
-          margin-bottom: 40px;
+          margin-bottom: 48px;
           width: 50%;
-          .docsite-icon {
-            vertical-align: top;
-            margin-right: 20px;
-            &::before {
-              vertical-align: top;
+
+          ul {
+            list-style: disc;
+            padding-left: 14px;
+
+            li {
+              font-family: Avenir-Medium;
+              font-size: 18px;
+              color: #999;
             }
           }
+
+          img {
+            vertical-align: top;
+            width: 34px;
+            margin-right: 20px;
+          }
+
           div {
             display: inline-block;
             width: 80%;
+
             h4 {
-              font-family: Avenir-Medium;
-              font-weight: 700;
+              font-family: Avenir-Heavy;
               font-size: 20px;
-              color: #333;
-              margin: 10px 0 20px;
+              margin: 5px 0 20px 0;
             }
+
             p {
               font-family: Avenir-Medium;
-              font-size: 14px;
+              font-size: 20px;
               line-height: 20px;
               color: #999;
             }
           }
         }
-        @media screen and (max-width: 768px){
-          li {
+
+        @media screen and (max-width: 768px) {
+          .feature-list-item {
             width: 100%;
           }
         }
       }
-    }
+    }  
   }
   @media screen and (max-width: $mobileWidth) {
     .introduction-section {
