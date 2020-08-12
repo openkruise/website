@@ -58,9 +58,10 @@ export default {
     },
     introduction: {
       title: 'Introduction',
-      desc: 'OpenKruise is a suite that provides workload automations in Kubernetes. It fills the gap between the upstream controller capabilities and the real production requirements. ' +
+      desc: 'OpenKruise is a suite that provides workload automations in Kubernetes. It complements the popular upstream workload controllers by ' +
+	    'supporting new capabilities based on real production requirements. ' +
 	    'There are two major categories that OpenKruise ' +
-	    'focuses on: workload management and controller management. The kruise repo collects all useful workload controllers. ' +
+	    'focuses on: workload management and controller management. The kruise repo collects all supported workload controllers. ' +
 	    'They are built primarily based on Kubernetes CRD extensions. ' +
 	    'The platform repo provides a framework to manage multiple controllers in the aspects of upgrading, sharding, tooling, monitoring etc (to be released). ',
       img: '/img/kruise-overall.png',
