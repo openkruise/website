@@ -1,6 +1,11 @@
 {
   "en-us": [
     {
+      "filename": "advanced_daemonset.md",
+      "link": "/en-us/docs/advanced_daemonset.html",
+      "meta": {}
+    },
+    {
       "filename": "advanced_statefulset.md",
       "link": "/en-us/docs/advanced_statefulset.html",
       "meta": {}
@@ -47,6 +52,11 @@
     }
   ],
   "zh-cn": [
+    {
+      "filename": "advanced_daemonset.md",
+      "link": "/zh-cn/docs/advanced_daemonset.html",
+      "meta": {}
+    },
     {
       "filename": "advanced_statefulset.md",
       "link": "/zh-cn/docs/advanced_statefulset.html",
