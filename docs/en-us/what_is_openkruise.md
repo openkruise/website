@@ -42,3 +42,6 @@ OpenKruise is a full set of standard extensions for Kubernetes. It works well wi
 
     A job that runs Pods to completion across all the nodes in the cluster.
 
+- **Advanced DaemonSet**
+
+    An enhanced version of default DaemonSet with extra functionalities such as partition, selector, inplace-update, pause and surging.

@@ -36,6 +36,10 @@ export default {
                         title: 'BroadcastJob',
                         link: '/en-us/docs/broadcastjob.html',
                     },
+                    {
+                        title: 'Advanced DaemonSet',
+                        link: '/en-us/docs/advanced_daemonset.html',
+                    },
                 ],
             },
             {
@@ -99,6 +103,10 @@ export default {
                     {
                         title: 'BroadcastJob',
                         link: '/zh-cn/docs/broadcastjob.html',
+                    },
+                    {
+                        title: 'Advanced DaemonSet',
+                        link: '/zh-cn/docs/advanced_daemonset.html',
                     },
                 ],
             },
