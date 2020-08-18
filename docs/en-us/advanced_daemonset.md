@@ -1,7 +1,7 @@
 # Advanced DaemonSet
 
 This controller enhances the rolling update workflow of default [DaemonSet](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
-controller from aspects, such as partition, selector, inplace-update, pause and surging strategies.
+controller from aspects, such as partition, selector, pause and surging strategies.
 
 Note that Advanced DaemonSet extends the same CRD schema of default DaemonSet with newly added fields.
 The CRD kind name is still `DaemonSet`.
@@ -28,9 +28,6 @@ const (
 +    // StandardRollingUpdateType replace the old daemons by new ones using rolling update i.e replace them on each node one after the other.
 +    // this is the default type for RollingUpdate.
 +    StandardRollingUpdateType RollingUpdateType = "Standard"
-
-+    // Replace container image without killing the pod.
-+    InplaceRollingUpdateType RollingUpdateType = "Inplace"
 
 +    // SurgingRollingUpdateType replaces the old daemons by new ones using rolling update i.e replace them on each node one
 +    // after the other, creating the new pod and then killing the old one.
@@ -73,7 +70,6 @@ which controls the way to rolling update.
 
 - `Standard`: controller will replace the old daemons by new ones using rolling update i.e replace them on each node one after the other.
   It is the same behavior as default DaemonSet.
-- `Inplace`: controller will try to in-place update Pod instead of recreating them if only the image changed.
 - `Surging`: controller will replace the old daemons by new ones using rolling update i.e replace them on each node one
   after the other, creating the new pod and then killing the old one.
 
@@ -85,7 +81,7 @@ spec:
   updateStrategy:
     type: RollingUpdate
     rollingUpdate:
-      type: Inplace
+      type: Standard
 ```
 
 ### Selector for rolling update
