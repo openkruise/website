@@ -1,6 +1,6 @@
 # Advanced DaemonSet
 
-这个控制器基于原生 [DaemonSet](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/) 上增强了发布能力，比如 灰度分批、按 Node label 选择、原地升级、暂停、热升级等。
+这个控制器基于原生 [DaemonSet](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/) 上增强了发布能力，比如 灰度分批、按 Node label 选择、暂停、热升级等。
 
 注意 `Advanced DaemonSet` 是一个 CRD，kind 名字也是 `DaemonSet`，但是 apiVersion 是 `apps.kruise.io/v1alpha1`。
 这个 CRD 的所有默认字段、默认行为与原生 StatefulSet 完全一致，除此之外还提供了一些 optional 字段来扩展增强的策略。
@@ -26,9 +26,6 @@ const (
 +    // StandardRollingUpdateType replace the old daemons by new ones using rolling update i.e replace them on each node one after the other.
 +    // this is the default type for RollingUpdate.
 +    StandardRollingUpdateType RollingUpdateType = "Standard"
-
-+    // Replace container image without killing the pod.
-+    InplaceRollingUpdateType RollingUpdateType = "Inplace"
 
 +    // SurgingRollingUpdateType replaces the old daemons by new ones using rolling update i.e replace them on each node one
 +    // after the other, creating the new pod and then killing the old one.
@@ -69,7 +66,6 @@ type RollingUpdateDaemonSet struct {
 Advanced DaemonSet 在 `spec.updateStrategy.rollingUpdate` 中有一个 `type` 字段，标识了如何进行滚动升级：
 
 - `Standard`: 对于每个 node，控制器会先删除旧的 daemon Pod，再创建一个新 Pod，和原生 DaemonSet 行为一致。
-- `Inplace`: 如果发现本次升级只修改了 image，则控制器会采用原生升级的方式来升级 Pod。
 - `Surging`: 对于每个 node，控制器会先创建一个新 Pod，等它 ready 之后再删除老 Pod。
 
 ```yaml
@@ -80,7 +76,7 @@ spec:
   updateStrategy:
     type: RollingUpdate
     rollingUpdate:
-      type: Inplace
+      type: Standard
 ```
 
 ### Selector 标签选择升级

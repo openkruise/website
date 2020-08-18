@@ -44,4 +44,4 @@ OpenKruise 是 Kubernetes 的一个标准扩展，它可以配合原生 Kubernet
 
 - **Advanced DaemonSet**
 
-    基于原生 DaemonSet 之上的增强版本，默认行为与原生一致，在此之外提供了灰度分批、按 Node label 选择、原地升级、暂停、热升级等发布策略。
+    基于原生 DaemonSet 之上的增强版本，默认行为与原生一致，在此之外提供了灰度分批、按 Node label 选择、暂停、热升级等发布策略。
