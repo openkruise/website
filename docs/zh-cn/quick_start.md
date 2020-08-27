@@ -1,24 +1,21 @@
 # 安装 OpenKruise
 
-## 安装前检查
-
-Kruise 需要 Kube-apiserver 启用一些功能如 `MutatingAdmissionWebhook` 和 `ValidatingAdmissionWebhook`。
-
-如果你的 Kubernetes 版本低于 v1.12，在安装前要先在本地执行如下的脚本来校验是否满足：
-
-> 注意，这个脚本需要对本地 /tmp 目录有读写权限，并且先配置好本地 kubectl 能够连接目标集群。
-
-```shell
-$ sh -c "$(curl -fsSL https://raw.githubusercontent.com/openkruise/kruise/master/scripts/check_for_installation.sh)"
-Successfully check for installation, you can install kruise now.
-```
+OpenKruise 要求 Kubernetes 的版本大于等于 `v1.12`.
 
 ## 通过 helm charts 安装
 
-目前最新的 Kruise 稳定版本是 `v0.5.0`。我们建议你采用 helm v3 来安装 Kruise，helm 是一个简单的命令行工具可以从[这里](https://github.com/helm/helm/releases)获取。
+目前最新的 Kruise 稳定版本是 `v0.6.0`。我们建议你采用 helm v3.1+ 来安装 Kruise，helm 是一个简单的命令行工具可以从[这里](https://github.com/helm/helm/releases)获取。
+
+```bash
+# Kubernetes 1.14 和更老的版本
+helm install kruise https://github.com/openkruise/kruise/releases/download/v0.6.0/kruise-chart.tgz --disable-openapi-validation
+# Kubernetes 1.15 和更新的版本
+helm install kruise https://github.com/openkruise/kruise/releases/download/v0.6.0/kruise-chart.tgz
+```
+
+执行结果如下：
 
 ```shell
-$ helm install kruise https://github.com/openkruise/kruise/releases/download/v0.5.0/kruise-chart.tgz
 NAME: kruise
 LAST DEPLOYED: Mon Jun 15 20:00:00 2020
 NAMESPACE: default
@@ -33,19 +30,25 @@ TEST SUITE: None
 
 下表展示了 chart 所有可配置的参数和它们的默认值：
 
-| 参数                               | 描述                                                        | 默认值                             |
-|-------------------------------------------|--------------------------------------------------------------------|-------------------------------------|
-| `log.level`                               | kruise-manager 输出的日志级别                                        | `4`                                 |
-| `manager.resources.limits.cpu`            | kruise-manager 容器的 CPU limit 配置                                | `100m`                              |
-| `manager.resources.limits.memory`         | kruise-manager 容器的 Memory limit 配置                             | `256Mi`                             |
-| `manager.resources.requests.cpu`          | kruise-manager 容器的 CPU request 配置                              | `100m`                              |
-| `manager.resources.requests.memory`       | kruise-manager 容器的 Memory request 配置                           | `256Mi`                             |
-| `manager.metrics.addr`                    | Metrics server 绑定地址                                             | `localhost`                         |
-| `manager.metrics.port`                    | Metrics server 绑定端口                                             | `8080`                              |
-| `manager.custom_resource_enable`          | 只启用特定的 CRD 资源                                                | `""`(空表示所有都启用)       |
-| `spec.nodeAffinity`                       | kruise-manager pod 的 nodeAffinity 配置                             | `{}`                                |
-| `spec.nodeSelector`                       | kruise-manager pod 的 nodeSelector 配置                             | `{}`                                |
-| `spec.tolerations`                        | kruise-manager pod 的 tolerations 配置                              | `[]`
+| Parameter                                 | Description                                                  | Default                       |
+| ----------------------------------------- | ------------------------------------------------------------ | ----------------------------- |
+| `log.level`                               | Log level that kruise-manager printed                        | `4`                           |
+| `revisionHistoryLimit`                    | Limit of revision history                                    | `3`                           |
+| `manager.replicas`                        | Replicas of kruise-controller-manager deployment             | `2`                           |
+| `manager.image.repository`                | Repository for kruise-manager image                          | openkruise/kruise-manager     |
+| `manager.image.tag`                       | Tag for kruise-manager image                                 | v0.6.0                        |
+| `manager.resources.limits.cpu`            | CPU resource limit of kruise-manager container               | `100m`                        |
+| `manager.resources.limits.memory`         | Memory resource limit of kruise-manager container            | `256Mi`                       |
+| `manager.resources.requests.cpu`          | CPU resource request of kruise-manager container             | `100m`                        |
+| `manager.resources.requests.memory`       | Memory resource request of kruise-manager container          | `256Mi`                       |
+| `manager.metrics.addr`                    | Addr of metrics served                                       | `localhost`                   |
+| `manager.metrics.port`                    | Port of metrics served                                       | `8080`                        |
+| `manager.webhook.port`                    | Port of webhook served                                       | `9443`                        |
+| `manager.custom_resource_enable`          | Custom resources enabled by kruise-manager                   | `""(empty means all enabled)` |
+| `spec.nodeAffinity`                       | Node affinity policy for kruise-manager pod                  | `{}`                          |
+| `spec.nodeSelector`                       | Node labels for kruise-manager pod                           | `{}`                          |
+| `spec.tolerations`                        | Tolerations for kruise-manager pod                           | `[]`                          |
+| `webhookConfiguration.failurePolicy.pods` | The failurePolicy for pods in mutating webhook configuration | `Ignore`                      |
 
 这些参数可以通过 `--set key=value[,key=value]` 参数在 `helm install` 命令中生效。
 
@@ -57,7 +60,8 @@ TEST SUITE: None
 2. 在 kruise-manager 容器中设置 `CUSTOM_RESOURCE_ENABLE` 环境变量，指定你需要启用的 CRD 名字。在 helm chart 安装的时候可以使用以下参数：
 
 ```shell
-$ helm install kruise https://github.com/openkruise/kruise/releases/download/v0.5.0/kruise-chart.tgz --set manager.custom_resource_enable="CloneSet\,SidecarSet"
+$ helm install kruise https://github.com/openkruise/kruise/releases/download/v0.6.0/kruise-chart.tgz --set manager.custom_resource_enable="CloneSet\,SidecarSet"
+...
 ```
 
 比如，`CUSTOM_RESOURCE_ENABLE=CloneSet,SidecarSet` 表示只启用 CloneSet 和 SidecarSet 的 controller/ webhook，其他资源的 controllers/webhooks 都会关闭。
