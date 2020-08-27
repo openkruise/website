@@ -1,3 +1,6 @@
+---
+title: 组件
+---
 # OpenKruise 组件
 
 当你在一个 K8s 集群中安装了 Kruise，其实是创建了一些 Kruise 的 CRD 和相关组件。

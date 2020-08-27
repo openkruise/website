@@ -1,3 +1,6 @@
+---
+title: SidecarSet
+---
 # SidecarSet
 
 This controller leverages the admission webhook to automatically

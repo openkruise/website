@@ -1,3 +1,6 @@
+---
+title: Golang 客户端
+---
 # Golang client
 
 如果要在一个 Golang 项目中对 OpenKruise 的资源做 create/get/update/delete 这些操作、或者通过 informer 做 list-watch，你需要一个支持 OpenKruise 的 client。

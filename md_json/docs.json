@@ -3,104 +3,144 @@
     {
       "filename": "advanced_daemonset.md",
       "link": "/en-us/docs/advanced_daemonset.html",
-      "meta": {}
+      "meta": {
+        "title": "Advanced DaemonSet"
+      }
     },
     {
       "filename": "advanced_statefulset.md",
       "link": "/en-us/docs/advanced_statefulset.html",
-      "meta": {}
+      "meta": {
+        "title": "Advanced StatefulSet"
+      }
     },
     {
       "filename": "broadcastjob.md",
       "link": "/en-us/docs/broadcastjob.html",
-      "meta": {}
+      "meta": {
+        "title": "BroadcastJob"
+      }
     },
     {
       "filename": "cloneset.md",
       "link": "/en-us/docs/cloneset.html",
-      "meta": {}
+      "meta": {
+        "title": "CloneSet"
+      }
     },
     {
       "filename": "components.md",
       "link": "/en-us/docs/components.html",
-      "meta": {}
+      "meta": {
+        "title": "Components"
+      }
     },
     {
       "filename": "go_client.md",
       "link": "/en-us/docs/go_client.html",
-      "meta": {}
+      "meta": {
+        "title": "Golang client"
+      }
     },
     {
       "filename": "quick_start.md",
       "link": "/en-us/docs/quick_start.html",
-      "meta": {}
+      "meta": {
+        "title": "Quick Start"
+      }
     },
     {
       "filename": "sidecarset.md",
       "link": "/en-us/docs/sidecarset.html",
-      "meta": {}
+      "meta": {
+        "title": "SidecarSet"
+      }
     },
     {
       "filename": "uniteddeployment.md",
       "link": "/en-us/docs/uniteddeployment.html",
-      "meta": {}
+      "meta": {
+        "title": "UnitedDeployment"
+      }
     },
     {
       "filename": "what_is_openkruise.md",
       "link": "/en-us/docs/what_is_openkruise.html",
-      "meta": {}
+      "meta": {
+        "title": "What is OpenKruise"
+      }
     }
   ],
   "zh-cn": [
     {
       "filename": "advanced_daemonset.md",
       "link": "/zh-cn/docs/advanced_daemonset.html",
-      "meta": {}
+      "meta": {
+        "title": "Advanced DaemonSet"
+      }
     },
     {
       "filename": "advanced_statefulset.md",
       "link": "/zh-cn/docs/advanced_statefulset.html",
-      "meta": {}
+      "meta": {
+        "title": "Advanced StatefulSet"
+      }
     },
     {
       "filename": "broadcastjob.md",
       "link": "/zh-cn/docs/broadcastjob.html",
-      "meta": {}
+      "meta": {
+        "title": "BroadcastJob"
+      }
     },
     {
       "filename": "cloneset.md",
       "link": "/zh-cn/docs/cloneset.html",
-      "meta": {}
+      "meta": {
+        "title": "CloneSet"
+      }
     },
     {
       "filename": "components.md",
       "link": "/zh-cn/docs/components.html",
-      "meta": {}
+      "meta": {
+        "title": "组件"
+      }
     },
     {
       "filename": "go_client.md",
       "link": "/zh-cn/docs/go_client.html",
-      "meta": {}
+      "meta": {
+        "title": "Golang 客户端"
+      }
     },
     {
       "filename": "quick_start.md",
       "link": "/zh-cn/docs/quick_start.html",
-      "meta": {}
+      "meta": {
+        "title": "快速开始"
+      }
     },
     {
       "filename": "sidecarset.md",
       "link": "/zh-cn/docs/sidecarset.html",
-      "meta": {}
+      "meta": {
+        "title": "SidecarSet"
+      }
     },
     {
       "filename": "uniteddeployment.md",
       "link": "/zh-cn/docs/uniteddeployment.html",
-      "meta": {}
+      "meta": {
+        "title": "UnitedDeployment"
+      }
     },
     {
       "filename": "what_is_openkruise.md",
       "link": "/zh-cn/docs/what_is_openkruise.html",
-      "meta": {}
+      "meta": {
+        "title": "OpenKruise 是什么"
+      }
     }
   ]
 }

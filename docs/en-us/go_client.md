@@ -1,3 +1,6 @@
+---
+title: Golang client
+---
 # Golang client
 
 If you want to create/get/update/delete those OpenKruise resources in a Golang project or list-watch them using informer,
