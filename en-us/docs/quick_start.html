@@ -13,19 +13,16 @@
 </head>
 <body>
 	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/en-us/index.html"><img class="logo" src="/img/kruise_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">中</span><div class="header-menu"><img class="header-menu-toggle" src="/img/system/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/en-us/index.html" target="_self">HOME</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/en-us/docs/what_is_openkruise.html" target="_self">DOCS</a></li><li class="menu-item menu-item-normal"><a href="/en-us/blog/index.html" target="_self">BLOG</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/img/system/docs.png" class="front-img"/><span>Documentation</span><img src="/img/system/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span></span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/what_is_openkruise.html" target="_self">What is OpenKruise</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/quick_start.html" target="_self">Quick Start</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Basic</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/cloneset.html" target="_self">CloneSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/advanced_statefulset.html" target="_self">Advanced StatefulSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/sidecarset.html" target="_self">SidecarSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/uniteddeployment.html" target="_self">UnitedDeployment</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/broadcastjob.html" target="_self">BroadcastJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/advanced_daemonset.html" target="_self">Advanced DaemonSet</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Reference</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/components.html" target="_self">Components</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/go_client.html" target="_self">Golang Client</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Contribution</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="https://github.com/openkruise/kruise/blob/master/CONTRIBUTING.md" target="_self">Guidebook</a></li></ul></li></ul></div><div class="doc-content markdown-body"><h1>Install OpenKruise</h1>
-<h2>Check before installation</h2>
-<p>Kruise requires Kube-apiserver to enable features such as <code>MutatingAdmissionWebhook</code> and <code>ValidatingAdmissionWebhook</code>.</p>
-<p><strong>If your Kubernetes version is lower than 1.12</strong>, you should check your cluster qualification before installation by running one of the following commands locally.</p>
-<blockquote>
-<p>The script assumes a read/write permission to /tmp and the local Kubectl is configured to access the target cluster.</p>
-</blockquote>
-<pre><code class="language-shell"><span class="hljs-meta">$</span><span class="bash"> sh -c <span class="hljs-string">"<span class="hljs-variable">$(curl -fsSL https://raw.githubusercontent.com/openkruise/kruise/master/scripts/check_for_installation.sh)</span>"</span></span>
-Successfully check for installation, you can install kruise now.
-</code></pre>
+<p>OpenKruise requires Kubernetes version &gt;= <code>v1.12</code>.</p>
 <h2>Install with helm charts</h2>
-<p>The latest stable version of Kruise is <code>v0.5.0</code>. It is recommended that you should install Kruise with helm v3, which is a simple command-line tool and you can get it from <a href="https://github.com/helm/helm/releases">here</a>.</p>
-<pre><code class="language-shell"><span class="hljs-meta">$</span><span class="bash"> helm install kruise https://github.com/openkruise/kruise/releases/download/v0.5.0/kruise-chart.tgz</span>
-NAME: kruise
+<p>The latest stable version of Kruise is <code>v0.6.0</code>. It is recommended that you should install Kruise with helm v3.1+, which is a simple command-line tool and you can get it from <a href="https://github.com/helm/helm/releases">here</a>.</p>
+<pre><code class="language-bash"><span class="hljs-comment"># Kubernetes 1.14 and older versions</span>
+helm install kruise https://github.com/openkruise/kruise/releases/download/v0.6.0/kruise-chart.tgz --<span class="hljs-built_in">disable</span>-openapi-validation
+<span class="hljs-comment"># Kubernetes 1.15 and newer versions</span>
+helm install kruise https://github.com/openkruise/kruise/releases/download/v0.6.0/kruise-chart.tgz
+</code></pre>
+<p>you will see follow:</p>
+<pre><code class="language-shell">NAME: kruise
 LAST DEPLOYED: Mon Jun 15 20:00:05 2020
 NAMESPACE: default
 STATUS: deployed
@@ -49,6 +46,26 @@ TEST SUITE: None
 <td><code>log.level</code></td>
 <td>Log level that kruise-manager printed</td>
 <td><code>4</code></td>
+</tr>
+<tr>
+<td><code>revisionHistoryLimit</code></td>
+<td>Limit of revision history</td>
+<td><code>3</code></td>
+</tr>
+<tr>
+<td><code>manager.replicas</code></td>
+<td>Replicas of kruise-controller-manager deployment</td>
+<td><code>2</code></td>
+</tr>
+<tr>
+<td><code>manager.image.repository</code></td>
+<td>Repository for kruise-manager image</td>
+<td>openkruise/kruise-manager</td>
+</tr>
+<tr>
+<td><code>manager.image.tag</code></td>
+<td>Tag for kruise-manager image</td>
+<td>v0.6.0</td>
 </tr>
 <tr>
 <td><code>manager.resources.limits.cpu</code></td>
@@ -81,9 +98,14 @@ TEST SUITE: None
 <td><code>8080</code></td>
 </tr>
 <tr>
+<td><code>manager.webhook.port</code></td>
+<td>Port of webhook served</td>
+<td><code>9443</code></td>
+</tr>
+<tr>
 <td><code>manager.custom_resource_enable</code></td>
 <td>Custom resources enabled by kruise-manager</td>
-<td><code>&quot;&quot;</code>(empty means all enabled)</td>
+<td><code>&quot;&quot;(empty means all enabled)</code></td>
 </tr>
 <tr>
 <td><code>spec.nodeAffinity</code></td>
@@ -100,6 +122,11 @@ TEST SUITE: None
 <td>Tolerations for kruise-manager pod</td>
 <td><code>[]</code></td>
 </tr>
+<tr>
+<td><code>webhookConfiguration.failurePolicy.pods</code></td>
+<td>The failurePolicy for pods in mutating webhook configuration</td>
+<td><code>Ignore</code></td>
+</tr>
 </tbody>
 </table>
 <p>Specify each parameter using the <code>--set key=value[,key=value]</code> argument to <code>helm install</code>.</p>
@@ -109,7 +136,8 @@ TEST SUITE: None
 <li>Only install the CRDs you need.</li>
 <li>Set env <code>CUSTOM_RESOURCE_ENABLE</code> in kruise-manager container for the resource names that you want to enable. This option can be applied by using helm chart:</li>
 </ol>
-<pre><code class="language-shell"><span class="hljs-meta">$</span><span class="bash"> helm install kruise https://github.com/openkruise/kruise/releases/download/v0.5.0/kruise-chart.tgz --<span class="hljs-built_in">set</span> manager.custom_resource_enable=<span class="hljs-string">"CloneSet\,SidecarSet"</span></span>
+<pre><code class="language-shell"><span class="hljs-meta">$</span><span class="bash"> helm install kruise https://github.com/openkruise/kruise/releases/download/v0.6.0/kruise-chart.tgz --<span class="hljs-built_in">set</span> manager.custom_resource_enable=<span class="hljs-string">"CloneSet\,SidecarSet"</span></span>
+...
 </code></pre>
 <p>For example, <code>CUSTOM_RESOURCE_ENABLE=CloneSet,SidecarSet</code> means only CloneSet and SidecarSet controllers/webhooks are enabled, all other controllers/webhooks are disabled.</p>
 <h2>Uninstall</h2>
