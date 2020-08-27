@@ -1,3 +1,6 @@
+---
+title: BroadcastJob
+---
 # BroadcastJob
 
 这个控制器将 Pod 分发到集群中每个 node 上，类似于 [DaemonSet](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)，

@@ -1,3 +1,6 @@
+---
+title: CloneSet
+---
 # CloneSet
 
 CloneSet 控制器提供了高效管理无状态应用的能力，它可以对标原生的 `Deployment`，但 `CloneSet` 提供了很多增强功能。

@@ -1,3 +1,6 @@
+---
+title: Quick Start
+---
 # Install OpenKruise
 
 OpenKruise requires Kubernetes version >= `v1.12`.

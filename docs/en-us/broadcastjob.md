@@ -1,3 +1,6 @@
+---
+title: BroadcastJob
+---
 # BroadcastJob
 
 This controller distributes a Pod on every node in the cluster.

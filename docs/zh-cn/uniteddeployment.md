@@ -1,3 +1,6 @@
+---
+title: UnitedDeployment
+---
 # UnitedDeployment
 
 这个控制器提供了一个新模式来通过多个 workload 管理多个区域下的 Pod。

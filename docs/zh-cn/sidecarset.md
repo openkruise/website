@@ -1,3 +1,6 @@
+---
+title: SidecarSet
+---
 # SidecarSet
 
 这个控制器支持通过 admission webhook 来自动为集群中创建的符合条件的 Pod 注入 sidecar 容器。

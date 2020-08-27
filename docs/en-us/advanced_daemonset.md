@@ -1,3 +1,6 @@
+---
+title: Advanced DaemonSet
+---
 # Advanced DaemonSet
 
 This controller enhances the rolling update workflow of default [DaemonSet](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)

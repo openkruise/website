@@ -1,3 +1,6 @@
+---
+title: Components
+---
 # OpenKruise components
 
 When you install Kruise into a K8s cluster, it means you have created Kruise CRDs and some components.

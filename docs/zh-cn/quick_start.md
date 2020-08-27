@@ -1,3 +1,6 @@
+---
+title: 快速开始
+---
 # 安装 OpenKruise
 
 OpenKruise 要求 Kubernetes 的版本大于等于 `v1.12`.

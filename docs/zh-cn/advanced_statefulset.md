@@ -1,3 +1,6 @@
+---
+title: Advanced StatefulSet
+---
 # Advanced StatefulSet
 
 这个控制器基于原生 [StatefulSet](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/) 上增强了发布能力，比如 maxUnavailable 并行发布、原地升级等。

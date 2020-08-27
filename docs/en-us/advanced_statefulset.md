@@ -1,3 +1,6 @@
+---
+title: Advanced StatefulSet
+---
 # Advanced StatefulSet
 
 This controller enhances the rolling update workflow of default [StatefulSet](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/)

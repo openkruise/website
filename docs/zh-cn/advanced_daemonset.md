@@ -1,3 +1,6 @@
+---
+title: Advanced DaemonSet
+---
 # Advanced DaemonSet
 
 这个控制器基于原生 [DaemonSet](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/) 上增强了发布能力，比如 灰度分批、按 Node label 选择、暂停、热升级等。

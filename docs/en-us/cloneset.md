@@ -1,3 +1,6 @@
+---
+title: CloneSet
+---
 # CloneSet
 
 This controller provides advanced features to efficiently manage stateless applications that
