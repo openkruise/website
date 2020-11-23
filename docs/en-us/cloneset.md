@@ -345,7 +345,114 @@ spec:
     paused: true
 ```
 
-### PreUpdate and PostUpdate
+### Lifecycle hook
 
-`PreUpdate` and `PostUpdate` can allow users to specify extra tasks before and after Pod update.
-This feature will be available in future release.
+Since v0.6.1, kruise has supported lifecycle hook for CloneSet.
+
+Each Pod managed by CloneSet has a clear state defined in `lifecycle.apps.kruise.io/state` label:
+
+- Normal
+- PreparingUpdate
+- Updating
+- Updated
+- PreparingDelete
+
+Lifecycle hook allows users to do something (for example remove pod from service endpoints) during Pod deleting and before/after in-place update.
+
+```golang
+type LifecycleStateType string
+
+// Lifecycle contains the hooks for Pod lifecycle.
+type Lifecycle struct {
+    // PreDelete is the hook before Pod to be deleted.
+    PreDelete *LifecycleHook `json:"preDelete,omitempty"`
+    // InPlaceUpdate is the hook before Pod to update and after Pod has been updated.
+    InPlaceUpdate *LifecycleHook `json:"inPlaceUpdate,omitempty"`
+}
+
+type LifecycleHook struct {
+    LabelsHandler     map[string]string `json:"labelsHandler,omitempty"`
+    FinalizersHandler []string          `json:"finalizersHandler,omitempty"`
+}
+```
+
+Examples:
+
+```yaml
+apiVersion: apps.kruise.io/v1alpha1
+kind: CloneSet
+spec:
+
+  # define with finalizer
+  lifecycle:
+    preDelete:
+      finalizersHandler:
+      - example.io/unready-blocker
+    inPlaceUpdate:
+      finalizersHandler:
+      - example.io/unready-blocker
+
+  # or define with label
+  lifecycle:
+    inPlaceUpdate:
+      labelsHandler:
+        example.io/block-unready: "true"
+```
+
+#### State circulation
+
+![Lifecycle circulation](/img/docs/cloneset-lifecycle.png)
+
+- When CloneSet delete a Pod (including scale in and recreate update):
+  - Delete it directly if no lifecycle hook definition or Pod not matched preDelete hook
+  - Otherwise, CloneSet will firstly update Pod to `PreparingDelete` state and wait for user controller to remove the label/finalizer and Pod not matched preDelete hook
+  - Note that Pods in `PreparingDelete` state will not be updated
+- When CloneSet update a Pod in-place:
+  - If lifecycle hook defined and Pod matched inPlaceUpdate hook, CloneSet will update Pod to `PreparingUpdate` state
+  - After user controller remove the label/finalizer (thus Pod not matched inPlaceUpdate hook), CloneSet will update it to `Updating` state and start updating
+  - After in-place update completed, CloneSet will update Pod to `Updated` state if lifecycle hook defined and Pod not matched inPlaceUpdate hook
+  - When user controller add label/finalizer into Pod and it matched inPlaceUpdate hook, CloneSet will finally update it to `Normal` state
+
+Besides, although our design supports to change a Pod from `PreparingDelete` back to `Normal` (through cancel specified delete), but it is not recommended. Because Pods in `PreparingDelete` state will not be updated by CloneSet, it might be updating immediately if comes back to `Normal`. This case is hard for user controller to handle.
+
+#### Another way for specified delete
+
+As we introduced above, CloneSet has `spec.scaleStrategy.podsToDelete` field and allow users to specify some Pods when reduce replicas.
+
+But if user just want to delete a Pod and let CloneSet create a new one, we provides another Pod label for specified delete: `apps.kruise.io/specified-delete: true`.
+Pods with this label, CloneSet will update it to `PreparingDelete` state, and delete it after hook has been satisfied.
+
+#### Example for user controller logic
+
+Same as yaml example above, we can fisrtly define：
+
+- `example.io/unready-blocker` finalizer as hook
+- `example.io/initialing` annotation as identity for initializing
+
+Add these fields into CloneSet template:
+
+```yaml
+apiVersion: apps.kruise.io/v1alpha1
+kind: CloneSet
+spec:
+  template:
+    metadata:
+      annotations:
+        example.io/initialing: "true"
+      finalizer:
+      - example.io/unready-blocker
+  # ...
+  lifecycle:
+    preDelete:
+      finalizersHandler:
+      - example.io/unready-blocker
+    inPlaceUpdate:
+      finalizersHandler:
+      - example.io/unready-blocker
+```
+
+User controller logic:
+
+- For Pod in `Normal` state, if there is `example.io/initialing: true` in annotation and ready condition in Pod status is True, then add it to endpoints and remove the annotation
+- For Pod in `PreparingDelete` and `PreparingUpdate` states, delete it from endpoints and remove `example.io/unready-blocker` finalizer
+- For Pod in `Updated` state, add it to endpoints and add `example.io/unready-blocker` finalizer

@@ -7,13 +7,13 @@ OpenKruise 要求 Kubernetes 的版本大于等于 `v1.12`.
 
 ## 通过 helm charts 安装
 
-目前最新的 Kruise 稳定版本是 `v0.6.0`。我们建议你采用 helm v3.1+ 来安装 Kruise，helm 是一个简单的命令行工具可以从[这里](https://github.com/helm/helm/releases)获取。
+目前最新的 Kruise 稳定版本是 `v0.6.1`。我们建议你采用 helm v3.1+ 来安装 Kruise，helm 是一个简单的命令行工具可以从[这里](https://github.com/helm/helm/releases)获取。
 
 ```bash
 # Kubernetes 1.14 和更老的版本
-helm install kruise https://github.com/openkruise/kruise/releases/download/v0.6.0/kruise-chart.tgz --disable-openapi-validation
+helm install kruise https://github.com/openkruise/kruise/releases/download/v0.6.1/kruise-chart.tgz --disable-openapi-validation
 # Kubernetes 1.15 和更新的版本
-helm install kruise https://github.com/openkruise/kruise/releases/download/v0.6.0/kruise-chart.tgz
+helm install kruise https://github.com/openkruise/kruise/releases/download/v0.6.1/kruise-chart.tgz
 ```
 
 执行结果如下：
@@ -63,7 +63,7 @@ TEST SUITE: None
 2. 在 kruise-manager 容器中设置 `CUSTOM_RESOURCE_ENABLE` 环境变量，指定你需要启用的 CRD 名字。在 helm chart 安装的时候可以使用以下参数：
 
 ```shell
-$ helm install kruise https://github.com/openkruise/kruise/releases/download/v0.6.0/kruise-chart.tgz --set manager.custom_resource_enable="CloneSet\,SidecarSet"
+$ helm install kruise https://github.com/openkruise/kruise/releases/download/v0.6.1/kruise-chart.tgz --set manager.custom_resource_enable="CloneSet\,SidecarSet"
 ...
 ```
 

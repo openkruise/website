@@ -25,24 +25,24 @@ statefulsets.apps.kruise.io                   2020-06-15T12:00:05Z
 uniteddeployments.apps.kruise.io              2020-06-15T12:00:05Z
 </code></pre>
 <h2>Kruise-manager</h2>
-<p>Kruise-manager 是一个运行 controller 和 webhook 中心组件，它通过 StatefulSet 部署在 <code>kruise-system</code> 命名空间中。</p>
-<pre><code class="language-shell"><span class="hljs-meta">$</span><span class="bash"> kubectl get sts -n kruise-system</span>
-NAME                        READY   AGE
-kruise-controller-manager   1/1     11m
+<p>Kruise-manager 是一个运行 controller 和 webhook 中心组件，它通过 Deployment 部署在 <code>kruise-system</code> 命名空间中。</p>
+<pre><code class="language-shell"><span class="hljs-meta">$</span><span class="bash"> kubectl get deploy -n kruise-system</span>
+NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+kruise-controller-manager   2/2     2            2           11m
 <span class="hljs-meta">
 $</span><span class="bash"> kubectl get pod -n kruise-system</span>
-NAME                          READY   STATUS    RESTARTS   AGE
-kruise-controller-manager-0   1/1     Running   1          11m
+NAME                                         READY   STATUS    RESTARTS   AGE
+kruise-controller-manager-78b98899c6-f8t67   1/1     Running   0          11m
+kruise-controller-manager-78b98899c6-tjlxl   1/1     Running   0          11m
 </code></pre>
-<!-- It can be deployed as multiple replicas with StatefulSet, but only one of them could become leader and start working, others will keep retrying to acquire the lock. -->
-<p>逻辑上来说，如 cloneset-controller/sidecarset-controller 这些的 controller 都是独立运行的。不过为了减少复杂度，它们都被打包在一个独立的二进制文件、并运行在 <code>kruise-controller-manager-0</code> 这个 Pod 中。</p>
-<p>除了 controller 之外，<code>kruise-controller-manager-0</code> 中还包含了针对 Kruise CRD 以及 Pod 资源的 admission webhook。Kruise-manager 会创建一些 webhook configurations 来配置哪些资源需要感知处理、以及提供一个 Service 来给 kube-apiserver 调用。</p>
+<!-- It can be deployed as multiple replicas with Deployment, but only one of them could become leader and start working, others will keep retrying to acquire the lock. -->
+<p>逻辑上来说，如 cloneset-controller/sidecarset-controller 这些的 controller 都是独立运行的。不过为了减少复杂度，它们都被打包在一个独立的二进制文件、并运行在 <code>kruise-controller-manager-xxx</code> 这个 Pod 中。</p>
+<p>除了 controller 之外，<code>kruise-controller-manager-xxx</code> 中还包含了针对 Kruise CRD 以及 Pod 资源的 admission webhook。Kruise-manager 会创建一些 webhook configurations 来配置哪些资源需要感知处理、以及提供一个 Service 来给 kube-apiserver 调用。</p>
 <pre><code class="language-shell"><span class="hljs-meta">$</span><span class="bash"> kubectl get svc -n kruise-system</span>
 NAME                                TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
-kruise-controller-manager-service   ClusterIP   10.106.157.122   &lt;none&gt;        443/TCP   13m
 kruise-webhook-server-service       ClusterIP   10.109.43.220    &lt;none&gt;        443/TCP   12m
 </code></pre>
-<p>上述的 <code>kruise-controller-manager-service</code> 是没用的，但是 <code>kruise-webhook-server-service</code> 非常重要，是提供给 kube-apiserver 调用的。</p>
+<p>上述的 <code>kruise-webhook-server-service</code> 非常重要，是提供给 kube-apiserver 调用的。</p>
 <h2>Kruise-daemon</h2>
 <p>这是一个<strong>即将开放</strong>的 daemon 组件，由 DaemonSet 来部署到每个 Node 上，目前主要用于管理 NodeImage 资源来预拉取镜像和上报状态。</p>
 </div></section><footer class="footer-container"><div class="footer-body"><img src="/img/kruise_gray.png"/><div class="cols-container"><div class="col col-12"><h3>Disclaimer</h3><p>OpenKruise is an open-source project under Apache License 2.0.</p></div><div class="col col-6"><dl><dt>文档</dt><dd><a href="/zh-cn/docs/what_is_openkruise.html" target="_self">OpenKruise 是什么</a></dd><dd><a href="/zh-cn/docs/components.html" target="_self">组件</a></dd><dd><a href="https://github.com/openkruise/kruise/blob/master/CONTRIBUTING.md" target="_self">贡献指南</a></dd></dl></div><div class="col col-6"><dl><dt>资源</dt></dl></div></div><div class="copyright"><span>Copyright © 2019 The OpenKruise Authors, The Kubernetes Authors</span></div></div></footer></div></div>

@@ -7,13 +7,13 @@ OpenKruise requires Kubernetes version >= `v1.12`.
 
 ## Install with helm charts
 
-The latest stable version of Kruise is `v0.6.0`. It is recommended that you should install Kruise with helm v3.1+, which is a simple command-line tool and you can get it from [here](https://github.com/helm/helm/releases).
+The latest stable version of Kruise is `v0.6.1`. It is recommended that you should install Kruise with helm v3.1+, which is a simple command-line tool and you can get it from [here](https://github.com/helm/helm/releases).
 
 ```bash
 # Kubernetes 1.14 and older versions
-helm install kruise https://github.com/openkruise/kruise/releases/download/v0.6.0/kruise-chart.tgz --disable-openapi-validation
+helm install kruise https://github.com/openkruise/kruise/releases/download/v0.6.1/kruise-chart.tgz --disable-openapi-validation
 # Kubernetes 1.15 and newer versions
-helm install kruise https://github.com/openkruise/kruise/releases/download/v0.6.0/kruise-chart.tgz
+helm install kruise https://github.com/openkruise/kruise/releases/download/v0.6.1/kruise-chart.tgz
 ```
 
 you will see follow:
@@ -65,7 +65,7 @@ If you only need some of the Kruise controllers and want to disable others, you 
 2. Set env `CUSTOM_RESOURCE_ENABLE` in kruise-manager container for the resource names that you want to enable. This option can be applied by using helm chart:
 
 ```shell
-$ helm install kruise https://github.com/openkruise/kruise/releases/download/v0.6.0/kruise-chart.tgz --set manager.custom_resource_enable="CloneSet\,SidecarSet"
+$ helm install kruise https://github.com/openkruise/kruise/releases/download/v0.6.1/kruise-chart.tgz --set manager.custom_resource_enable="CloneSet\,SidecarSet"
 ...
 ```
 

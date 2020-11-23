@@ -281,8 +281,107 @@ sample-qqglp   1/1     Running   0          18s     sample-56dfb978d4
   <span class="hljs-attr">updateStrategy:</span>
     <span class="hljs-attr">paused:</span> <span class="hljs-literal">true</span>
 </code></pre>
-<h3>PreUpdate and PostUpdate</h3>
-<p><code>PreUpdate</code> 和 <code>PostUpdate</code> 允许用户设置 Pod 升级前后的钩子来做一些额外的事情。这个功能后续即将开放。</p>
+<h3>生命周期钩子</h3>
+<p>从 v0.6.1 版本开始，kruise 在 CloneSet 中新增了对 lifecycle hook 的支持。</p>
+<p>每个 CloneSet 管理的 Pod 会有明确所处的状态，在 Pod label 中的 <code>lifecycle.apps.kruise.io/state</code> 标记：</p>
+<ul>
+<li>Normal：正常状态</li>
+<li>PreparingUpdate：准备原地升级</li>
+<li>Updating：原地升级中</li>
+<li>Updated：原地升级完成</li>
+<li>PreparingDelete：准备原地升级</li>
+</ul>
+<p>而生命周期钩子，则是通过在上述状态流转中卡点，来实现原地升级前后、删除前的 hook 操作。</p>
+<pre><code class="language-golang"><span class="hljs-keyword">type</span> LifecycleStateType <span class="hljs-keyword">string</span>
+
+<span class="hljs-comment">// Lifecycle contains the hooks for Pod lifecycle.</span>
+<span class="hljs-keyword">type</span> Lifecycle <span class="hljs-keyword">struct</span> {
+    <span class="hljs-comment">// PreDelete is the hook before Pod to be deleted.</span>
+    PreDelete *LifecycleHook <span class="hljs-string">`json:"preDelete,omitempty"`</span>
+    <span class="hljs-comment">// InPlaceUpdate is the hook before Pod to update and after Pod has been updated.</span>
+    InPlaceUpdate *LifecycleHook <span class="hljs-string">`json:"inPlaceUpdate,omitempty"`</span>
+}
+
+<span class="hljs-keyword">type</span> LifecycleHook <span class="hljs-keyword">struct</span> {
+    LabelsHandler     <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">string</span> <span class="hljs-string">`json:"labelsHandler,omitempty"`</span>
+    FinalizersHandler []<span class="hljs-keyword">string</span>          <span class="hljs-string">`json:"finalizersHandler,omitempty"`</span>
+}
+</code></pre>
+<p>示例：</p>
+<pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
+<span class="hljs-attr">kind:</span> <span class="hljs-string">CloneSet</span>
+<span class="hljs-attr">spec:</span>
+
+  <span class="hljs-comment"># 通过 finalizer 定义 hook</span>
+  <span class="hljs-attr">lifecycle:</span>
+    <span class="hljs-attr">preDelete:</span>
+      <span class="hljs-attr">finalizersHandler:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">example.io/unready-blocker</span>
+    <span class="hljs-attr">inPlaceUpdate:</span>
+      <span class="hljs-attr">finalizersHandler:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">example.io/unready-blocker</span>
+
+  <span class="hljs-comment"># 或者也可以通过 label 定义</span>
+  <span class="hljs-attr">lifecycle:</span>
+    <span class="hljs-attr">inPlaceUpdate:</span>
+      <span class="hljs-attr">labelsHandler:</span>
+        <span class="hljs-attr">example.io/block-unready:</span> <span class="hljs-string">"true"</span>
+</code></pre>
+<h4>流转示意</h4>
+<p><img src="/img/docs/cloneset-lifecycle.png" alt="OpenKruise components"></p>
+<ul>
+<li>当 CloneSet 删除一个 Pod（包括正常缩容和重建升级）时：
+<ul>
+<li>如果没有定义 lifecycle hook 或者 Pod 不符合 preDelete 条件，则直接删除</li>
+<li>否则，先只将 Pod 状态改为 <code>PreparingDelete</code>。等用户 controller 完成任务去掉 label/finalizer、Pod 不符合 preDelete 条件后，kruise 才执行 Pod 删除</li>
+<li>注意：<code>PreparingDelete</code> 状态的 Pod 处于删除阶段，不会被升级</li>
+</ul>
+</li>
+<li>当 CloneSet 原地升级一个 Pod 时：
+<ul>
+<li>升级之前，如果定义了 lifecycle hook 且 Pod 符合 inPlaceUpdate 条件，则将 Pod 状态改为 <code>PreparingUpdate</code></li>
+<li>等用户 controller 完成任务去掉 label/finalizer、Pod 不符合 inPlaceUpdate 条件后，kruise 将 Pod 状态改为 <code>Updating</code> 并开始升级</li>
+<li>升级完成后，如果定义了 lifecycle hook 且 Pod 不符合 inPlaceUpdate 条件，将 Pod 状态改为 <code>Updated</code></li>
+<li>等用户 controller 完成任务加上 label/finalizer、Pod 符合 inPlaceUpdate 条件后，kruise 将 Pod 状态改为 <code>Normal</code> 并判断为升级成功</li>
+</ul>
+</li>
+</ul>
+<p>关于从 <code>PreparingDelete</code> 回到 <code>Normal</code> 状态，从设计上是支持的（通过撤销指定删除），但我们一般不建议这种用法。由于 <code>PreparingDelete</code> 状态的 Pod 不会被升级，当回到 <code>Normal</code> 状态后可能立即再进入发布阶段，对于用户处理 hook 是一个难题。</p>
+<h4>另一种指定 Pod 删除的方式</h4>
+<p>前面介绍过，CloneSet 通过提供 <code>spec.scaleStrategy.podsToDelete</code> 字段来允许用户在缩小 replicas 的时候指定要删除的 Pod。
+但如果用户只是想删除某个 Pod 并让 CloneSet 重建，这种情况下修改 CloneSet 成本比较高，而用户直接删除 Pod 又无法触发 preDelete hook。</p>
+<p>因此我们又提供了一个 Pod 标签用于指定删除：<code>apps.kruise.io/specified-delete: true</code>。打了这个标签的 Pod，CloneSet 也视为需要删除，会先进入 <code>PreparingDelete</code>，待 lifecycle hook 完成后再删除。</p>
+<h4>用户 controller 逻辑示例</h4>
+<p>按上述例子，可以定义：</p>
+<ul>
+<li><code>example.io/unready-blocker</code> finalizer 作为 hook</li>
+<li><code>example.io/initialing</code> annotation 作为初始化标记</li>
+</ul>
+<p>在 CloneSet template 模板里带上这个字段：</p>
+<pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
+<span class="hljs-attr">kind:</span> <span class="hljs-string">CloneSet</span>
+<span class="hljs-attr">spec:</span>
+  <span class="hljs-attr">template:</span>
+    <span class="hljs-attr">metadata:</span>
+      <span class="hljs-attr">annotations:</span>
+        <span class="hljs-attr">example.io/initialing:</span> <span class="hljs-string">"true"</span>
+      <span class="hljs-attr">finalizer:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">example.io/unready-blocker</span>
+  <span class="hljs-comment"># ...</span>
+  <span class="hljs-attr">lifecycle:</span>
+    <span class="hljs-attr">preDelete:</span>
+      <span class="hljs-attr">finalizersHandler:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">example.io/unready-blocker</span>
+    <span class="hljs-attr">inPlaceUpdate:</span>
+      <span class="hljs-attr">finalizersHandler:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">example.io/unready-blocker</span>
+</code></pre>
+<p>而后用户 controller 的逻辑如下：</p>
+<ul>
+<li>对于 <code>Normal</code> 状态的 Pod，如果 annotation 中有 <code>example.io/initialing: true</code> 并且 Pod status 中的 ready condition 为 True，则接入流量、去除这个 annotation</li>
+<li>对于 <code>PreparingDelete</code> 和 <code>PreparingUpdate</code> 状态的 Pod，切走流量，并去除 <code>example.io/unready-blocker</code> finalizer</li>
+<li>对于 <code>Updated</code> 状态的 Pod，接入流量，并打上 <code>example.io/unready-blocker</code> finalizer</li>
+</ul>
 </div></section><footer class="footer-container"><div class="footer-body"><img src="/img/kruise_gray.png"/><div class="cols-container"><div class="col col-12"><h3>Disclaimer</h3><p>OpenKruise is an open-source project under Apache License 2.0.</p></div><div class="col col-6"><dl><dt>文档</dt><dd><a href="/zh-cn/docs/what_is_openkruise.html" target="_self">OpenKruise 是什么</a></dd><dd><a href="/zh-cn/docs/components.html" target="_self">组件</a></dd><dd><a href="https://github.com/openkruise/kruise/blob/master/CONTRIBUTING.md" target="_self">贡献指南</a></dd></dl></div><div class="col col-6"><dl><dt>资源</dt></dl></div></div><div class="copyright"><span>Copyright © 2019 The OpenKruise Authors, The Kubernetes Authors</span></div></div></footer></div></div>
 	<script src="https://f.alicdn.com/react/15.4.1/react-with-addons.min.js"></script>
 	<script src="https://f.alicdn.com/react/15.4.1/react-dom.min.js"></script>
