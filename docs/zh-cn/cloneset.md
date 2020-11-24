@@ -330,6 +330,114 @@ spec:
     paused: true
 ```
 
-### PreUpdate and PostUpdate
+### 生命周期钩子
 
-`PreUpdate` 和 `PostUpdate` 允许用户设置 Pod 升级前后的钩子来做一些额外的事情。这个功能后续即将开放。
+从 v0.6.1 版本开始，kruise 在 CloneSet 中新增了对 lifecycle hook 的支持。
+
+每个 CloneSet 管理的 Pod 会有明确所处的状态，在 Pod label 中的 `lifecycle.apps.kruise.io/state` 标记：
+
+- Normal：正常状态
+- PreparingUpdate：准备原地升级
+- Updating：原地升级中
+- Updated：原地升级完成
+- PreparingDelete：准备原地升级
+
+而生命周期钩子，则是通过在上述状态流转中卡点，来实现原地升级前后、删除前的自定义操作（比如开关流量、告警等）。
+
+```golang
+type LifecycleStateType string
+
+// Lifecycle contains the hooks for Pod lifecycle.
+type Lifecycle struct {
+    // PreDelete is the hook before Pod to be deleted.
+    PreDelete *LifecycleHook `json:"preDelete,omitempty"`
+    // InPlaceUpdate is the hook before Pod to update and after Pod has been updated.
+    InPlaceUpdate *LifecycleHook `json:"inPlaceUpdate,omitempty"`
+}
+
+type LifecycleHook struct {
+    LabelsHandler     map[string]string `json:"labelsHandler,omitempty"`
+    FinalizersHandler []string          `json:"finalizersHandler,omitempty"`
+}
+```
+
+示例：
+
+```yaml
+apiVersion: apps.kruise.io/v1alpha1
+kind: CloneSet
+spec:
+
+  # 通过 finalizer 定义 hook
+  lifecycle:
+    preDelete:
+      finalizersHandler:
+      - example.io/unready-blocker
+    inPlaceUpdate:
+      finalizersHandler:
+      - example.io/unready-blocker
+
+  # 或者也可以通过 label 定义
+  lifecycle:
+    inPlaceUpdate:
+      labelsHandler:
+        example.io/block-unready: "true"
+```
+
+#### 流转示意
+
+![Lifecycle circulation](/img/docs/cloneset-lifecycle.png)
+
+- 当 CloneSet 删除一个 Pod（包括正常缩容和重建升级）时：
+  - 如果没有定义 lifecycle hook 或者 Pod 不符合 preDelete 条件，则直接删除
+  - 否则，先只将 Pod 状态改为 `PreparingDelete`。等用户 controller 完成任务去掉 label/finalizer、Pod 不符合 preDelete 条件后，kruise 才执行 Pod 删除
+  - 注意：`PreparingDelete` 状态的 Pod 处于删除阶段，不会被升级
+- 当 CloneSet 原地升级一个 Pod 时：
+  - 升级之前，如果定义了 lifecycle hook 且 Pod 符合 inPlaceUpdate 条件，则将 Pod 状态改为 `PreparingUpdate`
+  - 等用户 controller 完成任务去掉 label/finalizer、Pod 不符合 inPlaceUpdate 条件后，kruise 将 Pod 状态改为 `Updating` 并开始升级
+  - 升级完成后，如果定义了 lifecycle hook 且 Pod 不符合 inPlaceUpdate 条件，将 Pod 状态改为 `Updated`
+  - 等用户 controller 完成任务加上 label/finalizer、Pod 符合 inPlaceUpdate 条件后，kruise 将 Pod 状态改为 `Normal` 并判断为升级成功
+
+关于从 `PreparingDelete` 回到 `Normal` 状态，从设计上是支持的（通过撤销指定删除），但我们一般不建议这种用法。由于 `PreparingDelete` 状态的 Pod 不会被升级，当回到 `Normal` 状态后可能立即再进入发布阶段，对于用户处理 hook 是一个难题。
+
+#### 另一种指定 Pod 删除的方式
+
+前面介绍过，CloneSet 通过提供 `spec.scaleStrategy.podsToDelete` 字段来允许用户在缩小 replicas 的时候指定要删除的 Pod。
+但如果用户只是想删除某个 Pod 并让 CloneSet 重建，这种情况下修改 CloneSet 成本比较高，而用户直接删除 Pod 又无法触发 preDelete hook。
+
+因此我们又提供了一个 Pod 标签用于指定删除：`apps.kruise.io/specified-delete: true`。打了这个标签的 Pod，CloneSet 也视为需要删除，会先进入 `PreparingDelete`，待 lifecycle hook 完成后再删除。
+
+#### 用户 controller 逻辑示例
+
+按上述例子，可以定义：
+
+- `example.io/unready-blocker` finalizer 作为 hook
+- `example.io/initialing` annotation 作为初始化标记
+
+在 CloneSet template 模板里带上这个字段：
+
+```yaml
+apiVersion: apps.kruise.io/v1alpha1
+kind: CloneSet
+spec:
+  template:
+    metadata:
+      annotations:
+        example.io/initialing: "true"
+      finalizer:
+      - example.io/unready-blocker
+  # ...
+  lifecycle:
+    preDelete:
+      finalizersHandler:
+      - example.io/unready-blocker
+    inPlaceUpdate:
+      finalizersHandler:
+      - example.io/unready-blocker
+```
+
+而后用户 controller 的逻辑如下：
+
+- 对于 `Normal` 状态的 Pod，如果 annotation 中有 `example.io/initialing: true` 并且 Pod status 中的 ready condition 为 True，则接入流量、去除这个 annotation
+- 对于 `PreparingDelete` 和 `PreparingUpdate` 状态的 Pod，切走流量，并去除 `example.io/unready-blocker` finalizer
+- 对于 `Updated` 状态的 Pod，接入流量，并打上 `example.io/unready-blocker` finalizer

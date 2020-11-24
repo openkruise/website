@@ -297,9 +297,107 @@ be the 1st, 6th and 10th updated Pods.</p>
   <span class="hljs-attr">updateStrategy:</span>
     <span class="hljs-attr">paused:</span> <span class="hljs-literal">true</span>
 </code></pre>
-<h3>PreUpdate and PostUpdate</h3>
-<p><code>PreUpdate</code> and <code>PostUpdate</code> can allow users to specify extra tasks before and after Pod update.
-This feature will be available in future release.</p>
+<h3>Lifecycle hook</h3>
+<p>Since v0.6.1, kruise has supported lifecycle hook for CloneSet.</p>
+<p>Each Pod managed by CloneSet has a clear state defined in <code>lifecycle.apps.kruise.io/state</code> label:</p>
+<ul>
+<li>Normal</li>
+<li>PreparingUpdate</li>
+<li>Updating</li>
+<li>Updated</li>
+<li>PreparingDelete</li>
+</ul>
+<p>Lifecycle hook allows users to do something during Pod deleting and before/after in-place update.</p>
+<pre><code class="language-golang"><span class="hljs-keyword">type</span> LifecycleStateType <span class="hljs-keyword">string</span>
+
+<span class="hljs-comment">// Lifecycle contains the hooks for Pod lifecycle.</span>
+<span class="hljs-keyword">type</span> Lifecycle <span class="hljs-keyword">struct</span> {
+    <span class="hljs-comment">// PreDelete is the hook before Pod to be deleted.</span>
+    PreDelete *LifecycleHook <span class="hljs-string">`json:"preDelete,omitempty"`</span>
+    <span class="hljs-comment">// InPlaceUpdate is the hook before Pod to update and after Pod has been updated.</span>
+    InPlaceUpdate *LifecycleHook <span class="hljs-string">`json:"inPlaceUpdate,omitempty"`</span>
+}
+
+<span class="hljs-keyword">type</span> LifecycleHook <span class="hljs-keyword">struct</span> {
+    LabelsHandler     <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">string</span> <span class="hljs-string">`json:"labelsHandler,omitempty"`</span>
+    FinalizersHandler []<span class="hljs-keyword">string</span>          <span class="hljs-string">`json:"finalizersHandler,omitempty"`</span>
+}
+</code></pre>
+<p>Examples:</p>
+<pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
+<span class="hljs-attr">kind:</span> <span class="hljs-string">CloneSet</span>
+<span class="hljs-attr">spec:</span>
+
+  <span class="hljs-comment"># define with finalizer</span>
+  <span class="hljs-attr">lifecycle:</span>
+    <span class="hljs-attr">preDelete:</span>
+      <span class="hljs-attr">finalizersHandler:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">example.io/unready-blocker</span>
+    <span class="hljs-attr">inPlaceUpdate:</span>
+      <span class="hljs-attr">finalizersHandler:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">example.io/unready-blocker</span>
+
+  <span class="hljs-comment"># or define with label</span>
+  <span class="hljs-attr">lifecycle:</span>
+    <span class="hljs-attr">inPlaceUpdate:</span>
+      <span class="hljs-attr">labelsHandler:</span>
+        <span class="hljs-attr">example.io/block-unready:</span> <span class="hljs-string">"true"</span>
+</code></pre>
+<h4>State circulation</h4>
+<p><img src="/img/docs/cloneset-lifecycle.png" alt="OpenKruise components"></p>
+<ul>
+<li>When CloneSet delete a Pod (including scale in and recreate update):
+<ul>
+<li>Delete it directly if no lifecycle hook definition or Pod not matched preDelete hook</li>
+<li>Otherwise, CloneSet will firstly update Pod to <code>PreparingDelete</code> state and wait for user controller remove the label/finalizer and Pod not matched preDelete hook</li>
+<li>Note that Pods in <code>PreparingDelete</code> state will not be updated</li>
+</ul>
+</li>
+<li>When CloneSet update a Pod in-place:
+<ul>
+<li>If lifecycle hook defined and Pod matched inPlaceUpdate hook, CloneSet will update Pod to <code>PreparingUpdate</code> state</li>
+<li>After user controller remove the label/finalizer and Pod not matched inPlaceUpdate hook, CloneSet will update it to <code>Updating</code> state and start updating</li>
+<li>After in-place update completed, CloneSet will update Pod to <code>Updated</code> state if lifecycle hook defined and Pod not matched inPlaceUpdate hook</li>
+<li>When user controller add label/finalizer into Pod and it matched inPlaceUpdate hook, CloneSet will finally update it to <code>Normal</code> state</li>
+</ul>
+</li>
+</ul>
+<p>Besides, although our design supports to change a Pod from <code>PreparingDelete</code> back to <code>Normal</code> (through cancel specified delete), but it is not recommaned. Because Pods in <code>PreparingDelete</code> state will not be updated by CloneSet, it might be updating immediately if comes back to <code>Normal</code>. This case is hard for user controller to handle.</p>
+<h4>Another way for specified delete</h4>
+<p>As we introduced above, CloneSet has <code>spec.scaleStrategy.podsToDelete</code> field and allow users to specify some Pods when reduce replicas.</p>
+<p>But if user just want to delete a Pod and let CloneSet create a new one, we provides another Pod label for specified delete: <code>apps.kruise.io/specified-delete: true</code>.
+Pods with this label, CloneSet will update it to <code>PreparingDelete</code> state, and delete it after hook has been satisfied.</p>
+<h4>Example for user controller logic</h4>
+<p>Same as yaml example above, we can fisrtly define：</p>
+<ul>
+<li><code>example.io/unready-blocker</code> finalizer as hook</li>
+<li><code>example.io/initialing</code> annotation as identity for initializing</li>
+</ul>
+<p>Add these fields into CloneSet template:</p>
+<pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
+<span class="hljs-attr">kind:</span> <span class="hljs-string">CloneSet</span>
+<span class="hljs-attr">spec:</span>
+  <span class="hljs-attr">template:</span>
+    <span class="hljs-attr">metadata:</span>
+      <span class="hljs-attr">annotations:</span>
+        <span class="hljs-attr">example.io/initialing:</span> <span class="hljs-string">"true"</span>
+      <span class="hljs-attr">finalizer:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">example.io/unready-blocker</span>
+  <span class="hljs-comment"># ...</span>
+  <span class="hljs-attr">lifecycle:</span>
+    <span class="hljs-attr">preDelete:</span>
+      <span class="hljs-attr">finalizersHandler:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">example.io/unready-blocker</span>
+    <span class="hljs-attr">inPlaceUpdate:</span>
+      <span class="hljs-attr">finalizersHandler:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">example.io/unready-blocker</span>
+</code></pre>
+<p>User controller logic:</p>
+<ul>
+<li>For Pod in <code>Normal</code> state, if there is <code>example.io/initialing: true</code> in annotation and ready condition in Pod status is True, then add it to endpoints and remove the annotation</li>
+<li>For Pod in <code>PreparingDelete</code> and <code>PreparingUpdate</code> states, delete it from endpoints and remove <code>example.io/unready-blocker</code> finalizer</li>
+<li>For Pod in <code>Updated</code> state, add it to endpoints and add <code>example.io/unready-blocker</code> finalizer</li>
+</ul>
 </div></section><footer class="footer-container"><div class="footer-body"><img src="/img/kruise_gray.png"/><div class="cols-container"><div class="col col-12"><h3>Disclaimer</h3><p>OpenKruise is an open-source project under Apache License 2.0.</p></div><div class="col col-6"><dl><dt>Documentation</dt><dd><a href="/en-us/docs/what_is_openkruise.html" target="_self">What is OpenKruise</a></dd><dd><a href="/en-us/docs/components.html" target="_self">Components</a></dd><dd><a href="https://github.com/openkruise/kruise/blob/master/CONTRIBUTING.md" target="_self">Contribution</a></dd></dl></div><div class="col col-6"><dl><dt>Resources</dt></dl></div></div><div class="copyright"><span>Copyright © 2019 The OpenKruise Authors, The Kubernetes Authors</span></div></div></footer></div></div>
 	<script src="https://f.alicdn.com/react/15.4.1/react-with-addons.min.js"></script>
 	<script src="https://f.alicdn.com/react/15.4.1/react-dom.min.js"></script>
