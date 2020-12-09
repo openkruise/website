@@ -291,7 +291,7 @@ sample-qqglp   1/1     Running   0          18s     sample-56dfb978d4
 <li>Updated：原地升级完成</li>
 <li>PreparingDelete：准备原地升级</li>
 </ul>
-<p>而生命周期钩子，则是通过在上述状态流转中卡点，来实现原地升级前后、删除前的 hook 操作。</p>
+<p>而生命周期钩子，则是通过在上述状态流转中卡点，来实现原地升级前后、删除前的自定义操作（比如开关流量、告警等）。</p>
 <pre><code class="language-golang"><span class="hljs-keyword">type</span> LifecycleStateType <span class="hljs-keyword">string</span>
 
 <span class="hljs-comment">// Lifecycle contains the hooks for Pod lifecycle.</span>
@@ -328,7 +328,7 @@ sample-qqglp   1/1     Running   0          18s     sample-56dfb978d4
         <span class="hljs-attr">example.io/block-unready:</span> <span class="hljs-string">"true"</span>
 </code></pre>
 <h4>流转示意</h4>
-<p><img src="/img/docs/cloneset-lifecycle.png" alt="OpenKruise components"></p>
+<p><img src="/img/docs/cloneset-lifecycle.png" alt="Lifecycle circulation"></p>
 <ul>
 <li>当 CloneSet 删除一个 Pod（包括正常缩容和重建升级）时：
 <ul>
@@ -365,7 +365,7 @@ sample-qqglp   1/1     Running   0          18s     sample-56dfb978d4
     <span class="hljs-attr">metadata:</span>
       <span class="hljs-attr">annotations:</span>
         <span class="hljs-attr">example.io/initialing:</span> <span class="hljs-string">"true"</span>
-      <span class="hljs-attr">finalizer:</span>
+      <span class="hljs-attr">finalizers:</span>
       <span class="hljs-bullet">-</span> <span class="hljs-string">example.io/unready-blocker</span>
   <span class="hljs-comment"># ...</span>
   <span class="hljs-attr">lifecycle:</span>

@@ -424,7 +424,7 @@ spec:
     metadata:
       annotations:
         example.io/initialing: "true"
-      finalizer:
+      finalizers:
       - example.io/unready-blocker
   # ...
   lifecycle:

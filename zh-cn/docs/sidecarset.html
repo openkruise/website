@@ -21,20 +21,25 @@
 它主要用于管理无状态的 sidecar 容器，比如监控、日志等 agent。</p>
 <p>SidecarSet spec 定义如下：</p>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> SidecarSetSpec <span class="hljs-keyword">struct</span> {
-    <span class="hljs-comment">// selector is a label query over pods that should be injected</span>
-    Selector *metav1.LabelSelector <span class="hljs-string">`json:"selector,omitempty"`</span>
+	<span class="hljs-comment">// selector is a label query over pods that should be injected</span>
+	Selector *metav1.LabelSelector <span class="hljs-string">`json:"selector,omitempty"`</span>
 
-    <span class="hljs-comment">// containers specifies the list of containers to be injected into the pod</span>
-    Containers []SidecarContainer <span class="hljs-string">`json:"containers,omitempty"`</span>
+	<span class="hljs-comment">// Containers is the list of init containers to be injected into the selected pod</span>
+	<span class="hljs-comment">// We will inject those containers by their name in ascending order</span>
+	<span class="hljs-comment">// We only inject init containers when a new pod is created, it does not apply to any existing pod</span>
+	InitContainers []SidecarContainer <span class="hljs-string">`json:"initContainers,omitempty"`</span>
 
-    <span class="hljs-comment">// List of volumes that can be mounted by sidecar containers</span>
-    Volumes []corev1.Volume <span class="hljs-string">`json:"volumes,omitempty"`</span>
+	<span class="hljs-comment">// Containers is the list of sidecar containers to be injected into the selected pod</span>
+	Containers []SidecarContainer <span class="hljs-string">`json:"containers,omitempty"`</span>
 
-    <span class="hljs-comment">// Paused indicates that the sidecarset is paused and will not be processed by the sidecarset controller.</span>
-    Paused <span class="hljs-keyword">bool</span> <span class="hljs-string">`json:"paused,omitempty"`</span>
+	<span class="hljs-comment">// List of volumes that can be mounted by sidecar containers</span>
+	Volumes []corev1.Volume <span class="hljs-string">`json:"volumes,omitempty"`</span>
 
-    <span class="hljs-comment">// The sidecarset strategy to use to replace existing pods with new ones.</span>
-    Strategy SidecarSetUpdateStrategy <span class="hljs-string">`json:"strategy,omitempty"`</span>
+	<span class="hljs-comment">// Paused indicates that the sidecarset is paused and will not be processed by the sidecarset controller.</span>
+	Paused <span class="hljs-keyword">bool</span> <span class="hljs-string">`json:"paused,omitempty"`</span>
+
+	<span class="hljs-comment">// The sidecarset strategy to use to replace existing pods with new ones.</span>
+	Strategy SidecarSetUpdateStrategy <span class="hljs-string">`json:"strategy,omitempty"`</span>
 }
 
 <span class="hljs-keyword">type</span> SidecarContainer <span class="hljs-keyword">struct</span> {
