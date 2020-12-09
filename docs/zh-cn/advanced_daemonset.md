@@ -6,7 +6,7 @@ title: Advanced DaemonSet
 这个控制器基于原生 [DaemonSet](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/) 上增强了发布能力，比如 灰度分批、按 Node label 选择、暂停、热升级等。
 
 注意 `Advanced DaemonSet` 是一个 CRD，kind 名字也是 `DaemonSet`，但是 apiVersion 是 `apps.kruise.io/v1alpha1`。
-这个 CRD 的所有默认字段、默认行为与原生 StatefulSet 完全一致，除此之外还提供了一些 optional 字段来扩展增强的策略。
+这个 CRD 的所有默认字段、默认行为与原生 DaemonSet 完全一致，除此之外还提供了一些 optional 字段来扩展增强的策略。
 
 因此，用户从原生 `DaemonSet` 迁移到 `Advanced DaemonSet`，只需要把 `apiVersion` 修改后提交即可：
 
