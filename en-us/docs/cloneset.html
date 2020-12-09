@@ -307,7 +307,7 @@ be the 1st, 6th and 10th updated Pods.</p>
 <li>Updated</li>
 <li>PreparingDelete</li>
 </ul>
-<p>Lifecycle hook allows users to do something during Pod deleting and before/after in-place update.</p>
+<p>Lifecycle hook allows users to do something (for example remove pod from service endpoints) during Pod deleting and before/after in-place update.</p>
 <pre><code class="language-golang"><span class="hljs-keyword">type</span> LifecycleStateType <span class="hljs-keyword">string</span>
 
 <span class="hljs-comment">// Lifecycle contains the hooks for Pod lifecycle.</span>
@@ -344,25 +344,25 @@ be the 1st, 6th and 10th updated Pods.</p>
         <span class="hljs-attr">example.io/block-unready:</span> <span class="hljs-string">"true"</span>
 </code></pre>
 <h4>State circulation</h4>
-<p><img src="/img/docs/cloneset-lifecycle.png" alt="OpenKruise components"></p>
+<p><img src="/img/docs/cloneset-lifecycle.png" alt="Lifecycle circulation"></p>
 <ul>
 <li>When CloneSet delete a Pod (including scale in and recreate update):
 <ul>
 <li>Delete it directly if no lifecycle hook definition or Pod not matched preDelete hook</li>
-<li>Otherwise, CloneSet will firstly update Pod to <code>PreparingDelete</code> state and wait for user controller remove the label/finalizer and Pod not matched preDelete hook</li>
+<li>Otherwise, CloneSet will firstly update Pod to <code>PreparingDelete</code> state and wait for user controller to remove the label/finalizer and Pod not matched preDelete hook</li>
 <li>Note that Pods in <code>PreparingDelete</code> state will not be updated</li>
 </ul>
 </li>
 <li>When CloneSet update a Pod in-place:
 <ul>
 <li>If lifecycle hook defined and Pod matched inPlaceUpdate hook, CloneSet will update Pod to <code>PreparingUpdate</code> state</li>
-<li>After user controller remove the label/finalizer and Pod not matched inPlaceUpdate hook, CloneSet will update it to <code>Updating</code> state and start updating</li>
+<li>After user controller remove the label/finalizer (thus Pod not matched inPlaceUpdate hook), CloneSet will update it to <code>Updating</code> state and start updating</li>
 <li>After in-place update completed, CloneSet will update Pod to <code>Updated</code> state if lifecycle hook defined and Pod not matched inPlaceUpdate hook</li>
 <li>When user controller add label/finalizer into Pod and it matched inPlaceUpdate hook, CloneSet will finally update it to <code>Normal</code> state</li>
 </ul>
 </li>
 </ul>
-<p>Besides, although our design supports to change a Pod from <code>PreparingDelete</code> back to <code>Normal</code> (through cancel specified delete), but it is not recommaned. Because Pods in <code>PreparingDelete</code> state will not be updated by CloneSet, it might be updating immediately if comes back to <code>Normal</code>. This case is hard for user controller to handle.</p>
+<p>Besides, although our design supports to change a Pod from <code>PreparingDelete</code> back to <code>Normal</code> (through cancel specified delete), but it is not recommended. Because Pods in <code>PreparingDelete</code> state will not be updated by CloneSet, it might be updating immediately if comes back to <code>Normal</code>. This case is hard for user controller to handle.</p>
 <h4>Another way for specified delete</h4>
 <p>As we introduced above, CloneSet has <code>spec.scaleStrategy.podsToDelete</code> field and allow users to specify some Pods when reduce replicas.</p>
 <p>But if user just want to delete a Pod and let CloneSet create a new one, we provides another Pod label for specified delete: <code>apps.kruise.io/specified-delete: true</code>.
@@ -381,7 +381,7 @@ Pods with this label, CloneSet will update it to <code>PreparingDelete</code> st
     <span class="hljs-attr">metadata:</span>
       <span class="hljs-attr">annotations:</span>
         <span class="hljs-attr">example.io/initialing:</span> <span class="hljs-string">"true"</span>
-      <span class="hljs-attr">finalizer:</span>
+      <span class="hljs-attr">finalizers:</span>
       <span class="hljs-bullet">-</span> <span class="hljs-string">example.io/unready-blocker</span>
   <span class="hljs-comment"># ...</span>
   <span class="hljs-attr">lifecycle:</span>

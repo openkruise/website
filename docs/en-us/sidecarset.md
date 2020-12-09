@@ -18,20 +18,25 @@ monitoring tools or operation agents. Its API spec is listed below:
 
 ```go
 type SidecarSetSpec struct {
-    // selector is a label query over pods that should be injected
-    Selector *metav1.LabelSelector `json:"selector,omitempty"`
+	// selector is a label query over pods that should be injected
+	Selector *metav1.LabelSelector `json:"selector,omitempty"`
 
-    // containers specifies the list of containers to be injected into the pod
-    Containers []SidecarContainer `json:"containers,omitempty"`
+	// Containers is the list of init containers to be injected into the selected pod
+	// We will inject those containers by their name in ascending order
+	// We only inject init containers when a new pod is created, it does not apply to any existing pod
+	InitContainers []SidecarContainer `json:"initContainers,omitempty"`
 
-    // List of volumes that can be mounted by sidecar containers
-    Volumes []corev1.Volume `json:"volumes,omitempty"`
+	// Containers is the list of sidecar containers to be injected into the selected pod
+	Containers []SidecarContainer `json:"containers,omitempty"`
 
-    // Paused indicates that the sidecarset is paused and will not be processed by the sidecarset controller.
-    Paused bool `json:"paused,omitempty"`
+	// List of volumes that can be mounted by sidecar containers
+	Volumes []corev1.Volume `json:"volumes,omitempty"`
 
-    // The sidecarset strategy to use to replace existing pods with new ones.
-    Strategy SidecarSetUpdateStrategy `json:"strategy,omitempty"`
+	// Paused indicates that the sidecarset is paused and will not be processed by the sidecarset controller.
+	Paused bool `json:"paused,omitempty"`
+
+	// The sidecarset strategy to use to replace existing pods with new ones.
+	Strategy SidecarSetUpdateStrategy `json:"strategy,omitempty"`
 }
 
 type SidecarContainer struct {
