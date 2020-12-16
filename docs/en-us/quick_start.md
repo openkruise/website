@@ -3,17 +3,20 @@ title: Quick Start
 ---
 # Install OpenKruise
 
-OpenKruise requires Kubernetes version >= `v1.12`.
+Since v0.7.0:
+
+OpenKruise only supports Kubernetes version >= `1.13+` because of CRD conversion.
+Note that for Kubernetes 1.13 and 1.14, users must enable `CustomResourceWebhookConversion` feature-gate in kube-apiserver before install or upgrade Kruise.
 
 ## Install with helm charts
 
-The latest stable version of Kruise is `v0.6.1`. It is recommended that you should install Kruise with helm v3.1+, which is a simple command-line tool and you can get it from [here](https://github.com/helm/helm/releases).
+It is recommended that you should install Kruise with helm v3.1+, which is a simple command-line tool and you can get it from [here](https://github.com/helm/helm/releases).
 
 ```bash
-# Kubernetes 1.14 and older versions
-helm install kruise https://github.com/openkruise/kruise/releases/download/v0.6.1/kruise-chart.tgz --disable-openapi-validation
+# Kubernetes 1.13 and 1.14
+helm install kruise https://github.com/openkruise/kruise/releases/download/v0.7.0/kruise-chart.tgz --disable-openapi-validation
 # Kubernetes 1.15 and newer versions
-helm install kruise https://github.com/openkruise/kruise/releases/download/v0.6.1/kruise-chart.tgz
+helm install kruise https://github.com/openkruise/kruise/releases/download/v0.7.0/kruise-chart.tgz
 ```
 
 you will see follow:
@@ -41,7 +44,7 @@ The following table lists the configurable parameters of the chart and their def
 | `revisionHistoryLimit`                    | Limit of revision history                                    | `3`                           |
 | `manager.replicas`                        | Replicas of kruise-controller-manager deployment             | `2`                           |
 | `manager.image.repository`                | Repository for kruise-manager image                          | openkruise/kruise-manager     |
-| `manager.image.tag`                       | Tag for kruise-manager image                                 | v0.6.0                        |
+| `manager.image.tag`                       | Tag for kruise-manager image                                 | v0.7.0                        |
 | `manager.resources.limits.cpu`            | CPU resource limit of kruise-manager container               | `100m`                        |
 | `manager.resources.limits.memory`         | Memory resource limit of kruise-manager container            | `256Mi`                       |
 | `manager.resources.requests.cpu`          | CPU resource request of kruise-manager container             | `100m`                        |
@@ -65,7 +68,7 @@ If you only need some of the Kruise controllers and want to disable others, you 
 2. Set env `CUSTOM_RESOURCE_ENABLE` in kruise-manager container for the resource names that you want to enable. This option can be applied by using helm chart:
 
 ```shell
-$ helm install kruise https://github.com/openkruise/kruise/releases/download/v0.6.1/kruise-chart.tgz --set manager.custom_resource_enable="CloneSet\,SidecarSet"
+$ helm install kruise https://github.com/openkruise/kruise/releases/download/v0.7.0/kruise-chart.tgz --set manager.custom_resource_enable="CloneSet\,SidecarSet"
 ...
 ```
 

@@ -10,17 +10,20 @@ Note that Advanced StatefulSet extends the same CRD schema of default StatefulSe
 The CRD kind name is still `StatefulSet`.
 This is done on purpose so that user can easily migrate workload to the Advanced StatefulSet from the
 default StatefulSet. For example, one may simply replace the value of `apiVersion` in the StatefulSet yaml
-file from `apps/v1` to `apps.kruise.io/v1alpha1` after installing Kruise manager.
+file from `apps/v1` to `apps.kruise.io/v1alpha1` or `apps.kruise.io/v1beta1` after installing Kruise manager.
 
 ```yaml
 -  apiVersion: apps/v1
-+  apiVersion: apps.kruise.io/v1alpha1
++  apiVersion: apps.kruise.io/v1beta1
    kind: StatefulSet
    metadata:
      name: sample
    spec:
      #...
 ```
+
+Note that since Kruise v0.7.0, Advanced StatefulSet has been promoted to `v1beta1`, which is compatible with `v1alpha1`.
+And for Kruise version lower than v0.7.0, you can only use `v1alpha1`.
 
 ## `MaxUnavailable` Rolling Update Strategy
 
@@ -190,3 +193,28 @@ spec:
     rollingUpdate:
       paused: true
 ```
+
+## Ordinals reserve(skip)
+
+Since Advanced StatefulSet `v1beta1` (Kruise >= v0.7.0), it supports ordinals reserve.
+
+By adding the ordinals to reserve into `reserveOrdinals` fields, Advanced StatefulSet will skip to create Pods with those ordinals.
+If these Pods have already existed, controller will delete them.
+Note that `spec.replicas` is the expectation number of running Pods and `spec.reserveOrdinals` is the ordinals that should be skipped.
+
+```yaml
+apiVersion: apps.kruise.io/v1beta1
+kind: StatefulSet
+spec:
+  # ...
+  replicas: 4
+  reserveOrdinals:
+  - 1
+```
+
+For an Advanced StatefulSet with `replicas=4, reserveOrdinals=[1]`, the ordinals of running Pods will be `[0,2,3,4]`.
+
+- If you want to migrate Pod-3 and reserve this ordinal, just append `3` into `reserveOrdinals` list.
+  Then controller will delete Pod-3 and create Pod-5 (existing Pods will be `[0,2,4,5]`).
+- If you just want to delete Pod-3, you should append `3` into `reserveOrdinals` list and set `replicas` to `3`.
+  Then controller will delete Pod-3 (existing Pods will be `[0,2,4]`).

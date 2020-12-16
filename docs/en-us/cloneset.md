@@ -177,8 +177,12 @@ Here are the explanations for the counters presented in CloneSet status:
 
 ### Partition
 
-Partition is the **desired number of Pods in old revisions**, defaults to `0`.
-When `partition` is set during update, `(replicas - partition)` number of pods will be updated with the new version. This field does **NOT** imply any update order.
+Partition is the **desired number or percent of Pods in old revisions**, defaults to `0`.  This field does **NOT** imply any update order.
+
+When `partition` is set during update:
+
+- If it is a number: `(replicas - partition)` number of pods will be updated with the new version.
+- If it is a percent: `(replicas * (100% - partition))` number of pods will be updated with the new version.
 
 For example, when we update sample CloneSet's container image to `nginx:mainline` and set `partition=3`, after a while, the sample CloneSet yaml looks like the following:
 

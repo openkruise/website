@@ -5,20 +5,22 @@ title: Advanced StatefulSet
 
 这个控制器基于原生 [StatefulSet](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/) 上增强了发布能力，比如 maxUnavailable 并行发布、原地升级等。
 
-注意 `Advanced StatefulSet` 是一个 CRD，kind 名字也是 `StatefulSet`，但是 apiVersion 是 `apps.kruise.io/v1alpha1`。
+注意 `Advanced StatefulSet` 是一个 CRD，kind 名字也是 `StatefulSet`，但是 apiVersion 是 `apps.kruise.io/v1alpha1` 和 `apps.kruise.io/v1beta1`。
 这个 CRD 的所有默认字段、默认行为与原生 StatefulSet 完全一致，除此之外还提供了一些 optional 字段来扩展增强的策略。
 
 因此，用户从原生 `StatefulSet` 迁移到 `Advanced StatefulSet`，只需要把 `apiVersion` 修改后提交即可：
 
 ```yaml
 -  apiVersion: apps/v1
-+  apiVersion: apps.kruise.io/v1alpha1
++  apiVersion: apps.kruise.io/v1beta1
    kind: StatefulSet
    metadata:
      name: sample
    spec:
      #...
 ```
+
+注意从 Kruise 0.7.0 开始，Advanced StatefulSet 版本升级到了 `v1beta1`，并与 `v1alpha1` 兼容。对于低于 v0.7.0 版本的 Kruise，只能使用 `v1alpha1`。
 
 ## `MaxUnavailable` 策略
 
@@ -28,7 +30,7 @@ Advanced StatefulSet 在 `RollingUpdateStatefulSetStrategy` 中新增了 `maxUna
 如果不配置 `maxUnavailable`，它的默认值为 1，也就是和原生 `StatefulSet` 一样只能 one by one 串行发布 Pod，即使把 podManagementPolicy 配置为 `Parallel` 也是这样。
 
 ```yaml
-apiVersion: apps.kruise.io/v1alpha1
+apiVersion: apps.kruise.io/v1beta1
 kind: StatefulSet
 spec:
   # ...
@@ -62,7 +64,7 @@ Advanced StatefulSet 增加了 `podUpdatePolicy` 来允许用户指定重建升�
 这样，就为 endpoints-controller 这些控制器留出了充足的时间来将 Pod 从 endpoints 端点列表中去除。
 
 ```yaml
-apiVersion: apps.kruise.io/v1alpha1
+apiVersion: apps.kruise.io/v1beta1
 kind: StatefulSet
 spec:
   # ...
@@ -80,7 +82,7 @@ spec:
 一个完整的原地升级 StatefulSet 例子如下：
 
 ```yaml
-apiVersion: apps.kruise.io/v1alpha1
+apiVersion: apps.kruise.io/v1beta1
 kind: StatefulSet
 metadata:
   name: sample
@@ -126,7 +128,7 @@ Advanced StatefulSet 在 `spec.updateStrategy.rollingUpdate` 下面新增了 `un
 - `weight`: Pod 优先级是由所有 weights 列表中的 term 来计算 match selector 得出。如下：
 
 ```yaml
-apiVersion: apps.kruise.io/v1alpha1
+apiVersion: apps.kruise.io/v1beta1
 kind: StatefulSet
 spec:
   # ...
@@ -148,7 +150,7 @@ spec:
 - `order`: Pod 优先级是由 orderKey 的 value 决定，这里要求对应的 value 的结尾能解析为 int 值。比如 value "5" 的优先级是 5，value "sts-10" 的优先级是 10。
 
 ```yaml
-apiVersion: apps.kruise.io/v1alpha1
+apiVersion: apps.kruise.io/v1beta1
 kind: StatefulSet
 spec:
   # ...
@@ -165,7 +167,7 @@ spec:
 用户可以通过设置 paused 为 true 暂停发布，不过控制器还是会做 replicas 数量管理：
 
 ```yaml
-apiVersion: apps.kruise.io/v1alpha1
+apiVersion: apps.kruise.io/v1beta1
 kind: StatefulSet
 spec:
   # ...
@@ -173,3 +175,25 @@ spec:
     rollingUpdate:
       paused: true
 ```
+
+## 序号保留（跳过）
+
+从 Advanced StatefulSet 的 v1beta1 版本开始（Kruise >= v0.7.0），支持序号保留功能。
+
+通过在 `reserveOrdinals` 字段中写入需要保留的序号，Advanced StatefulSet 会自动跳过创建这些序号的 Pod。如果 Pod 已经存在，则会被删除。
+注意，`spec.replicas` 是期望运行的 Pod 数量，`spec.reserveOrdinals` 是要跳过的序号。
+
+```yaml
+apiVersion: apps.kruise.io/v1beta1
+kind: StatefulSet
+spec:
+  # ...
+  replicas: 4
+  reserveOrdinals:
+  - 1
+```
+
+对于一个 `replicas=4, reserveOrdinals=[1]` 的 Advanced StatefulSet，实际运行的 Pod 序号为 `[0,2,3,4]`。
+
+- 如果要把 Pod-3 做迁移并保留序号，则把 `3` 追加到 `reserveOrdinals` 列表中。控制器会把 Pod-3 删除并创建 Pod-5（此时运行中 Pod 为 `[0,2,4,5]`）。
+- 如果只想删除 Pod-3，则把 `3` 追加到 `reserveOrdinals` 列表并同时把 `replicas` 减一修改为 `3`。控制器会把 Pod-3 删除（此时运行中 Pod 为 `[0,2,4]`）。
