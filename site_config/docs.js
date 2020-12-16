@@ -40,6 +40,10 @@ export default {
                         title: 'Advanced DaemonSet',
                         link: '/en-us/docs/advanced_daemonset.html',
                     },
+                    {
+                        title: 'AdvancedCronJob',
+                        link: '/en-us/docs/advancedcronjob.html',
+                    },
                 ],
             },
             {
@@ -107,6 +111,10 @@ export default {
                     {
                         title: 'Advanced DaemonSet',
                         link: '/zh-cn/docs/advanced_daemonset.html',
+                    },
+                    {
+                        title: 'AdvancedCronJob',
+                        link: '/zh-cn/docs/advancedcronjob.html',
                     },
                 ],
             },

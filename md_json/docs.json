@@ -15,6 +15,13 @@
       }
     },
     {
+      "filename": "advancedcronjob.md",
+      "link": "/en-us/docs/advancedcronjob.html",
+      "meta": {
+        "title": "AdvancedCronJob"
+      }
+    },
+    {
       "filename": "broadcastjob.md",
       "link": "/en-us/docs/broadcastjob.html",
       "meta": {
@@ -84,6 +91,13 @@
       "link": "/zh-cn/docs/advanced_statefulset.html",
       "meta": {
         "title": "Advanced StatefulSet"
+      }
+    },
+    {
+      "filename": "advancedcronjob.md",
+      "link": "/zh-cn/docs/advancedcronjob.html",
+      "meta": {
+        "title": "AdvancedCronJob"
       }
     },
     {

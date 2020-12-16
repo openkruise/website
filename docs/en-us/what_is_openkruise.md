@@ -48,3 +48,7 @@ OpenKruise is a full set of standard extensions for Kubernetes. It works well wi
 - **Advanced DaemonSet**
 
     An enhanced version of default DaemonSet with extra functionalities such as partition, node selector, pause and surging.
+
+- **AdvancedCronJob**
+
+    An extended CronJob controller, currently its template supports Job and BroadcastJob.

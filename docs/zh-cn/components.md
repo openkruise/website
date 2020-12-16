@@ -13,11 +13,13 @@ title: 组件
 
 ```shell
 $ kubectl get crd | grep kruise.io
-broadcastjobs.apps.kruise.io                  2020-06-15T12:00:05Z
-clonesets.apps.kruise.io                      2020-06-15T12:00:05Z
-sidecarsets.apps.kruise.io                    2020-06-15T12:00:05Z
-statefulsets.apps.kruise.io                   2020-06-15T12:00:05Z
-uniteddeployments.apps.kruise.io              2020-06-15T12:00:05Z
+advancedcronjobs.apps.kruise.io                  2020-12-14T02:45:08Z
+broadcastjobs.apps.kruise.io                     2020-12-14T02:45:09Z
+clonesets.apps.kruise.io                         2020-12-14T02:45:09Z
+daemonsets.apps.kruise.io                        2020-12-14T02:45:09Z
+sidecarsets.apps.kruise.io                       2020-12-14T02:45:09Z
+statefulsets.apps.kruise.io                      2020-12-14T02:45:09Z
+uniteddeployments.apps.kruise.io                 2020-12-14T02:45:09Z
 ```
 
 ## Kruise-manager

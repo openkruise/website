@@ -169,8 +169,12 @@ status:
 
 ### Partition 分批灰度
 
-Partition 的语义是 **保留旧版本 Pod 的数量**，默认为 `0`。
-如果在发布过程中设置了 `partition`，则控制器只会将 `(replicas - partition)` 数量的 Pod 更新到最新版本。和 `StatefulSet` 不同的是，这里的 `partition` 不表示任何 `order` 序号。
+Partition 的语义是 **保留旧版本 Pod 的数量或百分比**，默认为 `0`。这里的 `partition` 不表示任何 `order` 序号。
+
+如果在发布过程中设置了 `partition`:
+
+- 如果是数字，控制器会将 `(replicas - partition)` 数量的 Pod 更新到最新版本。
+- 如果是百分比，控制器会将 `(replicas * (100% - partition))` 数量的 Pod 更新到最新版本。
 
 比如，我们将 CloneSet 例子的 image 更新为 `nginx:mainline` 并且设置 `partition=3`。过了一会，查到的 CloneSet 如下：
 
