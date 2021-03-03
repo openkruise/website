@@ -21,6 +21,10 @@ OpenKruise 是 Kubernetes 的一个标准扩展，它可以配合原生 Kubernet
 
     定义一个跨多个可用区的全局 workload，容器，OpenKruise 会帮你在每个可用区创建一个对应的下属 workload。你可以统一管理他们的副本数、版本、甚至针对不同可用区采用不同的发布策略。
 
+- **镜像预热**
+
+  支持用户指定在任意范围的节点上下载镜像。
+
 - **...**
 
 ## CRD 列表
@@ -52,3 +56,7 @@ OpenKruise 是 Kubernetes 的一个标准扩展，它可以配合原生 Kubernet
 - **AdvancedCronJob**
 
     一个扩展的 CronJob 控制器，目前 template 模板支持配置使用 Job 或 BroadcastJob。
+
+- **ImagePullJob**
+
+    支持用户指定在任意范围的节点上下载镜像。

@@ -12,56 +12,116 @@
 	<link rel="stylesheet" href="/build/documentation.css" />
 </head>
 <body>
-	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/zh-cn/index.html"><img class="logo" src="/img/kruise_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">En</span><div class="header-menu"><img class="header-menu-toggle" src="/img/system/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/zh-cn/index.html" target="_self">首页</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/zh-cn/docs/what_is_openkruise.html" target="_self">文档</a></li><li class="menu-item menu-item-normal"><a href="/zh-cn/blog/index.html" target="_self">博客</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/img/system/docs.png" class="front-img"/><span>文档</span><img src="/img/system/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span></span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/what_is_openkruise.html" target="_self">OpenKruise 是什么</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/quick_start.html" target="_self">快速开始</a></li></ul></li><li class="menu-item menu-item-level-1"><span>基础说明</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/cloneset.html" target="_self">CloneSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advanced_statefulset.html" target="_self">Advanced StatefulSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/sidecarset.html" target="_self">SidecarSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/uniteddeployment.html" target="_self">UnitedDeployment</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/broadcastjob.html" target="_self">BroadcastJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advanced_daemonset.html" target="_self">Advanced DaemonSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advancedcronjob.html" target="_self">AdvancedCronJob</a></li></ul></li><li class="menu-item menu-item-level-1"><span>参考</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/components.html" target="_self">组件</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/go_client.html" target="_self">Golang 客户端</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Contribution</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="https://github.com/openkruise/kruise/blob/master/CONTRIBUTING.md" target="_self">Guidebook</a></li></ul></li></ul></div><div class="doc-content markdown-body"><h1>Golang client</h1>
+	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/zh-cn/index.html"><img class="logo" src="/img/kruise_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">En</span><div class="header-menu"><img class="header-menu-toggle" src="/img/system/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/zh-cn/index.html" target="_self">首页</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/zh-cn/docs/what_is_openkruise.html" target="_self">文档</a></li><li class="menu-item menu-item-normal"><a href="/zh-cn/blog/index.html" target="_self">博客</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/img/system/docs.png" class="front-img"/><span>文档</span><img src="/img/system/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span>快速开始</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/what_is_openkruise.html" target="_self">OpenKruise 是什么</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/installation.html" target="_self">安装</a></li></ul></li><li class="menu-item menu-item-level-1"><span>基础说明</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/cloneset.html" target="_self">CloneSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advanced_statefulset.html" target="_self">Advanced StatefulSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/sidecarset.html" target="_self">SidecarSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advanced_daemonset.html" target="_self">Advanced DaemonSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/uniteddeployment.html" target="_self">UnitedDeployment</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/broadcastjob.html" target="_self">BroadcastJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advancedcronjob.html" target="_self">AdvancedCronJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/imagepulljob.html" target="_self">ImagePullJob</a></li></ul></li><li class="menu-item menu-item-level-1"><span>参考</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/components.html" target="_self">组件</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/go_client.html" target="_self">Golang 客户端</a></li></ul></li><li class="menu-item menu-item-level-1"><span>贡献</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="https://github.com/openkruise/kruise/blob/master/CONTRIBUTING.md" target="_self">指引手册</a></li></ul></li></ul></div><div class="doc-content markdown-body"><h1>Golang client</h1>
 <p>如果要在一个 Golang 项目中对 OpenKruise 的资源做 create/get/update/delete 这些操作、或者通过 informer 做 list-watch，你需要一个支持 OpenKruise 的 client。</p>
-<p>尽管 Kruise 在 <a href="https://github.com/openkruise/kruise/tree/master/pkg/client">pkg/client</a> 目录中已经生成了一些 clientset/informers/listers 工具，但我们强烈不推荐用户使用这些。因为如果把整个 Kruise 仓库引入到你的项目中，可能会导致 go mod 依赖非常复杂，有些还会关系到 K8s 依赖版本问题。</p>
-<p>我们推荐用户只使用 <a href="https://github.com/openkruise/kruise-api">kruise-api</a> 仓库，它只包含了 Kruise 中自定义资源的 API schema 定义。</p>
-<p><a href="https://github.com/openkruise/kruise-api">kruise-api</a> 专门用来放置 Kruise APi 定义，它是从 <code>https://github.com/openkruise/kruise/tree/master/pkg/apis</code> 中同步过来的。所有的代码改动都是在后者里提交的，前者是只读的仓库。</p>
+<p>你需要在你的项目中引入 <a href="https://github.com/openkruise/kruise-api">kruise-api</a> 仓库，它包含了 Kruise 的 schema 定义以及 clientset 等工具。</p>
+<p><strong>不要</strong>直接引入整个 <a href="https://github.com/openkruise/kruise">kruise</a> 仓库作为依赖。</p>
 <h2>使用方式</h2>
-<p><a href="https://github.com/kubernetes-sigs/controller-runtime">controller-runtime</a> 是最好的使用 <code>kruise-api</code> 的方式：</p>
-<ul>
-<li>如果你的项目是通过 <a href="https://github.com/kubernetes-sigs/kubebuilder">kubebuilder</a> 或 <a href="https://github.com/operator-framework/operator-sdk">operator-sdk</a> 生成的，表明你已经使用了 <code>controller-runtime</code>。</li>
-<li>否则，你需要将它和 kruise-api 一起加入到你的 <code>go.mod</code> 中。</li>
-</ul>
-<h3>1. 添加 kruise scheme</h3>
-<pre><code class="language-go"><span class="hljs-keyword">import</span> kruiseapps <span class="hljs-string">"github.com/openkruise/kruise-api/apps/v1alpha1"</span>
+<p>首先，在你的 <code>go.mod</code> 中引入 <code>kruise-api</code> 依赖 （版本号最好和你安装的 Kruise 版本相同）：</p>
+<pre><code># 注意如果你代码依赖中 Kubernetes 版本 &gt;= 1.18，那么引入的版本要加 '1.18' 后缀，比如 v0.8.0-1.18
+require github.com/openkruise/kruise-api v0.8.0
+</code></pre>
+<p>然后，有两种方式在你的代码中使用 <code>kruise-api</code>：直接使用 或 通过 <code>controller-runtime</code> 使用。</p>
+<p>如果你的项目是通过 <a href="https://github.com/kubernetes-sigs/kubebuilder">kubebuilder</a> 或 <a href="https://github.com/operator-framework/operator-sdk">operator-sdk</a> 生成的，
+那么建议你通过 <code>controller-runtime</code> 使用。否则，你可以直接使用。</p>
+<h3>直接使用</h3>
+<ol>
+<li>New Kruise client using your rest config:</li>
+</ol>
+<pre><code class="language-go"><span class="hljs-keyword">import</span> kruiseclientset <span class="hljs-string">"github.com/openkruise/kruise-api/client/clientset/versioned"</span>
+
+<span class="hljs-comment">// cfg is the rest config defined in client-go, you should get it using kubeconfig or serviceaccount</span>
+kruiseClient := kruiseclientset.NewForConfigOrDie(cfg)
+</code></pre>
+<ol start="2">
+<li>Get/List Kruise resources:</li>
+</ol>
+<pre><code class="language-go">cloneSet, err := kruiseClient.AppsV1alpha1().CloneSets(namespace).Get(name, metav1.GetOptions{})
+cloneSetList, err := kruiseClient.AppsV1alpha1().CloneSets(namespace).List(metav1.ListOptions{})
+</code></pre>
+<ol start="3">
+<li>Create/Update Kruise resources:</li>
+</ol>
+<pre><code class="language-go"><span class="hljs-keyword">import</span> kruiseappsv1alpha1 <span class="hljs-string">"github.com/openkruise/kruise-api/apps/v1alpha1"</span>
+
+cloneSet := kruiseappsv1alpha1.CloneSet{
+    <span class="hljs-comment">// ...</span>
+}
+err = kruiseClient.AppsV1alpha1().CloneSets(namespace).Create(&amp;cloneSet, metav1.CreateOptions)
+</code></pre>
+<pre><code class="language-go"><span class="hljs-comment">// Get first</span>
+cloneSet, err := kruiseClient.AppsV1alpha1().CloneSets(namespace).Get(name, metav1.GetOptions{})
+<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> {
+    <span class="hljs-keyword">return</span> err
+}
+
+<span class="hljs-comment">// Modify object, such as replicas or template</span>
+cloneSet.Spec.Replicas = utilpointer.Int32Ptr(<span class="hljs-number">5</span>)
+
+<span class="hljs-comment">// Update</span>
+<span class="hljs-comment">// This might get conflict, should retry it</span>
+<span class="hljs-keyword">if</span> err = kruiseClient.AppsV1alpha1().CloneSets(namespace).Update(&amp;cloneSet, metav1.UpdateOptions); err != <span class="hljs-literal">nil</span> {
+    <span class="hljs-keyword">return</span> err
+}
+</code></pre>
+<ol start="4">
+<li>Watch Kruise resources:</li>
+</ol>
+<pre><code class="language-go"><span class="hljs-keyword">import</span> kruiseinformer <span class="hljs-string">"github.com/openkruise/kruise-api/client/informers/externalversions"</span>
+
+kruiseInformerFactory := kruiseinformer.NewSharedInformerFactory(kruiseClient, <span class="hljs-number">0</span>)
+kruiseInformerFactory.Apps().V1alpha1().CloneSets().Informer().AddEventHandler(...)
+kruiseInformerFactory.Start(...)
+</code></pre>
+<h3>通过 controller-runtime 使用</h3>
+<ol>
+<li>Add kruise apis into the scheme in your <code>main.go</code></li>
+</ol>
+<pre><code class="language-go"><span class="hljs-keyword">import</span> kruiseapi <span class="hljs-string">"github.com/openkruise/kruise-api"</span>
 
 <span class="hljs-comment">// ...</span>
-_ = kruiseapps.AddToScheme(scheme)
+_ = kruiseapi.AddToScheme(scheme)
 </code></pre>
-<h3>2. 生成 client</h3>
-<p>这一步在你直接使用 controller-runtime client 的时候才需要。</p>
-<p>如果你的项目是通过 <a href="https://github.com/kubernetes-sigs/kubebuilder">kubebuilder</a> 或 <a href="https://github.com/operator-framework/operator-sdk">operator-sdk</a> 生成的，你应该直接用 <code>mgr.GetClient()</code> 来获取 client，就不需要以下这个步骤了。</p>
+<ol start="2">
+<li>New client</li>
+</ol>
+<p>This is needed when use controller-runtime client directly.</p>
+<p>If your project is generated by <a href="https://github.com/kubernetes-sigs/kubebuilder">kubebuilder</a> or <a href="https://github.com/operator-framework/operator-sdk">operator-sdk</a>,
+you should get the client from <code>mgr.GetClient()</code> instead of the example below.</p>
 <pre><code class="language-go"><span class="hljs-keyword">import</span> <span class="hljs-string">"sigs.k8s.io/controller-runtime/pkg/client"</span>
 
 apiClient, err := client.New(c, client.Options{Scheme: scheme})
 </code></pre>
-<h3>3. Get/List</h3>
+<ol start="3">
+<li>Get/List</li>
+</ol>
 <pre><code class="language-go"><span class="hljs-keyword">import</span> (
-    kruiseapps <span class="hljs-string">"github.com/openkruise/kruise-api/apps/v1alpha1"</span>
+    kruiseappsv1alpha1 <span class="hljs-string">"github.com/openkruise/kruise-api/apps/v1alpha1"</span>
     <span class="hljs-string">"sigs.k8s.io/controller-runtime/pkg/client"</span>
 )
 
-cloneSet := kruiseapps.CloneSet{}
+cloneSet := kruiseappsv1alpha1.CloneSet{}
 err = apiClient.Get(context.TODO(), types.NamespacedName{Namespace: namespace, Name: name}, &amp;cloneSet)
 
-cloneSetList := kruiseapps.CloneSetList{}
+cloneSetList := kruiseappsv1alpha1.CloneSetList{}
 err = apiClient.List(context.TODO(), &amp;cloneSetList, client.InNamespace(instance.Namespace))
 </code></pre>
-<h3>4. Create/Update/Delete</h3>
-<p>创建一个 CloneSet：</p>
-<pre><code class="language-go"><span class="hljs-keyword">import</span> kruiseapps <span class="hljs-string">"github.com/openkruise/kruise-api/apps/v1alpha1"</span>
+<ol start="4">
+<li>Create/Update/Delete</li>
+</ol>
+<p>Create a new CloneSet:</p>
+<pre><code class="language-go"><span class="hljs-keyword">import</span> kruiseappsv1alpha1 <span class="hljs-string">"github.com/openkruise/kruise-api/apps/v1alpha1"</span>
 
-cloneSet := kruiseapps.CloneSet{
+cloneSet := kruiseappsv1alpha1.CloneSet{
     <span class="hljs-comment">// ...</span>
 }
 err = apiClient.Create(context.TODO(), &amp;cloneSet)
 </code></pre>
-<p>基于一个存量的 CloneSet 来更新：</p>
-<pre><code class="language-go"><span class="hljs-keyword">import</span> kruiseapps <span class="hljs-string">"github.com/openkruise/kruise-api/apps/v1alpha1"</span>
+<p>Update an existing CloneSet:</p>
+<pre><code class="language-go"><span class="hljs-keyword">import</span> kruiseappsv1alpha1 <span class="hljs-string">"github.com/openkruise/kruise-api/apps/v1alpha1"</span>
 
 <span class="hljs-comment">// Get first</span>
-cloneSet := kruiseapps.CloneSet{}
+cloneSet := kruiseappsv1alpha1.CloneSet{}
 <span class="hljs-keyword">if</span> err = apiClient.Get(context.TODO(), types.NamespacedName{Namespace: namespace, Name: name}, &amp;cloneSet); err != <span class="hljs-literal">nil</span> {
     <span class="hljs-keyword">return</span> err
 }
@@ -75,8 +135,11 @@ cloneSet.Spec.Replicas = utilpointer.Int32Ptr(<span class="hljs-number">5</span>
     <span class="hljs-keyword">return</span> err
 }
 </code></pre>
-<h3>5. List watch and informer</h3>
-<p>如果你的项目是通过 <a href="https://github.com/kubernetes-sigs/kubebuilder">kubebuilder</a> 或 <a href="https://github.com/operator-framework/operator-sdk">operator-sdk</a> 生成的，并且使用了 <code>mgr.GetClient()</code>，那么当你使用 <code>Get</code>/<code>List</code> 这些操作时就已经是从 informer 中查询了，而不是调用的 kube-apiserver。</p>
+<ol start="5">
+<li>List watch and informer</li>
+</ol>
+<p>If your project is generated by <a href="https://github.com/kubernetes-sigs/kubebuilder">kubebuilder</a> or <a href="https://github.com/operator-framework/operator-sdk">operator-sdk</a> and get the client from <code>mgr.GetClient()</code>,
+then methods like <code>Get</code>/<code>List</code> have already queried from informer instead of apiserver.</p>
 </div></section><footer class="footer-container"><div class="footer-body"><img src="/img/kruise_gray.png"/><div class="cols-container"><div class="col col-12"><h3>Disclaimer</h3><p>OpenKruise is an open-source project under Apache License 2.0.</p></div><div class="col col-6"><dl><dt>文档</dt><dd><a href="/zh-cn/docs/what_is_openkruise.html" target="_self">OpenKruise 是什么</a></dd><dd><a href="/zh-cn/docs/components.html" target="_self">组件</a></dd><dd><a href="https://github.com/openkruise/kruise/blob/master/CONTRIBUTING.md" target="_self">贡献指南</a></dd></dl></div><div class="col col-6"><dl><dt>资源</dt></dl></div></div><div class="copyright"><span>Copyright © 2019 The OpenKruise Authors, The Kubernetes Authors</span></div></div></footer></div></div>
 	<script src="https://f.alicdn.com/react/15.4.1/react-with-addons.min.js"></script>
 	<script src="https://f.alicdn.com/react/15.4.1/react-dom.min.js"></script>

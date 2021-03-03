@@ -9,7 +9,9 @@ title: UnitedDeployment
 在一个 Kubernetes 集群中可能存在不同的 node 类型，比如多个可用区、或不同的节点技术（比如 Virtual kueblet）等，这些不同类型的 node 上有 label/taint 标识。
 UnitedDeployment 控制器可以提供一个模板来定义应用，并通过管理多个 workload 来匹配下面不同的区域。
 每个 UnitedDeployment 下每个区域的 workload 被称为 `subset`，有一个期望的 `replicas` Pod 数量。
-目前 subset 支持使用 `StatefulSet` 和 `Advanced StatefulSet`。
+目前 subset 支持使用 `StatefulSet`、`Advanced StatefulSet`、`CloneSet`、`Deployment`。
+
+API 定义: https://github.com/openkruise/kruise/blob/master/apis/apps/v1alpha1/uniteddeployment_types.go
 
 下面用一个简单例子来演示如何定义一个 UnitedDeployment 来管理下面三个区域的 StatefulSet，所有区域的 Pod 总数为 6。
 
@@ -25,6 +27,7 @@ spec:
     matchLabels:
       app: sample
   template:
+    # statefulSetTemplate or advancedStatefulSetTemplate or cloneSetTemplate or deploymentTemplate
     statefulSetTemplate:
       metadata:
         labels:

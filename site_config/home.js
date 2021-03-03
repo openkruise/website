@@ -5,11 +5,11 @@ export default {
   'zh-cn': {
     brand: {
       brandName: 'OpenKruise',
-      briefIntroduction: '面向自动化场景的 Kubernetes 应用负载扩展控制器',
+      briefIntroduction: '面向应用自动化场景的 Kubernetes 扩展套件',
       buttons: [
         {
           text: '快速开始',
-          link: '/zh-cn/docs/quick_start.html',
+          link: '/zh-cn/docs/installation.html',
           type: 'primary',
         },
         {
@@ -22,7 +22,8 @@ export default {
     },
     introduction: {
       title: 'OpenKruise是什么',
-      desc: 'Kruise是OpenKruise项目的核心。它是一组控制器，可在应用程序工作负载管理上扩展和补充Kubernetes核心控制器。',
+      desc: 'OpenKruise 是一组 Kubernetes 之上的套件，提供了面向云原生应用的自动化能力，' +
+          '包括多种面向无状态、有状态应用、Sidecar管理方面的工作负载，以及镜像预热等扩展功能。',
       img: '/img/kruise-overall.png',
     },
     functions: {
@@ -69,7 +70,7 @@ export default {
           title: '简单易用',
           content: [
             '安装/卸载 简单',
-            '安装控制器可选'
+            '安装 feature-gate 可选'
           ],
         },
         {
@@ -92,11 +93,11 @@ export default {
   'en-us': {
     brand: {
       brandName: 'OpenKruise',
-      briefIntroduction: 'A Kubernetes automation suite for workload management',
+      briefIntroduction: 'A Kubernetes extended suite for application automations',
       buttons: [
         {
           text: 'GET STARTED',
-          link: '/en-us/docs/quick_start.html',
+          link: '/en-us/docs/installation.html',
           type: 'primary',
         },
         {
@@ -109,7 +110,8 @@ export default {
     },
     introduction: {
       title: 'Introduction',
-      desc: 'OpenKruise is a suite that provides workload automations in Kubernetes. It complements the popular upstream workload controllers by ' +
+      desc: 'OpenKruise is a suite that provides application automations in Kubernetes. ' +
+          'It complements the popular upstream workload controllers by ' +
         'supporting new capabilities based on real production requirements. ' +
         'There are two major categories that OpenKruise ' +
         'focuses on: workload management and controller management. The kruise repo collects all supported workload controllers. ' +
@@ -161,7 +163,7 @@ export default {
           title: 'Easy to use',
           content: [
             'Easy install/uninstall',
-            'Selective controller installation'
+            'Selective feature-gate installation'
           ],
         },
         {

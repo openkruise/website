@@ -2,14 +2,15 @@ export default {
     'en-us': {
         sidemenu: [
             {
+                title: 'Quick start',
                 children: [
                     {
                         title: 'What is OpenKruise',
                         link: '/en-us/docs/what_is_openkruise.html',
                     },
                     {
-                        title: 'Quick Start',
-                        link: '/en-us/docs/quick_start.html',
+                        title: 'Installation',
+                        link: '/en-us/docs/installation.html',
                     },
                 ],
             },
@@ -29,6 +30,10 @@ export default {
                         link: '/en-us/docs/sidecarset.html',
                     },
                     {
+                        title: 'Advanced DaemonSet',
+                        link: '/en-us/docs/advanced_daemonset.html',
+                    },
+                    {
                         title: 'UnitedDeployment',
                         link: '/en-us/docs/uniteddeployment.html',
                     },
@@ -37,12 +42,12 @@ export default {
                         link: '/en-us/docs/broadcastjob.html',
                     },
                     {
-                        title: 'Advanced DaemonSet',
-                        link: '/en-us/docs/advanced_daemonset.html',
-                    },
-                    {
                         title: 'AdvancedCronJob',
                         link: '/en-us/docs/advancedcronjob.html',
+                    },
+                    {
+                        title: 'ImagePullJob',
+                        link: '/en-us/docs/imagepulljob.html',
                     },
                 ],
             },
@@ -74,14 +79,15 @@ export default {
     'zh-cn': {
         sidemenu: [
             {
+                title: '快速开始',
                 children: [
                     {
                         title: 'OpenKruise 是什么',
                         link: '/zh-cn/docs/what_is_openkruise.html'
                     },
                     {
-                        title: '快速开始',
-                        link: '/zh-cn/docs/quick_start.html',
+                        title: '安装',
+                        link: '/zh-cn/docs/installation.html',
                     },
                 ],
             },
@@ -101,6 +107,10 @@ export default {
                         link: '/zh-cn/docs/sidecarset.html',
                     },
                     {
+                        title: 'Advanced DaemonSet',
+                        link: '/zh-cn/docs/advanced_daemonset.html',
+                    },
+                    {
                         title: 'UnitedDeployment',
                         link: '/zh-cn/docs/uniteddeployment.html',
                     },
@@ -109,12 +119,12 @@ export default {
                         link: '/zh-cn/docs/broadcastjob.html',
                     },
                     {
-                        title: 'Advanced DaemonSet',
-                        link: '/zh-cn/docs/advanced_daemonset.html',
-                    },
-                    {
                         title: 'AdvancedCronJob',
                         link: '/zh-cn/docs/advancedcronjob.html',
+                    },
+                    {
+                        title: 'ImagePullJob',
+                        link: '/zh-cn/docs/imagepulljob.html',
                     },
                 ],
             },
@@ -132,10 +142,10 @@ export default {
                 ],
             },
             {
-                title: 'Contribution',
+                title: '贡献',
                 children: [
                     {
-                        title: 'Guidebook',
+                        title: '指引手册',
                         link: 'https://github.com/openkruise/kruise/blob/master/CONTRIBUTING.md'
                     },
                 ],
