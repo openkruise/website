@@ -21,6 +21,10 @@ OpenKruise is a full set of standard extensions for Kubernetes. It works well wi
 
     Define a global workload over multiple fault domains, and OpenKruise will spread a sub workload for each domain. You can manage replicas, template and update strategies for workloads in different fault domains.
 
+- **Image pre-download**
+
+  Help users download images on any nodes they want.
+
 - **...**
 
 ## CRDs
@@ -52,3 +56,7 @@ OpenKruise is a full set of standard extensions for Kubernetes. It works well wi
 - **AdvancedCronJob**
 
     An extended CronJob controller, currently its template supports Job and BroadcastJob.
+
+- **ImagePullJob**
+
+    Help users download images on any nodes they want.

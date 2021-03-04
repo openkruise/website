@@ -344,7 +344,7 @@ spec:
 - PreparingUpdate：准备原地升级
 - Updating：原地升级中
 - Updated：原地升级完成
-- PreparingDelete：准备原地升级
+- PreparingDelete：准备删除
 
 而生命周期钩子，则是通过在上述状态流转中卡点，来实现原地升级前后、删除前的自定义操作（比如开关流量、告警等）。
 

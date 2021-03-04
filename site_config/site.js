@@ -16,8 +16,8 @@ export default {
         key: 'docs',
         text: 'DOCS',
         link: '/en-us/docs/what_is_openkruise.html'
-			},
-			{
+      },
+      {
         key: 'blog',
         text: 'BLOG',
         link: '/en-us/blog/index.html'
@@ -68,8 +68,8 @@ export default {
         key: 'docs',
         text: '文档',
         link: '/zh-cn/docs/what_is_openkruise.html'
-			},
-			{
+      },
+      {
         key: 'blog',
         text: '博客',
         link: '/zh-cn/blog/index.html'

@@ -50,10 +50,17 @@
       }
     },
     {
-      "filename": "quick_start.md",
-      "link": "/en-us/docs/quick_start.html",
+      "filename": "imagepulljob.md",
+      "link": "/en-us/docs/imagepulljob.html",
       "meta": {
-        "title": "Quick Start"
+        "title": "ImagePullJob"
+      }
+    },
+    {
+      "filename": "installation.md",
+      "link": "/en-us/docs/installation.html",
+      "meta": {
+        "title": "Installation"
       }
     },
     {
@@ -129,10 +136,17 @@
       }
     },
     {
-      "filename": "quick_start.md",
-      "link": "/zh-cn/docs/quick_start.html",
+      "filename": "imagepulljob.md",
+      "link": "/zh-cn/docs/imagepulljob.html",
       "meta": {
-        "title": "快速开始"
+        "title": "ImagePullJob"
+      }
+    },
+    {
+      "filename": "installation.md",
+      "link": "/zh-cn/docs/installation.html",
+      "meta": {
+        "title": "安装"
       }
     },
     {

@@ -13,8 +13,11 @@ the pods created by individual workload will be scheduled to the target domain.
 
 Each workload managed by UnitedDeployment is called a `subset`.
 Each domain should at least provide the capacity to run the `replicas` number of pods.
-Currently `StatefulSet` and `Advanced StatefulSet` are the supported workloads. The below sample yaml
-presents a UnitedDeployment which manages three StatefulSet instances in three domains.
+Currently `StatefulSet`, `Advanced StatefulSet`, `CloneSet` and `Deployment` are the supported workloads.
+
+API definition: https://github.com/openkruise/kruise/blob/master/apis/apps/v1alpha1/uniteddeployment_types.go
+
+The below sample yaml presents a UnitedDeployment which manages three StatefulSet instances in three domains.
 The total number of managed pods is 6.
 
 ```yaml
@@ -29,6 +32,7 @@ spec:
     matchLabels:
       app: sample
   template:
+    # statefulSetTemplate or advancedStatefulSetTemplate or cloneSetTemplate or deploymentTemplate
     statefulSetTemplate:
       metadata:
         labels:
