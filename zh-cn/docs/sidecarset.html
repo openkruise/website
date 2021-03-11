@@ -12,15 +12,15 @@
 	<link rel="stylesheet" href="/build/documentation.css" />
 </head>
 <body>
-	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/zh-cn/index.html"><img class="logo" src="/img/kruise_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">En</span><div class="header-menu"><img class="header-menu-toggle" src="/img/system/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/zh-cn/index.html" target="_self">首页</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/zh-cn/docs/what_is_openkruise.html" target="_self">文档</a></li><li class="menu-item menu-item-normal"><a href="/zh-cn/blog/index.html" target="_self">博客</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/img/system/docs.png" class="front-img"/><span>文档</span><img src="/img/system/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span>快速开始</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/what_is_openkruise.html" target="_self">OpenKruise 是什么</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/installation.html" target="_self">安装</a></li></ul></li><li class="menu-item menu-item-level-1"><span>基础说明</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/cloneset.html" target="_self">CloneSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advanced_statefulset.html" target="_self">Advanced StatefulSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/sidecarset.html" target="_self">SidecarSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advanced_daemonset.html" target="_self">Advanced DaemonSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/uniteddeployment.html" target="_self">UnitedDeployment</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/broadcastjob.html" target="_self">BroadcastJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advancedcronjob.html" target="_self">AdvancedCronJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/imagepulljob.html" target="_self">ImagePullJob</a></li></ul></li><li class="menu-item menu-item-level-1"><span>参考</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/components.html" target="_self">组件</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/go_client.html" target="_self">Golang 客户端</a></li></ul></li><li class="menu-item menu-item-level-1"><span>贡献</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="https://github.com/openkruise/kruise/blob/master/CONTRIBUTING.md" target="_self">指引手册</a></li></ul></li></ul></div><div class="doc-content markdown-body"><h1>SidecarSet</h1>
+	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/zh-cn/index.html"><img class="logo" src="/img/kruise_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">En</span><div class="header-menu"><img class="header-menu-toggle" src="/img/system/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/zh-cn/index.html" target="_self">首页</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/zh-cn/docs/what_is_openkruise.html" target="_self">文档</a></li><li class="menu-item menu-item-normal"><a href="/zh-cn/blog/index.html" target="_self">博客</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/img/system/docs.png" class="front-img"/><span>文档</span><img src="/img/system/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span>快速开始</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/what_is_openkruise.html" target="_self">OpenKruise 是什么</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/installation.html" target="_self">安装</a></li></ul></li><li class="menu-item menu-item-level-1"><span>基础说明</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/cloneset.html" target="_self">CloneSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advanced_statefulset.html" target="_self">Advanced StatefulSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/sidecarset.html" target="_self">SidecarSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advanced_daemonset.html" target="_self">Advanced DaemonSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/uniteddeployment.html" target="_self">UnitedDeployment</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/broadcastjob.html" target="_self">BroadcastJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advancedcronjob.html" target="_self">AdvancedCronJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/imagepulljob.html" target="_self">ImagePullJob</a></li></ul></li><li class="menu-item menu-item-level-1"><span>参考</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/components.html" target="_self">组件</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/go_client.html" target="_self">Golang 客户端</a></li></ul></li><li class="menu-item menu-item-level-1"><span>贡献</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="https://github.com/openkruise/kruise/blob/master/CONTRIBUTING.md" target="_self">指引手册</a></li></ul></li></ul></div><div class="doc-content markdown-body"><h1 id="sidecarset">SidecarSet <a class="header-anchor" href="#sidecarset">#</a></h1>
 <p>这个控制器支持通过 admission webhook 来自动为集群中创建的符合条件的 Pod 注入 sidecar 容器。
 这个注入过程和 <a href="https://istio.io/docs/setup/kubernetes/additional-setup/sidecar-injection/">istio</a>
 的自动注入方式很类似。
 除了在 Pod 创建时候注入外，SidecarSet 还提供了为运行时 Pod 原地升级其中已经注入的 sidecar 容器镜像的能力。</p>
 <p>简单来说，SidecarSet 将 sidecar 容器的定义和生命周期与业务容器解耦。
 它主要用于管理无状态的 sidecar 容器，比如监控、日志等 agent。</p>
-<h2>范例</h2>
-<h3>创建 SidecarSet</h3>
+<h2 id="%E8%8C%83%E4%BE%8B">范例 <a class="header-anchor" href="#%E8%8C%83%E4%BE%8B">#</a></h2>
+<h3 id="%E5%88%9B%E5%BB%BA-sidecarset">创建 SidecarSet <a class="header-anchor" href="#%E5%88%9B%E5%BB%BA-sidecarset">#</a></h3>
 <p>如下的 sidecarset.yaml 定义了一个 SidecarSet，其中包括了一个名为 sidecar1 的 sidecar 容器：</p>
 <pre><code class="language-yaml"><span class="hljs-comment"># sidecarset.yaml</span>
 <span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
@@ -48,7 +48,7 @@
 <p>创建这个 YAML:</p>
 <pre><code class="language-bash">kubectl apply -f sidecarset.yaml
 </code></pre>
-<h3>创建 Pod</h3>
+<h3 id="%E5%88%9B%E5%BB%BA-pod">创建 Pod <a class="header-anchor" href="#%E5%88%9B%E5%BB%BA-pod">#</a></h3>
 <p>定义一个匹配 SidecarSet selector 的 Pod：</p>
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">Pod</span>
@@ -74,7 +74,7 @@ status:
   readyPods: 1
   updatedPods: 1
 </code></pre>
-<h3>更新sidecar container Image</h3>
+<h3 id="%E6%9B%B4%E6%96%B0sidecar-container-image">更新sidecar container Image <a class="header-anchor" href="#%E6%9B%B4%E6%96%B0sidecar-container-image">#</a></h3>
 <p>更新sidecarSet中sidecar container的image=centos:7</p>
 <pre><code class="language-bash">$ kubectl edit sidecarsets <span class="hljs-built_in">test</span>-sidecarset
 
@@ -105,7 +105,7 @@ Events:
   Normal  Started    5m5s (x2 over 12m)  kubelet            Started container sidecar1
   Normal  Pulled     5m5s                kubelet            Successfully pulled image <span class="hljs-string">"centos:7"</span>
 </code></pre>
-<h1>SidecarSet功能说明</h1>
+<h2 id="sidecarset%E5%8A%9F%E8%83%BD%E8%AF%B4%E6%98%8E">SidecarSet功能说明 <a class="header-anchor" href="#sidecarset%E5%8A%9F%E8%83%BD%E8%AF%B4%E6%98%8E">#</a></h2>
 <p>一个简单的 SidecarSet yaml 文件如下：</p>
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">SidecarSet</span>
@@ -122,7 +122,7 @@ Events:
     <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">init-container</span>
       <span class="hljs-attr">image:</span> <span class="hljs-string">busybox:latest</span>
       <span class="hljs-attr">command:</span> <span class="hljs-string">[</span> <span class="hljs-string">"/bin/sh"</span><span class="hljs-string">,</span> <span class="hljs-string">"-c"</span><span class="hljs-string">,</span> <span class="hljs-string">"sleep 5 &amp;&amp; echo 'init container success'"</span> <span class="hljs-string">]</span>
-  <span class="hljs-attr">strategy:</span>
+  <span class="hljs-attr">updateStrategy:</span>
     <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
   <span class="hljs-attr">namespace:</span> <span class="hljs-string">ns-1</span>
 
@@ -136,15 +136,15 @@ Events:
 <li>initContainers只支持注入，不支持pod原地升级</li>
 </ul>
 </li>
-<li>spec.namespace sidecarset默认在k8s整个集群范围内生效，即对所有的命名空间生效（除了kube-system, kube-public），当设置该字段时，只对该namespace的pod生效</li>
-<li>spec.strategy sidecarSet更新策略，type表明升级方式：
+<li>spec.updateStrategy sidecarSet更新策略，type表明升级方式：
 <ul>
 <li>NotUpdate 不更新，此模式下只会包含注入能力</li>
 <li>RollingUpdate 注入+滚动更新，包含了丰富的滚动更新策略，后面会详细介绍</li>
 </ul>
 </li>
+<li>spec.namespace sidecarset默认在k8s整个集群范围内生效，即对所有的命名空间生效（除了kube-system, kube-public），当设置该字段时，只对该namespace的pod生效</li>
 </ul>
-<h2>sidecar container注入</h2>
+<h3 id="sidecar-container%E6%B3%A8%E5%85%A5">sidecar container注入 <a class="header-anchor" href="#sidecar-container%E6%B3%A8%E5%85%A5">#</a></h3>
 <p>sidecar 的注入只会发生在 Pod 创建阶段，并且只有 Pod spec 会被更新，不会影响 Pod 所属的 workload template 模板。
 spec.containers除了默认的k8s container字段，还扩展了如下一些字段，来方便注入：</p>
 <pre><code class="language-yaml"><span class="hljs-attr">spec:</span>
@@ -152,12 +152,13 @@ spec.containers除了默认的k8s container字段，还扩展了如下一些字�
     <span class="hljs-attr">matchLabels:</span>
       <span class="hljs-attr">app:</span> <span class="hljs-string">sample</span>
   <span class="hljs-attr">containers:</span>
+      <span class="hljs-comment"># k8s原生container字段</span>
     <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">nginx</span>
       <span class="hljs-attr">image:</span> <span class="hljs-string">nginx:alpine</span>
       <span class="hljs-attr">volumeMounts:</span>
         <span class="hljs-bullet">-</span> <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/nginx/conf</span>
           <span class="hljs-attr">name:</span> <span class="hljs-string">nginx.conf</span>
-      <span class="hljs-comment"># 扩展container字段</span>
+      <span class="hljs-comment"># 扩展sidecar container字段</span>
       <span class="hljs-attr">podInjectPolicy:</span> <span class="hljs-string">BeforeAppContainer</span>
       <span class="hljs-attr">shareVolumePolicy:</span> <span class="hljs-string">disabled</span>
       <span class="hljs-attr">transferEnv:</span>
@@ -186,9 +187,9 @@ spec.containers除了默认的k8s container字段，还扩展了如下一些字�
 </ul>
 </li>
 </ul>
-<h2>sidecar更新策略</h2>
+<h3 id="sidecar%E6%9B%B4%E6%96%B0%E7%AD%96%E7%95%A5">sidecar更新策略 <a class="header-anchor" href="#sidecar%E6%9B%B4%E6%96%B0%E7%AD%96%E7%95%A5">#</a></h3>
 <p>SidecarSet不仅支持sidecar容器的原地升级，而且提供了非常丰富的升级、灰度策略。</p>
-<h3>分批发布</h3>
+<h4 id="%E5%88%86%E6%89%B9%E5%8F%91%E5%B8%83">分批发布 <a class="header-anchor" href="#%E5%88%86%E6%89%B9%E5%8F%91%E5%B8%83">#</a></h4>
 <p>Partition 的语义是 <strong>保留旧版本 Pod 的数量或百分比</strong>，默认为 <code>0</code>。这里的 <code>partition</code> 不表示任何 <code>order</code> 序号。</p>
 <p>如果在发布过程中设置了 <code>partition</code>:</p>
 <ul>
@@ -201,12 +202,12 @@ spec.containers除了默认的k8s container字段，还扩展了如下一些字�
   <span class="hljs-attr">name:</span> <span class="hljs-string">sidecarset</span>
 <span class="hljs-attr">spec:</span>
   <span class="hljs-comment"># ...</span>
-  <span class="hljs-attr">strategy:</span>
+  <span class="hljs-attr">updateStrategy:</span>
     <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
     <span class="hljs-attr">partition:</span> <span class="hljs-number">90</span>
 </code></pre>
 <p>假设该SidecarSet关联的pod数量是100个，则本次升级只会升级10个，保留90个。</p>
-<h3>最大不可用数量</h3>
+<h4 id="%E6%9C%80%E5%A4%A7%E4%B8%8D%E5%8F%AF%E7%94%A8%E6%95%B0%E9%87%8F">最大不可用数量 <a class="header-anchor" href="#%E6%9C%80%E5%A4%A7%E4%B8%8D%E5%8F%AF%E7%94%A8%E6%95%B0%E9%87%8F">#</a></h4>
 <p>MaxUnavailable 是发布过程中保证的，同一时间下最大不可用的 Pod 数量，默认值为 1。用户可以将其设置为绝对值或百分比（百分比会被控制器按照selected pod做基数来计算出一个背后的绝对值）。</p>
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">SidecarSet</span>
@@ -214,7 +215,7 @@ spec.containers除了默认的k8s container字段，还扩展了如下一些字�
   <span class="hljs-attr">name:</span> <span class="hljs-string">sidecarset</span>
 <span class="hljs-attr">spec:</span>
   <span class="hljs-comment"># ...</span>
-  <span class="hljs-attr">strategy:</span>
+  <span class="hljs-attr">updateStrategy:</span>
     <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
     <span class="hljs-attr">maxUnavailable:</span> <span class="hljs-number">20</span><span class="hljs-string">%</span>
 </code></pre>
@@ -223,7 +224,7 @@ spec.containers除了默认的k8s container字段，还扩展了如下一些字�
 <li>当 {matched pod}=100,partition=50,maxUnavailable=10，控制器会发布 50 个 Pod 到新版本，但是发布窗口为 10，即同一时间只会发布 10 个 Pod，每发布好一个 Pod 才会再找一个发布，直到 50 个发布完成。</li>
 <li>当 {matched pod}=100,partition=80,maxUnavailable=30，控制器会发布 20 个 Pod 到新版本，因为满足 maxUnavailable 数量，所以这 20 个 Pod 会同时发布。</li>
 </ul>
-<h3>发布暂停</h3>
+<h4 id="%E5%8F%91%E5%B8%83%E6%9A%82%E5%81%9C">发布暂停 <a class="header-anchor" href="#%E5%8F%91%E5%B8%83%E6%9A%82%E5%81%9C">#</a></h4>
 <p>用户可以通过设置 paused 为 true 暂停发布，此时对于新创建的、扩容的pod依旧会实现注入能力，已经更新的pod会保持更新后的版本不动，还没有更新的pod会暂停更新。</p>
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">SidecarSet</span>
@@ -231,11 +232,11 @@ spec.containers除了默认的k8s container字段，还扩展了如下一些字�
   <span class="hljs-attr">name:</span> <span class="hljs-string">sidecarset</span>
 <span class="hljs-attr">spec:</span>
   <span class="hljs-comment"># ...</span>
-  <span class="hljs-attr">strategy:</span>
+  <span class="hljs-attr">updateStrategy:</span>
     <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
     <span class="hljs-attr">paused:</span> <span class="hljs-literal">true</span>
 </code></pre>
-<h3>金丝雀发布</h3>
+<h4 id="%E9%87%91%E4%B8%9D%E9%9B%80%E5%8F%91%E5%B8%83">金丝雀发布 <a class="header-anchor" href="#%E9%87%91%E4%B8%9D%E9%9B%80%E5%8F%91%E5%B8%83">#</a></h4>
 <p>对于有金丝雀发布需求的业务，可以通过strategy.selector来实现。方式：对于需要率先金丝雀灰度的pod打上固定的labels[canary.release] = true，再通过strategy.selector.matchLabels来选中该pod</p>
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">SidecarSet</span>
@@ -243,19 +244,19 @@ spec.containers除了默认的k8s container字段，还扩展了如下一些字�
   <span class="hljs-attr">name:</span> <span class="hljs-string">sidecarset</span>
 <span class="hljs-attr">spec:</span>
   <span class="hljs-comment"># ...</span>
-  <span class="hljs-attr">strategy:</span>
-  	<span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
-  	<span class="hljs-attr">selector:</span>
+  <span class="hljs-attr">updateStrategy:</span>
+    <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
+    <span class="hljs-attr">selector:</span>
       <span class="hljs-attr">matchLabels:</span>
-        <span class="hljs-attr">canary.release:</span> <span class="hljs-literal">true</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">canary.release:</span> <span class="hljs-literal">true</span>
 </code></pre>
-<h2>发布顺序控制</h2>
+<h3 id="%E5%8F%91%E5%B8%83%E9%A1%BA%E5%BA%8F%E6%8E%A7%E5%88%B6">发布顺序控制 <a class="header-anchor" href="#%E5%8F%91%E5%B8%83%E9%A1%BA%E5%BA%8F%E6%8E%A7%E5%88%B6">#</a></h3>
 <ul>
 <li>默认对升级的pod排序，保证多次升级的顺序一致</li>
 <li>默认选择优先顺序是（越小优先级越高）： unscheduled &lt; scheduled, pending &lt; unknown &lt; running, not-ready &lt; ready, newer pods &lt; older pods</li>
 <li>scatter打散排序</li>
 </ul>
-<h3>scatter打散顺序</h3>
+<h4 id="scatter%E6%89%93%E6%95%A3%E9%A1%BA%E5%BA%8F">scatter打散顺序 <a class="header-anchor" href="#scatter%E6%89%93%E6%95%A3%E9%A1%BA%E5%BA%8F">#</a></h4>
 <p>打散策略允许用户定义将符合某些标签的 Pod 打散到整个发布过程中。比如，一个 SidecarSet所管理的pod为10，如果下面有 3 个 Pod 带有 foo=bar 标签，且用户在打散策略中设置了这个标签，那么这 3 个 Pod 会被放在第 1、6、10 个位置发布。</p>
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">SidecarSet</span>
@@ -263,14 +264,14 @@ spec.containers除了默认的k8s container字段，还扩展了如下一些字�
   <span class="hljs-attr">name:</span> <span class="hljs-string">sidecarset</span>
 <span class="hljs-attr">spec:</span>
   <span class="hljs-comment"># ...</span>
-  <span class="hljs-attr">strategy:</span>
-  	<span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
+  <span class="hljs-attr">updateStrategy:</span>
+    <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
     <span class="hljs-attr">scatterStrategy:</span>
     <span class="hljs-bullet">-</span> <span class="hljs-attr">key:</span> <span class="hljs-string">foo</span>
       <span class="hljs-attr">value:</span> <span class="hljs-string">bar</span>
 </code></pre>
 <p><strong>注意：如果使用 scatter 策略，建议只设置一对 key-value 做打散，会比较好理解。</strong></p>
-<h2>SidecarSet状态说明</h2>
+<h3 id="sidecarset%E7%8A%B6%E6%80%81%E8%AF%B4%E6%98%8E">SidecarSet状态说明 <a class="header-anchor" href="#sidecarset%E7%8A%B6%E6%80%81%E8%AF%B4%E6%98%8E">#</a></h3>
 <p>通过sidecarset原地升级sidecar容器时，可以通过SidecarSet.Status来观察升级的过程</p>
 <pre><code class="language-yaml"><span class="hljs-comment"># kubectl describe sidecarsets sidecarset-example</span>
 <span class="hljs-attr">Name:</span>         <span class="hljs-string">sidecarset-example</span>

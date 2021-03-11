@@ -12,7 +12,7 @@
 	<link rel="stylesheet" href="/build/documentation.css" />
 </head>
 <body>
-	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/en-us/index.html"><img class="logo" src="/img/kruise_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">中</span><div class="header-menu"><img class="header-menu-toggle" src="/img/system/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/en-us/index.html" target="_self">HOME</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/en-us/docs/what_is_openkruise.html" target="_self">DOCS</a></li><li class="menu-item menu-item-normal"><a href="/en-us/blog/index.html" target="_self">BLOG</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/img/system/docs.png" class="front-img"/><span>Documentation</span><img src="/img/system/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span>Quick start</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/what_is_openkruise.html" target="_self">What is OpenKruise</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/installation.html" target="_self">Installation</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Basic</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/cloneset.html" target="_self">CloneSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/advanced_statefulset.html" target="_self">Advanced StatefulSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/sidecarset.html" target="_self">SidecarSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/advanced_daemonset.html" target="_self">Advanced DaemonSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/uniteddeployment.html" target="_self">UnitedDeployment</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/broadcastjob.html" target="_self">BroadcastJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/advancedcronjob.html" target="_self">AdvancedCronJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/imagepulljob.html" target="_self">ImagePullJob</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Reference</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/components.html" target="_self">Components</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/go_client.html" target="_self">Golang Client</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Contribution</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="https://github.com/openkruise/kruise/blob/master/CONTRIBUTING.md" target="_self">Guidebook</a></li></ul></li></ul></div><div class="doc-content markdown-body"><h1>Advanced DaemonSet</h1>
+	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/en-us/index.html"><img class="logo" src="/img/kruise_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">中</span><div class="header-menu"><img class="header-menu-toggle" src="/img/system/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/en-us/index.html" target="_self">HOME</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/en-us/docs/what_is_openkruise.html" target="_self">DOCS</a></li><li class="menu-item menu-item-normal"><a href="/en-us/blog/index.html" target="_self">BLOG</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/img/system/docs.png" class="front-img"/><span>Documentation</span><img src="/img/system/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span>Quick start</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/what_is_openkruise.html" target="_self">What is OpenKruise</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/installation.html" target="_self">Installation</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Basic</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/cloneset.html" target="_self">CloneSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/advanced_statefulset.html" target="_self">Advanced StatefulSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/sidecarset.html" target="_self">SidecarSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/advanced_daemonset.html" target="_self">Advanced DaemonSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/uniteddeployment.html" target="_self">UnitedDeployment</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/broadcastjob.html" target="_self">BroadcastJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/advancedcronjob.html" target="_self">AdvancedCronJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/imagepulljob.html" target="_self">ImagePullJob</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Reference</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/components.html" target="_self">Components</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/go_client.html" target="_self">Golang Client</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Contribution</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="https://github.com/openkruise/kruise/blob/master/CONTRIBUTING.md" target="_self">Guidebook</a></li></ul></li></ul></div><div class="doc-content markdown-body"><h1 id="advanced-daemonset">Advanced DaemonSet <a class="header-anchor" href="#advanced-daemonset">#</a></h1>
 <p>This controller enhances the rolling update workflow of default <a href="https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/">DaemonSet</a>
 controller from aspects, such as partition, selector, pause and surging strategies.</p>
 <p>Note that Advanced DaemonSet extends the same CRD schema of default DaemonSet with newly added fields.
@@ -28,7 +28,7 @@ file from <code>apps/v1</code> to <code>apps.kruise.io/v1alpha1</code> after ins
    <span class="hljs-attr">spec:</span>
      <span class="hljs-comment">#...</span>
 </code></pre>
-<h2>Enhanced strategies</h2>
+<h2 id="enhanced-strategies">Enhanced strategies <a class="header-anchor" href="#enhanced-strategies">#</a></h2>
 <p>These new fields have been added into RollingUpdateDaemonSet:</p>
 <pre><code class="language-go"><span class="hljs-keyword">const</span> (
 +    <span class="hljs-comment">// StandardRollingUpdateType replace the old daemons by new ones using rolling update i.e replace them on each node one after the other.</span>
@@ -68,7 +68,7 @@ file from <code>apps/v1</code> to <code>apps.kruise.io/v1alpha1</code> after ins
 +    MaxSurge *intstr.IntOrString <span class="hljs-string">`json:"maxSurge,omitempty" protobuf:"bytes,7,opt,name=maxSurge"`</span>
 }
 </code></pre>
-<h3>Type for rolling update</h3>
+<h3 id="type-for-rolling-update">Type for rolling update <a class="header-anchor" href="#type-for-rolling-update">#</a></h3>
 <p>Advanced DaemonSet has a <code>Type</code> field in <code>spec.updateStrategy.rollingUpdate</code>
 which controls the way to rolling update.</p>
 <ul>
@@ -86,7 +86,7 @@ after the other, creating the new pod and then killing the old one.</li>
     <span class="hljs-attr">rollingUpdate:</span>
       <span class="hljs-attr">type:</span> <span class="hljs-string">Standard</span>
 </code></pre>
-<h3>Selector for rolling update</h3>
+<h3 id="selector-for-rolling-update">Selector for rolling update <a class="header-anchor" href="#selector-for-rolling-update">#</a></h3>
 <p>It helps users to update Pods on specific nodes whose labels could be matched with the selector.</p>
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">DaemonSet</span>
@@ -99,7 +99,7 @@ after the other, creating the new pod and then killing the old one.</li>
         <span class="hljs-attr">matchLabels:</span>
           <span class="hljs-attr">nodeType:</span> <span class="hljs-string">canary</span>
 </code></pre>
-<h3>Partition for rolling update</h3>
+<h3 id="partition-for-rolling-update">Partition for rolling update <a class="header-anchor" href="#partition-for-rolling-update">#</a></h3>
 <p>This strategy defines rules for calculating the priority of updating pods.
 Partition is the number of DaemonSet pods that should be remained to be old version.</p>
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
@@ -111,7 +111,7 @@ Partition is the number of DaemonSet pods that should be remained to be old vers
     <span class="hljs-attr">rollingUpdate:</span>
       <span class="hljs-attr">partition:</span> <span class="hljs-number">10</span>
 </code></pre>
-<h3>MaxSurge for rolling update</h3>
+<h3 id="maxsurge-for-rolling-update">MaxSurge for rolling update <a class="header-anchor" href="#maxsurge-for-rolling-update">#</a></h3>
 <p>MaxSurge is the maximum number of DaemonSet pods that can be scheduled above the desired number of pods during the update.
 Only when type=SurgingRollingUpdateType, it works.</p>
 <p>Value can be an absolute number (ex: 5) or a percentage of the total number of DaemonSet pods at the start of the update (ex: 10%).
@@ -128,7 +128,7 @@ thus ensuring that at most 130% of the desired final number of DaemonSet pods ar
     <span class="hljs-attr">rollingUpdate:</span>
       <span class="hljs-attr">maxSurge:</span> <span class="hljs-number">30</span><span class="hljs-string">%</span>
 </code></pre>
-<h3>Paused for rolling update</h3>
+<h3 id="paused-for-rolling-update">Paused for rolling update <a class="header-anchor" href="#paused-for-rolling-update">#</a></h3>
 <p><code>paused</code> indicates that Pods updating is paused, controller will not update Pods but just maintain the number of replicas.</p>
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">DaemonSet</span>

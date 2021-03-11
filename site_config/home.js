@@ -1,7 +1,6 @@
 import React from 'react';
 
 export default {
-  title: 'OpenKruise',
   'zh-cn': {
     brand: {
       brandName: 'OpenKruise',

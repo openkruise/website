@@ -12,7 +12,7 @@
 	<link rel="stylesheet" href="/build/blogDetail.css" />
 </head>
 <body>
-	<div id="root"><div class="blog-detail-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/en-us/index.html"><img class="logo" src="/img/kruise_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">中</span><div class="header-menu"><img class="header-menu-toggle" src="/img/system/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/en-us/index.html" target="_self">HOME</a></li><li class="menu-item menu-item-normal"><a href="/en-us/docs/what_is_openkruise.html" target="_self">DOCS</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/en-us/blog/index.html" target="_self">BLOG</a></li></ul></div></div></header><section class="blog-content markdown-body"><h1>UnitedDeploymemt - Supporting Multi-domain Workload Management</h1>
+	<div id="root"><div class="blog-detail-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/en-us/index.html"><img class="logo" src="/img/kruise_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">中</span><div class="header-menu"><img class="header-menu-toggle" src="/img/system/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/en-us/index.html" target="_self">HOME</a></li><li class="menu-item menu-item-normal"><a href="/en-us/docs/what_is_openkruise.html" target="_self">DOCS</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/en-us/blog/index.html" target="_self">BLOG</a></li></ul></div></div></header><section class="blog-content markdown-body"><h1 id="uniteddeploymemt---supporting-multi-domain-workload-management">UnitedDeploymemt - Supporting Multi-domain Workload Management <a class="header-anchor" href="#uniteddeploymemt---supporting-multi-domain-workload-management">#</a></h1>
 <p>By FEI GUO (Alibaba), NOVEMBER 20 2019, 6 MINUTE READ</p>
 <p>Ironically, probably every cloud user knew (or should realized that) failures in Cloud resources
 are inevitable. Hence, high availability is probably one of the most desirable features that
@@ -38,7 +38,7 @@ Since each <code>Subset</code> is associated with a workload, UnitedDeployment c
 finer-grained rollout and deployment strategies.
 In addition, UnitedDeploymemt can be further extended to support
 multiple clusters! Let us reveal how UnitedDeployment is designed.</p>
-<h2>Using <code>Subsets</code> to describe domain topology</h2>
+<h2 id="using-subsets-to-describe-domain-topology">Using <code>Subsets</code> to describe domain topology <a class="header-anchor" href="#using-subsets-to-describe-domain-topology">#</a></h2>
 <p>UnitedDeploymemt uses <code>Subset</code> to represent a failure domain. <code>Subset</code> API
 primarily specifies the nodes that forms the domain and the number of replicas, or
 the percentage of total replicas, run in this domain. UnitedDeployment manages
@@ -70,7 +70,7 @@ failure due to lack of resources. If users have prior knowledge about AZ resourc
 UnitedDeployment can help to apply an optimal Pod distribution to ensure overall
 cluster utilization remains balanced. Of course, if not specified, a uniform Pod distribution
 will be applied to maximize availability.</p>
-<h2>Customized subset rollout <code>Partitions</code></h2>
+<h2 id="customized-subset-rollout-partitions">Customized subset rollout <code>Partitions</code> <a class="header-anchor" href="#customized-subset-rollout-partitions">#</a></h2>
 <p>User can update all the UnitedDeployment subset workloads by providing a
 new version of subset workload template.
 Note that UnitedDeployment does not control
@@ -99,7 +99,7 @@ controller can realize a canary release plan of upgrading 50% of Pods in each
 subset at a time by setting subset partitions to 2, 1, 1 respectively.
 The same cannot be easily achieved by using a single workload controller like <code>StatefulSet</code>
 or <code>Deployment</code>.</p>
-<h2>Multi-Cluster application management (In future)</h2>
+<h2 id="multi-cluster-application-management-(in-future)">Multi-Cluster application management (In future) <a class="header-anchor" href="#multi-cluster-application-management-(in-future)">#</a></h2>
 <p>UnitedDeployment can be extended to support multi-cluster workload
 management. The idea is that <code>Subsets</code> may not only
 reside in one cluster, but also spread over multiple clusters.
@@ -163,7 +163,7 @@ individual cluster would have a replica of 100. UnitedDeployment focuses more on
 providing the ability of managing multiple workloads in multiple clusters on behalf
 of one application, which is absent in Kubernetes community to the best of our
 knowledge.</p>
-<h2>Summary</h2>
+<h2 id="summary">Summary <a class="header-anchor" href="#summary">#</a></h2>
 <p>This blog post introduces UnitedDeployment, a new controller which helps managing
 application spread over multiple domains (in arbitrary clusters).
 It not only allows evenly distributing Pods over AZs,

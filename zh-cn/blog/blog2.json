@@ -1,6 +1,6 @@
 {
   "filename": "blog2.md",
-  "__html": "<h1>学习 Reconciling 并发模式</h1>\n<p>By FEI GUO (Alibaba), NOVEMBER 10 2019, 6 MINUTE READ</p>\n<blockquote>\n<p>非常抱歉，这篇博客暂时还没有提供中文版本。</p>\n</blockquote>\n<blockquote>\n<p>如果你有兴趣，我们非常欢迎你能参与编写或翻译博客。\n可以通过给 <a href=\"https://github.com/openkruise/website\">website</a> 提 Pull Request 来参与 OpenKruise 文档和博客的建设。</p>\n</blockquote>\n",
+  "__html": "<h1 id=\"%E5%AD%A6%E4%B9%A0-reconciling-%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%BC%8F\">学习 Reconciling 并发模式 <a class=\"header-anchor\" href=\"#%E5%AD%A6%E4%B9%A0-reconciling-%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%BC%8F\">#</a></h1>\n<p>By FEI GUO (Alibaba), NOVEMBER 10 2019, 6 MINUTE READ</p>\n<blockquote>\n<p>非常抱歉，这篇博客暂时还没有提供中文版本。</p>\n</blockquote>\n<blockquote>\n<p>如果你有兴趣，我们非常欢迎你能参与编写或翻译博客。\n可以通过给 <a href=\"https://github.com/openkruise/website\">website</a> 提 Pull Request 来参与 OpenKruise 文档和博客的建设。</p>\n</blockquote>\n",
   "link": "/zh-cn/blog/blog2.html",
   "meta": {
     "title": "学习 Reconciling 并发模式",

@@ -12,7 +12,7 @@
 	<link rel="stylesheet" href="/build/blogDetail.css" />
 </head>
 <body>
-	<div id="root"><div class="blog-detail-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/en-us/index.html"><img class="logo" src="/img/kruise_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">中</span><div class="header-menu"><img class="header-menu-toggle" src="/img/system/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/en-us/index.html" target="_self">HOME</a></li><li class="menu-item menu-item-normal"><a href="/en-us/docs/what_is_openkruise.html" target="_self">DOCS</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/en-us/blog/index.html" target="_self">BLOG</a></li></ul></div></div></header><section class="blog-content markdown-body"><h1>Kruise Controller Classification Guidance</h1>
+	<div id="root"><div class="blog-detail-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/en-us/index.html"><img class="logo" src="/img/kruise_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">中</span><div class="header-menu"><img class="header-menu-toggle" src="/img/system/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/en-us/index.html" target="_self">HOME</a></li><li class="menu-item menu-item-normal"><a href="/en-us/docs/what_is_openkruise.html" target="_self">DOCS</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/en-us/blog/index.html" target="_self">BLOG</a></li></ul></div></div></header><section class="blog-content markdown-body"><h1 id="kruise-controller-classification-guidance">Kruise Controller Classification Guidance <a class="header-anchor" href="#kruise-controller-classification-guidance">#</a></h1>
 <p>By FEI GUO (Alibaba), SIYU WANG (Alibaba), OCTOBOR 10 2019, 8 MINUTE READ</p>
 <p>Kubernetes does not provide a clear guidance about which controller is the best fit for
 a user application. Sometimes, this does not seem to be a big problem if users understand
@@ -34,7 +34,7 @@ duplications that may confuse users.</li>
 can more easily understand the use cases of them. We will elaborate this more in this
 post. The first and most intuitive criterion for classification is the controller name.</li>
 </ul>
-<h3>Controller Name Convention</h3>
+<h3 id="controller-name-convention">Controller Name Convention <a class="header-anchor" href="#controller-name-convention">#</a></h3>
 <p>An easily understandable controller name can certainly help adoption. After consulting
 with many internal/external Kubernetes users, we decide to use the following naming
 conventions in Kruise. Note that these conventions are not contradicted with the controller
@@ -73,7 +73,7 @@ at its API documentation. This example showcases that sometimes a well-thought-o
 may not be helpful to identify controller. Again, Kruise does not plan to resolve
 this problem. As an incremental effort, Kruise considers the following criterion to help classify
 <strong>Set</strong> -suffix controllers.</p>
-<h3>Fixed Pod Name</h3>
+<h3 id="fixed-pod-name">Fixed Pod Name <a class="header-anchor" href="#fixed-pod-name">#</a></h3>
 <p>One unique property of <code>StatefulSet</code> is that it maintains consistent identities for
 Pod network and storage. Essentially, this is done by fixing Pod names.
 Pod name can identify both network and storage since it is part of DNS record and
@@ -153,7 +153,7 @@ The following table roughly compares Advanced StatefulSet and CloneSet in a few 
 <p>Now, a clear recommendation to Kruise users is if your applications require fixed Pod names (identities for Pod network and storage), you can start with <code>Advanced StatefulSet</code>.
 Otherwise, <code>CloneSet</code> is the primary choice of <strong>Set</strong> -suffix controllers (if <code>DaemonSet</code> is not
 applicable).</p>
-<h3>Summary</h3>
+<h3 id="summary">Summary <a class="header-anchor" href="#summary">#</a></h3>
 <p>Kruise aims to provide intuitive names for new controllers. As a supplement, this post
 provides additional guidance for Kruise users to pick the right controller for their
 applications. Hope it helps!</p>
