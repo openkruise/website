@@ -12,7 +12,7 @@
 	<link rel="stylesheet" href="/build/documentation.css" />
 </head>
 <body>
-	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/en-us/index.html"><img class="logo" src="/img/kruise_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">中</span><div class="header-menu"><img class="header-menu-toggle" src="/img/system/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/en-us/index.html" target="_self">HOME</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/en-us/docs/what_is_openkruise.html" target="_self">DOCS</a></li><li class="menu-item menu-item-normal"><a href="/en-us/blog/index.html" target="_self">BLOG</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/img/system/docs.png" class="front-img"/><span>Documentation</span><img src="/img/system/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span>Quick start</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/what_is_openkruise.html" target="_self">What is OpenKruise</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/installation.html" target="_self">Installation</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Basic</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/cloneset.html" target="_self">CloneSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/advanced_statefulset.html" target="_self">Advanced StatefulSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/sidecarset.html" target="_self">SidecarSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/advanced_daemonset.html" target="_self">Advanced DaemonSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/uniteddeployment.html" target="_self">UnitedDeployment</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/broadcastjob.html" target="_self">BroadcastJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/advancedcronjob.html" target="_self">AdvancedCronJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/imagepulljob.html" target="_self">ImagePullJob</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Reference</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/components.html" target="_self">Components</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/go_client.html" target="_self">Golang Client</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Contribution</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="https://github.com/openkruise/kruise/blob/master/CONTRIBUTING.md" target="_self">Guidebook</a></li></ul></li></ul></div><div class="doc-content markdown-body"><h1>CloneSet</h1>
+	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/en-us/index.html"><img class="logo" src="/img/kruise_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">中</span><div class="header-menu"><img class="header-menu-toggle" src="/img/system/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/en-us/index.html" target="_self">HOME</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/en-us/docs/what_is_openkruise.html" target="_self">DOCS</a></li><li class="menu-item menu-item-normal"><a href="/en-us/blog/index.html" target="_self">BLOG</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/img/system/docs.png" class="front-img"/><span>Documentation</span><img src="/img/system/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span>Quick start</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/what_is_openkruise.html" target="_self">What is OpenKruise</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/installation.html" target="_self">Installation</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Basic</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/cloneset.html" target="_self">CloneSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/advanced_statefulset.html" target="_self">Advanced StatefulSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/sidecarset.html" target="_self">SidecarSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/advanced_daemonset.html" target="_self">Advanced DaemonSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/uniteddeployment.html" target="_self">UnitedDeployment</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/broadcastjob.html" target="_self">BroadcastJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/advancedcronjob.html" target="_self">AdvancedCronJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/imagepulljob.html" target="_self">ImagePullJob</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Reference</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/components.html" target="_self">Components</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/go_client.html" target="_self">Golang Client</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Contribution</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="https://github.com/openkruise/kruise/blob/master/CONTRIBUTING.md" target="_self">Guidebook</a></li></ul></li></ul></div><div class="doc-content markdown-body"><h1 id="cloneset">CloneSet <a class="header-anchor" href="#cloneset">#</a></h1>
 <p>This controller provides advanced features to efficiently manage stateless applications that
 do not have instance order requirement during scaling and rollout. Analogously,
 CloneSet can be recognized as an enhanced version of upstream <code>Deployment</code> workload, but it does many more.</p>
@@ -38,8 +38,8 @@ manages Pods directly. A sample CloneSet yaml looks like following:</p>
       <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">nginx</span>
         <span class="hljs-attr">image:</span> <span class="hljs-string">nginx:alpine</span>
 </code></pre>
-<h2>Scale features</h2>
-<h3>Support PVCs</h3>
+<h2 id="scale-features">Scale features <a class="header-anchor" href="#scale-features">#</a></h2>
+<h3 id="support-pvcs">Support PVCs <a class="header-anchor" href="#support-pvcs">#</a></h3>
 <p>CloneSet allows user to define PVC templates <code>volumeClaimTemplates</code> in <code>CloneSetSpec</code>, which can support PVCs per Pod.
 This cannot be done with <code>Deployment</code>. If not specified, CloneSet will only create Pods without PVCs.</p>
 <p>A few reminders:</p>
@@ -83,7 +83,7 @@ This cannot be done with <code>Deployment</code>. If not specified, CloneSet wil
           <span class="hljs-attr">requests:</span>
             <span class="hljs-attr">storage:</span> <span class="hljs-string">20Gi</span>
 </code></pre>
-<h3>Selective Pod deletion</h3>
+<h3 id="selective-pod-deletion">Selective Pod deletion <a class="header-anchor" href="#selective-pod-deletion">#</a></h3>
 <p>When a CloneSet is scaled down, sometimes user has preference to deleting specific Pods.
 This cannot be done using <code>StatefulSet</code> or <code>Deployment</code>, because <code>StatefulSet</code> always delete Pod
 in order and <code>Deployment</code>/<code>ReplicaSet</code> only delete Pod by its own sorted sequence.</p>
@@ -105,8 +105,8 @@ Controller will clear <code>podsToDelete</code> automatically once the listed Po
 <li>If one just adds a Pod name to <code>podsToDelete</code> and do not modify <code>replicas</code>, controller will delete this Pod, and create a new Pod.</li>
 <li>Without specifying <code>podsToDelete</code>, controller will scale down by deleting Pods in the order: not-ready &lt; ready, unscheduled &lt; scheduled, and pending &lt; running.</li>
 </ul>
-<h2>Update features</h2>
-<h3>In-place update</h3>
+<h2 id="update-features">Update features <a class="header-anchor" href="#update-features">#</a></h2>
+<h3 id="in-place-update">In-place update <a class="header-anchor" href="#in-place-update">#</a></h3>
 <p>CloneSet provides three update policies just like <code>AdvancedStatefulSet</code>, defaults to <code>ReCreate</code>.</p>
 <ul>
 <li><code>ReCreate</code>: controller will delete old Pods and PVCs and create new ones.</li>
@@ -129,7 +129,7 @@ So that endpoints-controller could have enough time to remove this Pod from endp
     <span class="hljs-attr">inPlaceUpdateStrategy:</span>
       <span class="hljs-attr">gracePeriodSeconds:</span> <span class="hljs-number">10</span>
 </code></pre>
-<h3>Template and revision</h3>
+<h3 id="template-and-revision">Template and revision <a class="header-anchor" href="#template-and-revision">#</a></h3>
 <p><code>spec.template</code> defines the latest pod template in the CloneSet.
 Controller will calculate a revision hash for each version of <code>spec.template</code> when it has been initialized or modified.
 For example, when we create a sample CloneSet, controller will calculate the revision hash <code>sample-744d4796cc</code> and
@@ -160,7 +160,7 @@ present the hash in CloneSet Status.</p>
 <li><code>status.updatedReplicas</code>: Number of pods with the latest revision</li>
 <li><code>status.updatedReadyReplicas</code>: Number of <strong>ready</strong> pods with the latest revision</li>
 </ul>
-<h3>Partition</h3>
+<h3 id="partition">Partition <a class="header-anchor" href="#partition">#</a></h3>
 <p>Partition is the <strong>desired number or percent of Pods in old revisions</strong>, defaults to <code>0</code>.  This field does <strong>NOT</strong> imply any update order.</p>
 <p>When <code>partition</code> is set during update:</p>
 <ul>
@@ -205,7 +205,7 @@ sample-ns85c   1/1     Running   0          6m46s   sample-d4d4fb5bd
 sample-jnjdp   1/1     Running   0          10s     sample-56dfb978d4
 sample-qqglp   1/1     Running   0          18s     sample-56dfb978d4
 </code></pre>
-<h3>MaxUnavailable</h3>
+<h3 id="maxunavailable">MaxUnavailable <a class="header-anchor" href="#maxunavailable">#</a></h3>
 <p>MaxUnavailable is the maximum number of Pods that can be unavailable during the update.
 Value can be an absolute number (e.g., 5) or a percentage of desired number of Pods (e.g., 10%).
 Default value is 20%.</p>
@@ -216,7 +216,7 @@ Default value is 20%.</p>
   <span class="hljs-attr">updateStrategy:</span>
     <span class="hljs-attr">maxUnavailable:</span> <span class="hljs-number">20</span><span class="hljs-string">%</span>
 </code></pre>
-<h3>MaxSurge</h3>
+<h3 id="maxsurge">MaxSurge <a class="header-anchor" href="#maxsurge">#</a></h3>
 <p>MaxSurge is the maximum number of pods that can be scheduled above the desired replicas during the update.
 Value can be an absolute number (ex: 5) or a percentage of desired pods (ex: 10%).
 Defaults to 0.</p>
@@ -234,11 +234,11 @@ and then update the rest Pods with old revisions,</p>
   <span class="hljs-attr">updateStrategy:</span>
     <span class="hljs-attr">maxSurge:</span> <span class="hljs-number">3</span>
 </code></pre>
-<h3>Update sequence</h3>
+<h3 id="update-sequence">Update sequence <a class="header-anchor" href="#update-sequence">#</a></h3>
 <p>When controller chooses Pods to update, it has default sort logic based on Pod phase and conditions:
 <strong>unscheduled &lt; scheduled, pending &lt; unknown &lt; running, not-ready &lt; ready</strong>.
 In addition, CloneSet also supports advanced <code>priority</code> and <code>scatter</code> strategies to allow users to specify the update order.</p>
-<h4><code>priority</code> strategy</h4>
+<h4 id="priority-strategy"><code>priority</code> strategy <a class="header-anchor" href="#priority-strategy">#</a></h4>
 <p>This strategy defines rules for calculating the priority of updating pods.
 All update candidates will be applied with the priority terms.
 <code>priority</code> can be calculated either by weight or by order.</p>
@@ -273,7 +273,7 @@ All update candidates will be applied with the priority terms.
       <span class="hljs-attr">orderPriority:</span>
         <span class="hljs-bullet">-</span> <span class="hljs-attr">orderedKey:</span> <span class="hljs-string">some-label-key</span>
 </code></pre>
-<h4><code>scatter</code> strategy</h4>
+<h4 id="scatter-strategy"><code>scatter</code> strategy <a class="header-anchor" href="#scatter-strategy">#</a></h4>
 <p>This strategy defines rules to make certain Pods be scattered during update.
 For example, if a CloneSet has <code>replica=10</code>, and we add <code>foo=bar</code> label in 3 Pods and specify the following scatter rule. These 3 Pods will
 be the 1st, 6th and 10th updated Pods.</p>
@@ -292,7 +292,7 @@ be the 1st, 6th and 10th updated Pods.</p>
 <li>If <code>scatter</code> strategy is used, we suggest to just use one term. Otherwise, the update order can be hard to understand.</li>
 </ul>
 <p>Last but not the least, the above advanced update strategies require independent Pod labeling mechanisms, which are not provided by CloneSet.</p>
-<h3>Paused update</h3>
+<h3 id="paused-update">Paused update <a class="header-anchor" href="#paused-update">#</a></h3>
 <p><code>paused</code> indicates that Pods updating is paused, controller will not update Pods but just maintain the number of replicas.</p>
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">CloneSet</span>
@@ -301,7 +301,7 @@ be the 1st, 6th and 10th updated Pods.</p>
   <span class="hljs-attr">updateStrategy:</span>
     <span class="hljs-attr">paused:</span> <span class="hljs-literal">true</span>
 </code></pre>
-<h3>Lifecycle hook</h3>
+<h3 id="lifecycle-hook">Lifecycle hook <a class="header-anchor" href="#lifecycle-hook">#</a></h3>
 <p>Since v0.6.1, kruise has supported lifecycle hook for CloneSet.</p>
 <p>Each Pod managed by CloneSet has a clear state defined in <code>lifecycle.apps.kruise.io/state</code> label:</p>
 <ul>
@@ -347,7 +347,7 @@ be the 1st, 6th and 10th updated Pods.</p>
       <span class="hljs-attr">labelsHandler:</span>
         <span class="hljs-attr">example.io/block-unready:</span> <span class="hljs-string">"true"</span>
 </code></pre>
-<h4>State circulation</h4>
+<h4 id="state-circulation">State circulation <a class="header-anchor" href="#state-circulation">#</a></h4>
 <p><img src="/img/docs/cloneset-lifecycle.png" alt="Lifecycle circulation"></p>
 <ul>
 <li>When CloneSet delete a Pod (including scale in and recreate update):
@@ -367,11 +367,11 @@ be the 1st, 6th and 10th updated Pods.</p>
 </li>
 </ul>
 <p>Besides, although our design supports to change a Pod from <code>PreparingDelete</code> back to <code>Normal</code> (through cancel specified delete), but it is not recommended. Because Pods in <code>PreparingDelete</code> state will not be updated by CloneSet, it might be updating immediately if comes back to <code>Normal</code>. This case is hard for user controller to handle.</p>
-<h4>Another way for specified delete</h4>
+<h4 id="another-way-for-specified-delete">Another way for specified delete <a class="header-anchor" href="#another-way-for-specified-delete">#</a></h4>
 <p>As we introduced above, CloneSet has <code>spec.scaleStrategy.podsToDelete</code> field and allow users to specify some Pods when reduce replicas.</p>
 <p>But if user just want to delete a Pod and let CloneSet create a new one, we provides another Pod label for specified delete: <code>apps.kruise.io/specified-delete: true</code>.
 Pods with this label, CloneSet will update it to <code>PreparingDelete</code> state, and delete it after hook has been satisfied.</p>
-<h4>Example for user controller logic</h4>
+<h4 id="example-for-user-controller-logic">Example for user controller logic <a class="header-anchor" href="#example-for-user-controller-logic">#</a></h4>
 <p>Same as yaml example above, we can fisrtly define：</p>
 <ul>
 <li><code>example.io/unready-blocker</code> finalizer as hook</li>

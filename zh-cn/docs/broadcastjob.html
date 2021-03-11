@@ -12,22 +12,22 @@
 	<link rel="stylesheet" href="/build/documentation.css" />
 </head>
 <body>
-	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/zh-cn/index.html"><img class="logo" src="/img/kruise_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">En</span><div class="header-menu"><img class="header-menu-toggle" src="/img/system/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/zh-cn/index.html" target="_self">首页</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/zh-cn/docs/what_is_openkruise.html" target="_self">文档</a></li><li class="menu-item menu-item-normal"><a href="/zh-cn/blog/index.html" target="_self">博客</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/img/system/docs.png" class="front-img"/><span>文档</span><img src="/img/system/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span>快速开始</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/what_is_openkruise.html" target="_self">OpenKruise 是什么</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/installation.html" target="_self">安装</a></li></ul></li><li class="menu-item menu-item-level-1"><span>基础说明</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/cloneset.html" target="_self">CloneSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advanced_statefulset.html" target="_self">Advanced StatefulSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/sidecarset.html" target="_self">SidecarSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advanced_daemonset.html" target="_self">Advanced DaemonSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/uniteddeployment.html" target="_self">UnitedDeployment</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/broadcastjob.html" target="_self">BroadcastJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advancedcronjob.html" target="_self">AdvancedCronJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/imagepulljob.html" target="_self">ImagePullJob</a></li></ul></li><li class="menu-item menu-item-level-1"><span>参考</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/components.html" target="_self">组件</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/go_client.html" target="_self">Golang 客户端</a></li></ul></li><li class="menu-item menu-item-level-1"><span>贡献</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="https://github.com/openkruise/kruise/blob/master/CONTRIBUTING.md" target="_self">指引手册</a></li></ul></li></ul></div><div class="doc-content markdown-body"><h1>BroadcastJob</h1>
+	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/zh-cn/index.html"><img class="logo" src="/img/kruise_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">En</span><div class="header-menu"><img class="header-menu-toggle" src="/img/system/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/zh-cn/index.html" target="_self">首页</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/zh-cn/docs/what_is_openkruise.html" target="_self">文档</a></li><li class="menu-item menu-item-normal"><a href="/zh-cn/blog/index.html" target="_self">博客</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/img/system/docs.png" class="front-img"/><span>文档</span><img src="/img/system/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span>快速开始</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/what_is_openkruise.html" target="_self">OpenKruise 是什么</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/installation.html" target="_self">安装</a></li></ul></li><li class="menu-item menu-item-level-1"><span>基础说明</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/cloneset.html" target="_self">CloneSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advanced_statefulset.html" target="_self">Advanced StatefulSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/sidecarset.html" target="_self">SidecarSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advanced_daemonset.html" target="_self">Advanced DaemonSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/uniteddeployment.html" target="_self">UnitedDeployment</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/broadcastjob.html" target="_self">BroadcastJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advancedcronjob.html" target="_self">AdvancedCronJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/imagepulljob.html" target="_self">ImagePullJob</a></li></ul></li><li class="menu-item menu-item-level-1"><span>参考</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/components.html" target="_self">组件</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/go_client.html" target="_self">Golang 客户端</a></li></ul></li><li class="menu-item menu-item-level-1"><span>贡献</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="https://github.com/openkruise/kruise/blob/master/CONTRIBUTING.md" target="_self">指引手册</a></li></ul></li></ul></div><div class="doc-content markdown-body"><h1 id="broadcastjob">BroadcastJob <a class="header-anchor" href="#broadcastjob">#</a></h1>
 <p>这个控制器将 Pod 分发到集群中每个 node 上，类似于 <a href="https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/">DaemonSet</a>，
 但是 BroadcastJob 管理的 Pod 并不是长期运行的 daemon 服务，而是类似于 <a href="https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/">Job</a> 的任务类型 Pod。</p>
 <p>最终在每个 node 上的 Pod 都执行完成退出后，BroadcastJob 和这些 Pod 并不会占用集群资源。
 这个控制器非常有利于做升级基础软件、巡检等过一段时间需要在整个集群中跑一次的工作。</p>
 <p>此外，BroadcastJob 还可以维持每个 node 跑成功一个 Pod 任务。如果采取这种模式，当后续集群中新增 node 时 BroadcastJob 也会分发 Pod 任务上去执行。</p>
-<h2>BroadcastJob Spec</h2>
-<h3>Template</h3>
+<h2 id="broadcastjob-spec">BroadcastJob Spec <a class="header-anchor" href="#broadcastjob-spec">#</a></h2>
+<h3 id="template">Template <a class="header-anchor" href="#template">#</a></h3>
 <p><code>Template</code> 描述了 Pod 模板，用于创建任务 Pod。
 注意，由于是任务类型的 Pod，其中的 restart policy 只能设置为 <code>Never</code> 或 <code>OnFailure</code>，不允许设为 <code>Always</code>。</p>
-<h3>Parallelism</h3>
+<h3 id="parallelism">Parallelism <a class="header-anchor" href="#parallelism">#</a></h3>
 <p><code>Parallelism</code> 指定了最多能允许多少个 Pod 同时在执行任务，默认不做限制。</p>
 <p>比如，一个集群里有 10 个 node、并设置了 <code>Parallelism</code> 为 3，那么 BroadcastJob 会保证同时只会有 3 个 node 上的 Pod 在执行。每当一个 Pod 执行完成，BroadcastJob 才会创建一个新 Pod 执行。</p>
-<h3>CompletionPolicy</h3>
+<h3 id="completionpolicy">CompletionPolicy <a class="header-anchor" href="#completionpolicy">#</a></h3>
 <p><code>CompletionPolicy</code> 支持指定 BroadcastJob 控制器的 reconciling 行为，可以设置为 <code>Always</code> 或 <code>Never</code>：</p>
-<h4><code>Always</code></h4>
+<h4 id="always"><code>Always</code> <a class="header-anchor" href="#always">#</a></h4>
 <p><code>Always</code> 策略意味着 job 最终会完成，不管是执行成功还是失败了。在 <code>Always</code> 策略下还可以设置以下参数：</p>
 <ul>
 <li>
@@ -40,12 +40,12 @@
 <p><code>TTLSecondsAfterFinished</code> 限制了 BroadcastJob 在完成之后的存活时间，默认没有限制。比如设置了 <code>TTLSecondsAfterFinished</code> 为 10s，那么当 job 结束后超过了 10s，控制器就会把 job 和下面的所有 Pod 删掉。</p>
 </li>
 </ul>
-<h4><code>Never</code></h4>
+<h4 id="never"><code>Never</code> <a class="header-anchor" href="#never">#</a></h4>
 <p><code>Never</code> 策略意味着 BroadcastJob 永远都不会结束（标记为 Succeeded 或 Failed），即使当前 job 下面的 Pod 都已经执行成功了。
 这也意味着 <code>ActiveDeadlineSeconds</code>、 <code>BackoffLimit</code>、 <code>TTLSecondsAfterFinished</code> 这三个参数是不能使用的。</p>
 <p>比如说，用户希望对集群中每个 node 都下发一个配置，包括后续新增的 node 都需要做，那么就可以创建一个 <code>Never</code> 策略的 BroadcastJob。</p>
-<h2>例子</h2>
-<h3>监控 BroadcastJob status</h3>
+<h2 id="%E4%BE%8B%E5%AD%90">例子 <a class="header-anchor" href="#%E4%BE%8B%E5%AD%90">#</a></h2>
+<h3 id="%E7%9B%91%E6%8E%A7-broadcastjob-status">监控 BroadcastJob status <a class="header-anchor" href="#%E7%9B%91%E6%8E%A7-broadcastjob-status">#</a></h3>
 <p>在一个单 node 集群中创建一个 BroadcastJob，执行 <code>kubectl get bj</code> （BroadcastJob 的 short name）看到以下状态：</p>
 <pre><code class="language-shell"> NAME                 DESIRED   ACTIVE   SUCCEEDED   FAILED
  broadcastjob-sample  1         0        1           0
@@ -56,7 +56,7 @@
 <li><code>SUCCEEDED</code>: 执行成功的 Pod 数量</li>
 <li><code>FAILED</code>: 执行失败的 Pod 数量</li>
 </ul>
-<h3>使用 <code>ttlSecondsAfterFinished</code></h3>
+<h3 id="%E4%BD%BF%E7%94%A8-ttlsecondsafterfinished">使用 <code>ttlSecondsAfterFinished</code> <a class="header-anchor" href="#%E4%BD%BF%E7%94%A8-ttlsecondsafterfinished">#</a></h3>
 <p>创建 BroadcastJob 配置 <code>ttlSecondsAfterFinished</code> 为 30。
 这个 job 会在执行结束后 30s 被删除。</p>
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
@@ -75,7 +75,7 @@
     <span class="hljs-attr">type:</span> <span class="hljs-string">Always</span>
     <span class="hljs-attr">ttlSecondsAfterFinished:</span> <span class="hljs-number">30</span>
 </code></pre>
-<h3>使用 <code>activeDeadlineSeconds</code></h3>
+<h3 id="%E4%BD%BF%E7%94%A8-activedeadlineseconds">使用 <code>activeDeadlineSeconds</code> <a class="header-anchor" href="#%E4%BD%BF%E7%94%A8-activedeadlineseconds">#</a></h3>
 <p>创建 BroadcastJob 配置 <code>activeDeadlineSeconds</code> 为 10。
 这个 job 会在运行超过 10s 之后被标记为失败，并把下面还在运行的 Pod 删除掉。</p>
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
@@ -94,7 +94,7 @@
     <span class="hljs-attr">type:</span> <span class="hljs-string">Always</span>
     <span class="hljs-attr">activeDeadlineSeconds:</span> <span class="hljs-number">10</span>
 </code></pre>
-<h3>使用 <code>Never</code> completionPolicy</h3>
+<h3 id="%E4%BD%BF%E7%94%A8-never-completionpolicy">使用 <code>Never</code> completionPolicy <a class="header-anchor" href="#%E4%BD%BF%E7%94%A8-never-completionpolicy">#</a></h3>
 <p>创建 BroadcastJob 配置 <code>completionPolicy</code> 为 <code>Never</code>。
 这个 job 会持续运行即使当前所有 node 上的 Pod 都执行完成了。</p>
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>

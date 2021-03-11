@@ -42,16 +42,6 @@ module.exports = {
         exclude: /node_modules/,
         use: 'json-loader',
       },
-      {
-        test: /\.(woff|woff2|eot|ttf|otf|svg)((\?|#).*)?$/,
-        use: [{
-          loader: 'file-loader',
-          options: {
-            name: '[name].[ext]',
-            publicPath: './',
-          },
-        }],
-      },
     ],
   },
   resolve: {
