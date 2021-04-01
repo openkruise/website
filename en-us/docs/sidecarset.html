@@ -129,7 +129,6 @@ Events:
   <span class="hljs-attr">updateStrategy:</span>
     <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
   <span class="hljs-attr">namespace:</span> <span class="hljs-string">ns-1</span>
-
 </code></pre>
 <ul>
 <li>spec.selector Select the POD that needs to be injected and updated by Label. MatchLabels and MatchExpressions are supported. Please refer to the details: <a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/">https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/</a></li>
@@ -168,7 +167,8 @@ In addition to the default K8s Container field, the following fields have been e
       <span class="hljs-attr">name:</span> <span class="hljs-string">nginx.conf</span>
     <span class="hljs-comment"># extended sidecar container fields</span>
     <span class="hljs-attr">podInjectPolicy:</span> <span class="hljs-string">BeforeAppContainer</span>
-    <span class="hljs-attr">shareVolumePolicy:</span> <span class="hljs-string">disabled</span>
+    <span class="hljs-attr">shareVolumePolicy:</span>
+      <span class="hljs-attr">type:</span> <span class="hljs-string">disabled</span> <span class="hljs-string">|</span> <span class="hljs-string">enabled</span>
     <span class="hljs-attr">transferEnv:</span>
     <span class="hljs-bullet">-</span> <span class="hljs-attr">sourceContainerName:</span> <span class="hljs-string">main</span>
       <span class="hljs-attr">envName:</span> <span class="hljs-string">PROXY_IP</span>    
@@ -186,7 +186,7 @@ In addition to the default K8s Container field, the following fields have been e
 <li>data volume sharing
 <ul>
 <li>Share specific volumes: Use spec.volumes to define the volumes needed by Sidecar itself. See details：<a href="https://kubernetes.io/docs/concepts/storage/volumes/">https://kubernetes.io/docs/concepts/storage/volumes/</a></li>
-<li>Share pod containers volumes: If ShareVolumePolicy is enabled, the sidecar container will share the other container's VolumeMounts in the pod(don't contains the injected sidecar container)</li>
+<li>Share pod containers volumes: If ShareVolumePolicy.type is enabled, the sidecar container will share the other container's VolumeMounts in the pod(don't contains the injected sidecar container)</li>
 </ul>
 </li>
 <li>Environment variable sharing
