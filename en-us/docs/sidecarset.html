@@ -39,15 +39,15 @@ monitoring tools or operation agents.</p>
     <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
     <span class="hljs-attr">maxUnavailable:</span> <span class="hljs-number">1</span>
   <span class="hljs-attr">containers:</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">sidecar1</span>
-      <span class="hljs-attr">image:</span> <span class="hljs-string">centos:6.7</span>
-      <span class="hljs-attr">command:</span> <span class="hljs-string">["sleep",</span> <span class="hljs-string">"999d"</span><span class="hljs-string">]</span> <span class="hljs-comment"># do nothing at all</span>
-      <span class="hljs-attr">volumeMounts:</span>
-        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">log-volume</span>
-          <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/var/log</span>
-  <span class="hljs-attr">volumes:</span> <span class="hljs-comment"># this field will be merged into pod.spec.volumes</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">sidecar1</span>
+    <span class="hljs-attr">image:</span> <span class="hljs-string">centos:6.7</span>
+    <span class="hljs-attr">command:</span> <span class="hljs-string">["sleep",</span> <span class="hljs-string">"999d"</span><span class="hljs-string">]</span> <span class="hljs-comment"># do nothing at all</span>
+    <span class="hljs-attr">volumeMounts:</span>
     <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">log-volume</span>
-      <span class="hljs-attr">emptyDir:</span> <span class="hljs-string">{}</span>
+    <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/var/log</span>
+  <span class="hljs-attr">volumes:</span> <span class="hljs-comment"># this field will be merged into pod.spec.volumes</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">log-volume</span>
+    <span class="hljs-attr">emptyDir:</span> <span class="hljs-string">{}</span>
 </code></pre>
 <p>Create a SidecarSet based on the YAML file:</p>
 <pre><code class="language-bash">kubectl apply -f sidecarset.yaml
@@ -109,8 +109,8 @@ Events:
   Normal  Started    5m5s (x2 over 12m)  kubelet            Started container sidecar1
   Normal  Pulled     5m5s                kubelet            Successfully pulled image <span class="hljs-string">"centos:7"</span>
 </code></pre>
-<h1>SidecarSet features</h1>
-<p>A sample CloneSet yaml looks like following:</p>
+<h2>SidecarSet features</h2>
+<p>A sample SidecarSet yaml looks like following:</p>
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">SidecarSet</span>
 <span class="hljs-attr">metadata:</span>
@@ -120,16 +120,15 @@ Events:
     <span class="hljs-attr">matchLabels:</span>
       <span class="hljs-attr">app:</span> <span class="hljs-string">sample</span>
   <span class="hljs-attr">containers:</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">nginx</span>
-      <span class="hljs-attr">image:</span> <span class="hljs-string">nginx:alpine</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">nginx</span>
+    <span class="hljs-attr">image:</span> <span class="hljs-string">nginx:alpine</span>
   <span class="hljs-attr">initContainers:</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">init-container</span>
-      <span class="hljs-attr">image:</span> <span class="hljs-string">busybox:latest</span>
-      <span class="hljs-attr">command:</span> <span class="hljs-string">[</span> <span class="hljs-string">"/bin/sh"</span><span class="hljs-string">,</span> <span class="hljs-string">"-c"</span><span class="hljs-string">,</span> <span class="hljs-string">"sleep 5 &amp;&amp; echo 'init container success'"</span> <span class="hljs-string">]</span>
-  <span class="hljs-attr">strategy:</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">init-container</span>
+    <span class="hljs-attr">image:</span> <span class="hljs-string">busybox:latest</span>
+    <span class="hljs-attr">command:</span> <span class="hljs-string">[</span> <span class="hljs-string">"/bin/sh"</span><span class="hljs-string">,</span> <span class="hljs-string">"-c"</span><span class="hljs-string">,</span> <span class="hljs-string">"sleep 5 &amp;&amp; echo 'init container success'"</span> <span class="hljs-string">]</span>
+  <span class="hljs-attr">updateStrategy:</span>
     <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
   <span class="hljs-attr">namespace:</span> <span class="hljs-string">ns-1</span>
-
 </code></pre>
 <ul>
 <li>spec.selector Select the POD that needs to be injected and updated by Label. MatchLabels and MatchExpressions are supported. Please refer to the details: <a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/">https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/</a></li>
@@ -140,35 +139,42 @@ Events:
 <li>InitContainers only support injection and do not support POD in-place update</li>
 </ul>
 </li>
-<li>spec.namespace By default, sidecarset is cluster scope in k8s, that is, for all namespaces (except kube-system, kube-public). When spec.namespace field set, it only applies to pods of that namespace</li>
-<li>spec.strategy sidecarSet update strategy, type indicates the upgrade method:
+<li>spec.updateStrategy sidecarSet update strategy, type indicates the upgrade method:
 <ul>
 <li>NotUpdate No updates, in this type only inject sidecar containers in pod</li>
 <li>RollingUpdate Injection and rolling update, which contains a rich update strategy, will be described in more detail later</li>
 </ul>
 </li>
+<li>spec.namespace By default, sidecarset is cluster scope in k8s, that is, for all namespaces (except kube-system, kube-public). When spec.namespace field set, it only applies to pods of that namespace</li>
 </ul>
-<h2>sidecar container injection</h2>
+<h3>sidecar container injection</h3>
 <p>The injection of sidecar containers happens at Pod creation time and only Pod spec is updated. The workload template spec will not be updated.
 In addition to the default K8s Container field, the following fields have been extended to injection:</p>
-<pre><code class="language-yaml"><span class="hljs-attr">spec:</span>
+<pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
+<span class="hljs-attr">kind:</span> <span class="hljs-string">SidecarSet</span>
+<span class="hljs-attr">metadata:</span>
+  <span class="hljs-attr">name:</span> <span class="hljs-string">sidecarset</span>
+<span class="hljs-attr">spec:</span>
   <span class="hljs-attr">selector:</span>
     <span class="hljs-attr">matchLabels:</span>
       <span class="hljs-attr">app:</span> <span class="hljs-string">sample</span>
   <span class="hljs-attr">containers:</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">nginx</span>
-      <span class="hljs-attr">image:</span> <span class="hljs-string">nginx:alpine</span>
-      <span class="hljs-attr">volumeMounts:</span>
-        <span class="hljs-bullet">-</span> <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/nginx/conf</span>
-          <span class="hljs-attr">name:</span> <span class="hljs-string">nginx.conf</span>
-      <span class="hljs-attr">podInjectPolicy:</span> <span class="hljs-string">BeforeAppContainer</span>
-      <span class="hljs-attr">shareVolumePolicy:</span> <span class="hljs-string">disabled</span>
-      <span class="hljs-attr">transferEnv:</span>
-        <span class="hljs-bullet">-</span> <span class="hljs-attr">sourceContainerName:</span> <span class="hljs-string">main</span>
-          <span class="hljs-attr">envName:</span> <span class="hljs-string">PROXY_IP</span>    
+    <span class="hljs-comment"># default K8s Container fields</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">nginx</span>
+    <span class="hljs-attr">image:</span> <span class="hljs-string">nginx:alpine</span>
+    <span class="hljs-attr">volumeMounts:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/nginx/conf</span>
+      <span class="hljs-attr">name:</span> <span class="hljs-string">nginx.conf</span>
+    <span class="hljs-comment"># extended sidecar container fields</span>
+    <span class="hljs-attr">podInjectPolicy:</span> <span class="hljs-string">BeforeAppContainer</span>
+    <span class="hljs-attr">shareVolumePolicy:</span>
+      <span class="hljs-attr">type:</span> <span class="hljs-string">enabled</span> <span class="hljs-string">|</span> <span class="hljs-string">disabled</span>
+    <span class="hljs-attr">transferEnv:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-attr">sourceContainerName:</span> <span class="hljs-string">main</span>
+      <span class="hljs-attr">envName:</span> <span class="hljs-string">PROXY_IP</span>    
   <span class="hljs-attr">volumes:</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-attr">Name:</span> <span class="hljs-string">nginx.conf</span>
-      <span class="hljs-attr">hostPath:</span> <span class="hljs-string">/data/nginx/conf</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">Name:</span> <span class="hljs-string">nginx.conf</span>
+    <span class="hljs-attr">hostPath:</span> <span class="hljs-string">/data/nginx/conf</span>
 </code></pre>
 <ul>
 <li>podInjectPolicy Define where Containers are injected into pod.spec.containers
@@ -180,7 +186,7 @@ In addition to the default K8s Container field, the following fields have been e
 <li>data volume sharing
 <ul>
 <li>Share specific volumes: Use spec.volumes to define the volumes needed by Sidecar itself. See details：<a href="https://kubernetes.io/docs/concepts/storage/volumes/">https://kubernetes.io/docs/concepts/storage/volumes/</a></li>
-<li>Share pod containers volumes: If ShareVolumePolicy is enabled, the sidecar container will share the other container's VolumeMounts in the pod(don't contains the injected sidecar container)</li>
+<li>Share pod containers volumes: If ShareVolumePolicy.type is enabled, the sidecar container will share the other container's VolumeMounts in the pod(don't contains the injected sidecar container)</li>
 </ul>
 </li>
 <li>Environment variable sharing
@@ -189,9 +195,9 @@ In addition to the default K8s Container field, the following fields have been e
 </ul>
 </li>
 </ul>
-<h2>sidecarset update strategy</h2>
+<h3>sidecarset update strategy</h3>
 <p>Sidecarset not only supports the in-place update of Sidecar container, but also provides a very rich upgrade strategy.</p>
-<h3>partition</h3>
+<h4>partition</h4>
 <p>Partition is the <strong>desired number or percent of Pods in old revisions</strong>, defaults to <code>0</code>.  This field does <strong>NOT</strong> imply any update order.</p>
 <p>When <code>partition</code> is set during update:</p>
 <ul>
@@ -204,12 +210,12 @@ In addition to the default K8s Container field, the following fields have been e
   <span class="hljs-attr">name:</span> <span class="hljs-string">sidecarset</span>
 <span class="hljs-attr">spec:</span>
   <span class="hljs-comment"># ...</span>
-  <span class="hljs-attr">strategy:</span>
+  <span class="hljs-attr">updateStrategy:</span>
     <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
     <span class="hljs-attr">partition:</span> <span class="hljs-number">90</span>
 </code></pre>
 <p>Assuming that the number of PODs associated with this Sidecarset is 100, this upgrade will only upgrade 10 pods to latest and keep 90 pods old versions.</p>
-<h3>MaxUnavailable</h3>
+<h4>MaxUnavailable</h4>
 <p>MaxUnavailable is the maximum number of PODs that are unavailable at the same time that is guaranteed during the Posting process. The default value is 1.</p>
 <p>The user can set it to either an absolute value or a percentage (the percentage is calculated by the controller as the cardinality of the selected pod to calculate the absolute value behind one).</p>
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
@@ -218,7 +224,7 @@ In addition to the default K8s Container field, the following fields have been e
   <span class="hljs-attr">name:</span> <span class="hljs-string">sidecarset</span>
 <span class="hljs-attr">spec:</span>
   <span class="hljs-comment"># ...</span>
-  <span class="hljs-attr">strategy:</span>
+  <span class="hljs-attr">updateStrategy:</span>
     <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
     <span class="hljs-attr">maxUnavailable:</span> <span class="hljs-number">20</span><span class="hljs-string">%</span>
 </code></pre>
@@ -227,7 +233,7 @@ In addition to the default K8s Container field, the following fields have been e
 <li>When {matched pod}=100,partition=50,maxUnavailable=10, the controller will update 50 PODS to the new version, and only 10 PODS will be updated at the same time, until the 50 updated is completed.</li>
 <li>When {matched pod}=100,partition=80,maxUnavailable=30, the controller will update 20 PODS to the new version, because the maxUnavailable number is 30, so the 20 PODS will be updated simultaneously.</li>
 </ul>
-<h3>Pause</h3>
+<h4>Pause</h4>
 <p>A user can pause the release by setting pause to true, and the injection capability will remain for newly created, expanded PODS, while updated PODS will remain the updated version, and those that have not been updated will be paused.</p>
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">SidecarSet</span>
@@ -235,11 +241,11 @@ In addition to the default K8s Container field, the following fields have been e
   <span class="hljs-attr">name:</span> <span class="hljs-string">sidecarset</span>
 <span class="hljs-attr">spec:</span>
   <span class="hljs-comment"># ...</span>
-  <span class="hljs-attr">strategy:</span>
+  <span class="hljs-attr">updateStrategy:</span>
     <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
     <span class="hljs-attr">paused:</span> <span class="hljs-literal">true</span>
 </code></pre>
-<h3>Selector</h3>
+<h4>Selector</h4>
 <p>For businesses that have Canary update requirements, this can be done through Strategy.selector filed. First: take the canary updated pods on fixed labels [canary. Release] = true, second fix the strategy.selector.MatchLabels to select the pod</p>
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">SidecarSet</span>
@@ -247,19 +253,19 @@ In addition to the default K8s Container field, the following fields have been e
   <span class="hljs-attr">name:</span> <span class="hljs-string">sidecarset</span>
 <span class="hljs-attr">spec:</span>
   <span class="hljs-comment"># ...</span>
-  <span class="hljs-attr">strategy:</span>
-  	<span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
-  	<span class="hljs-attr">selector:</span>
+  <span class="hljs-attr">updateStrategy:</span>
+    <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
+    <span class="hljs-attr">selector:</span>
       <span class="hljs-attr">matchLabels:</span>
-        <span class="hljs-attr">canary.release:</span> <span class="hljs-literal">true</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">canary.release:</span> <span class="hljs-literal">true</span>
 </code></pre>
-<h2>sidecarset update order</h2>
+<h3>sidecarset update order</h3>
 <ul>
-<li>The POD of upgrade is sorted by default to ensure the same order of multiple upgrades</li>
+<li>The PODs of upgrade is sorted by default to ensure the same order of multiple upgrades</li>
 <li>The default priority is (the smaller the higher the priority)： unscheduled &lt; scheduled, pending &lt; unknown &lt; running, not-ready &lt; ready, newer pods &lt; older pods</li>
 <li>scatter order</li>
 </ul>
-<h3>scatter</h3>
+<h4>scatter</h4>
 <p>The scatter policy allows users to define the scatters of PODs that conform to certain tags throughout the publishing process.
 For example, if a SidecarSet manages 10 PODS, if there are 3 PODS below with the tag foo=bar, and the user sets this tag in the shatter policy, then these 3 PODS will be published in the 1st, 6th, and 10th positions.</p>
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
@@ -268,14 +274,14 @@ For example, if a SidecarSet manages 10 PODS, if there are 3 PODS below with the
   <span class="hljs-attr">name:</span> <span class="hljs-string">sidecarset</span>
 <span class="hljs-attr">spec:</span>
   <span class="hljs-comment"># ...</span>
-  <span class="hljs-attr">strategy:</span>
-  	<span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
+  <span class="hljs-attr">updateStrategy:</span>
+    <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
     <span class="hljs-attr">scatterStrategy:</span>
     <span class="hljs-bullet">-</span> <span class="hljs-attr">key:</span> <span class="hljs-string">foo</span>
       <span class="hljs-attr">value:</span> <span class="hljs-string">bar</span>
 </code></pre>
 <p><strong>Note: If you use Scatter, it is recommended to set only a pair of key-values for scatter. It will be easier to understand.</strong></p>
-<h2>SidecarSet Status</h2>
+<h3>SidecarSet Status</h3>
 <p>When upgrading sidecar containers with a SidecarSet, you can observe the process of upgrading through SidecarSet.Status</p>
 <pre><code class="language-yaml"><span class="hljs-comment"># kubectl describe sidecarsets sidecarset-example</span>
 <span class="hljs-attr">Name:</span>         <span class="hljs-string">sidecarset-example</span>

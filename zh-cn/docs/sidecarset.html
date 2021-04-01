@@ -35,15 +35,15 @@
     <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
     <span class="hljs-attr">maxUnavailable:</span> <span class="hljs-number">1</span>
   <span class="hljs-attr">containers:</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">sidecar1</span>
-      <span class="hljs-attr">image:</span> <span class="hljs-string">centos:6.7</span>
-      <span class="hljs-attr">command:</span> <span class="hljs-string">["sleep",</span> <span class="hljs-string">"999d"</span><span class="hljs-string">]</span> <span class="hljs-comment"># do nothing at all</span>
-      <span class="hljs-attr">volumeMounts:</span>
-        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">log-volume</span>
-          <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/var/log</span>
-  <span class="hljs-attr">volumes:</span> <span class="hljs-comment"># this field will be merged into pod.spec.volumes</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">sidecar1</span>
+    <span class="hljs-attr">image:</span> <span class="hljs-string">centos:6.7</span>
+    <span class="hljs-attr">command:</span> <span class="hljs-string">["sleep",</span> <span class="hljs-string">"999d"</span><span class="hljs-string">]</span> <span class="hljs-comment"># do nothing at all</span>
+    <span class="hljs-attr">volumeMounts:</span>
     <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">log-volume</span>
-      <span class="hljs-attr">emptyDir:</span> <span class="hljs-string">{}</span>
+    <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/var/log</span>
+  <span class="hljs-attr">volumes:</span> <span class="hljs-comment"># this field will be merged into pod.spec.volumes</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">log-volume</span>
+    <span class="hljs-attr">emptyDir:</span> <span class="hljs-string">{}</span>
 </code></pre>
 <p>创建这个 YAML:</p>
 <pre><code class="language-bash">kubectl apply -f sidecarset.yaml
@@ -105,7 +105,7 @@ Events:
   Normal  Started    5m5s (x2 over 12m)  kubelet            Started container sidecar1
   Normal  Pulled     5m5s                kubelet            Successfully pulled image <span class="hljs-string">"centos:7"</span>
 </code></pre>
-<h1>SidecarSet功能说明</h1>
+<h2>SidecarSet功能说明</h2>
 <p>一个简单的 SidecarSet yaml 文件如下：</p>
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">SidecarSet</span>
@@ -116,16 +116,15 @@ Events:
     <span class="hljs-attr">matchLabels:</span>
       <span class="hljs-attr">app:</span> <span class="hljs-string">sample</span>
   <span class="hljs-attr">containers:</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">nginx</span>
-      <span class="hljs-attr">image:</span> <span class="hljs-string">nginx:alpine</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">nginx</span>
+    <span class="hljs-attr">image:</span> <span class="hljs-string">nginx:alpine</span>
   <span class="hljs-attr">initContainers:</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">init-container</span>
-      <span class="hljs-attr">image:</span> <span class="hljs-string">busybox:latest</span>
-      <span class="hljs-attr">command:</span> <span class="hljs-string">[</span> <span class="hljs-string">"/bin/sh"</span><span class="hljs-string">,</span> <span class="hljs-string">"-c"</span><span class="hljs-string">,</span> <span class="hljs-string">"sleep 5 &amp;&amp; echo 'init container success'"</span> <span class="hljs-string">]</span>
-  <span class="hljs-attr">strategy:</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">init-container</span>
+    <span class="hljs-attr">image:</span> <span class="hljs-string">busybox:latest</span>
+    <span class="hljs-attr">command:</span> <span class="hljs-string">[</span> <span class="hljs-string">"/bin/sh"</span><span class="hljs-string">,</span> <span class="hljs-string">"-c"</span><span class="hljs-string">,</span> <span class="hljs-string">"sleep 5 &amp;&amp; echo 'init container success'"</span> <span class="hljs-string">]</span>
+  <span class="hljs-attr">updateStrategy:</span>
     <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
   <span class="hljs-attr">namespace:</span> <span class="hljs-string">ns-1</span>
-
 </code></pre>
 <ul>
 <li>spec.selector 通过label的方式选择需要注入、更新的pod，支持matchLabels、MatchExpressions两种方式，详情请参考：<a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/">https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/</a></li>
@@ -136,36 +135,42 @@ Events:
 <li>initContainers只支持注入，不支持pod原地升级</li>
 </ul>
 </li>
-<li>spec.namespace sidecarset默认在k8s整个集群范围内生效，即对所有的命名空间生效（除了kube-system, kube-public），当设置该字段时，只对该namespace的pod生效</li>
-<li>spec.strategy sidecarSet更新策略，type表明升级方式：
+<li>spec.updateStrategy sidecarSet更新策略，type表明升级方式：
 <ul>
 <li>NotUpdate 不更新，此模式下只会包含注入能力</li>
 <li>RollingUpdate 注入+滚动更新，包含了丰富的滚动更新策略，后面会详细介绍</li>
 </ul>
 </li>
+<li>spec.namespace sidecarset默认在k8s整个集群范围内生效，即对所有的命名空间生效（除了kube-system, kube-public），当设置该字段时，只对该namespace的pod生效</li>
 </ul>
-<h2>sidecar container注入</h2>
+<h3>sidecar container注入</h3>
 <p>sidecar 的注入只会发生在 Pod 创建阶段，并且只有 Pod spec 会被更新，不会影响 Pod 所属的 workload template 模板。
 spec.containers除了默认的k8s container字段，还扩展了如下一些字段，来方便注入：</p>
-<pre><code class="language-yaml"><span class="hljs-attr">spec:</span>
+<pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
+<span class="hljs-attr">kind:</span> <span class="hljs-string">SidecarSet</span>
+<span class="hljs-attr">metadata:</span>
+  <span class="hljs-attr">name:</span> <span class="hljs-string">sidecarset</span>
+<span class="hljs-attr">spec:</span>
   <span class="hljs-attr">selector:</span>
     <span class="hljs-attr">matchLabels:</span>
       <span class="hljs-attr">app:</span> <span class="hljs-string">sample</span>
   <span class="hljs-attr">containers:</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">nginx</span>
-      <span class="hljs-attr">image:</span> <span class="hljs-string">nginx:alpine</span>
-      <span class="hljs-attr">volumeMounts:</span>
-        <span class="hljs-bullet">-</span> <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/nginx/conf</span>
-          <span class="hljs-attr">name:</span> <span class="hljs-string">nginx.conf</span>
-      <span class="hljs-comment"># 扩展container字段</span>
-      <span class="hljs-attr">podInjectPolicy:</span> <span class="hljs-string">BeforeAppContainer</span>
-      <span class="hljs-attr">shareVolumePolicy:</span> <span class="hljs-string">disabled</span>
-      <span class="hljs-attr">transferEnv:</span>
-        <span class="hljs-bullet">-</span> <span class="hljs-attr">sourceContainerName:</span> <span class="hljs-string">main</span>
-          <span class="hljs-attr">envName:</span> <span class="hljs-string">PROXY_IP</span>    
+    <span class="hljs-comment"># default K8s Container fields</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">nginx</span>
+    <span class="hljs-attr">image:</span> <span class="hljs-string">nginx:alpine</span>
+    <span class="hljs-attr">volumeMounts:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/nginx/conf</span>
+      <span class="hljs-attr">name:</span> <span class="hljs-string">nginx.conf</span>
+    <span class="hljs-comment"># extended sidecar container fields</span>
+    <span class="hljs-attr">podInjectPolicy:</span> <span class="hljs-string">BeforeAppContainer</span>
+    <span class="hljs-attr">shareVolumePolicy:</span>
+      <span class="hljs-attr">type:</span> <span class="hljs-string">enabled</span> <span class="hljs-string">|</span> <span class="hljs-string">disabled</span>
+    <span class="hljs-attr">transferEnv:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-attr">sourceContainerName:</span> <span class="hljs-string">main</span>
+      <span class="hljs-attr">envName:</span> <span class="hljs-string">PROXY_IP</span>    
   <span class="hljs-attr">volumes:</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-attr">Name:</span> <span class="hljs-string">nginx.conf</span>
-      <span class="hljs-attr">hostPath:</span> <span class="hljs-string">/data/nginx/conf</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">Name:</span> <span class="hljs-string">nginx.conf</span>
+    <span class="hljs-attr">hostPath:</span> <span class="hljs-string">/data/nginx/conf</span>
 </code></pre>
 <ul>
 <li>podInjectPolicy 定义container注入到pod.spec.containers中的位置
@@ -177,7 +182,7 @@ spec.containers除了默认的k8s container字段，还扩展了如下一些字�
 <li>数据卷共享
 <ul>
 <li>共享指定卷：通过 spec.volumes 来定义 sidecar 自身需要的 volume，详情请参考：<a href="https://kubernetes.io/docs/concepts/storage/volumes/">https://kubernetes.io/docs/concepts/storage/volumes/</a></li>
-<li>共享所有卷：通过 spec.containers[i].shareVolumePolicy = enabled | disabled 来控制是否挂载pod应用容器的卷，常用于日志收集等 sidecar，配置为 enabled 后会把应用容器中所有挂载点注入 sidecar 同一路经下(sidecar中本身就有声明的数据卷和挂载点除外）</li>
+<li>共享所有卷：通过 spec.containers[i].shareVolumePolicy.type = enabled | disabled 来控制是否挂载pod应用容器的卷，常用于日志收集等 sidecar，配置为 enabled 后会把应用容器中所有挂载点注入 sidecar 同一路经下(sidecar中本身就有声明的数据卷和挂载点除外）</li>
 </ul>
 </li>
 <li>环境变量共享
@@ -186,9 +191,9 @@ spec.containers除了默认的k8s container字段，还扩展了如下一些字�
 </ul>
 </li>
 </ul>
-<h2>sidecar更新策略</h2>
+<h3>sidecar更新策略</h3>
 <p>SidecarSet不仅支持sidecar容器的原地升级，而且提供了非常丰富的升级、灰度策略。</p>
-<h3>分批发布</h3>
+<h4>分批发布</h4>
 <p>Partition 的语义是 <strong>保留旧版本 Pod 的数量或百分比</strong>，默认为 <code>0</code>。这里的 <code>partition</code> 不表示任何 <code>order</code> 序号。</p>
 <p>如果在发布过程中设置了 <code>partition</code>:</p>
 <ul>
@@ -201,12 +206,12 @@ spec.containers除了默认的k8s container字段，还扩展了如下一些字�
   <span class="hljs-attr">name:</span> <span class="hljs-string">sidecarset</span>
 <span class="hljs-attr">spec:</span>
   <span class="hljs-comment"># ...</span>
-  <span class="hljs-attr">strategy:</span>
+  <span class="hljs-attr">updateStrategy:</span>
     <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
     <span class="hljs-attr">partition:</span> <span class="hljs-number">90</span>
 </code></pre>
 <p>假设该SidecarSet关联的pod数量是100个，则本次升级只会升级10个，保留90个。</p>
-<h3>最大不可用数量</h3>
+<h4>最大不可用数量</h4>
 <p>MaxUnavailable 是发布过程中保证的，同一时间下最大不可用的 Pod 数量，默认值为 1。用户可以将其设置为绝对值或百分比（百分比会被控制器按照selected pod做基数来计算出一个背后的绝对值）。</p>
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">SidecarSet</span>
@@ -214,7 +219,7 @@ spec.containers除了默认的k8s container字段，还扩展了如下一些字�
   <span class="hljs-attr">name:</span> <span class="hljs-string">sidecarset</span>
 <span class="hljs-attr">spec:</span>
   <span class="hljs-comment"># ...</span>
-  <span class="hljs-attr">strategy:</span>
+  <span class="hljs-attr">updateStrategy:</span>
     <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
     <span class="hljs-attr">maxUnavailable:</span> <span class="hljs-number">20</span><span class="hljs-string">%</span>
 </code></pre>
@@ -223,7 +228,7 @@ spec.containers除了默认的k8s container字段，还扩展了如下一些字�
 <li>当 {matched pod}=100,partition=50,maxUnavailable=10，控制器会发布 50 个 Pod 到新版本，但是发布窗口为 10，即同一时间只会发布 10 个 Pod，每发布好一个 Pod 才会再找一个发布，直到 50 个发布完成。</li>
 <li>当 {matched pod}=100,partition=80,maxUnavailable=30，控制器会发布 20 个 Pod 到新版本，因为满足 maxUnavailable 数量，所以这 20 个 Pod 会同时发布。</li>
 </ul>
-<h3>发布暂停</h3>
+<h4>发布暂停</h4>
 <p>用户可以通过设置 paused 为 true 暂停发布，此时对于新创建的、扩容的pod依旧会实现注入能力，已经更新的pod会保持更新后的版本不动，还没有更新的pod会暂停更新。</p>
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">SidecarSet</span>
@@ -231,11 +236,11 @@ spec.containers除了默认的k8s container字段，还扩展了如下一些字�
   <span class="hljs-attr">name:</span> <span class="hljs-string">sidecarset</span>
 <span class="hljs-attr">spec:</span>
   <span class="hljs-comment"># ...</span>
-  <span class="hljs-attr">strategy:</span>
+  <span class="hljs-attr">updateStrategy:</span>
     <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
     <span class="hljs-attr">paused:</span> <span class="hljs-literal">true</span>
 </code></pre>
-<h3>金丝雀发布</h3>
+<h4>金丝雀发布</h4>
 <p>对于有金丝雀发布需求的业务，可以通过strategy.selector来实现。方式：对于需要率先金丝雀灰度的pod打上固定的labels[canary.release] = true，再通过strategy.selector.matchLabels来选中该pod</p>
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">SidecarSet</span>
@@ -243,19 +248,19 @@ spec.containers除了默认的k8s container字段，还扩展了如下一些字�
   <span class="hljs-attr">name:</span> <span class="hljs-string">sidecarset</span>
 <span class="hljs-attr">spec:</span>
   <span class="hljs-comment"># ...</span>
-  <span class="hljs-attr">strategy:</span>
-  	<span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
-  	<span class="hljs-attr">selector:</span>
+  <span class="hljs-attr">updateStrategy:</span>
+    <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
+    <span class="hljs-attr">selector:</span>
       <span class="hljs-attr">matchLabels:</span>
-        <span class="hljs-attr">canary.release:</span> <span class="hljs-literal">true</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">canary.release:</span> <span class="hljs-literal">true</span>
 </code></pre>
-<h2>发布顺序控制</h2>
+<h3>发布顺序控制</h3>
 <ul>
 <li>默认对升级的pod排序，保证多次升级的顺序一致</li>
 <li>默认选择优先顺序是（越小优先级越高）： unscheduled &lt; scheduled, pending &lt; unknown &lt; running, not-ready &lt; ready, newer pods &lt; older pods</li>
 <li>scatter打散排序</li>
 </ul>
-<h3>scatter打散顺序</h3>
+<h4>scatter打散顺序</h4>
 <p>打散策略允许用户定义将符合某些标签的 Pod 打散到整个发布过程中。比如，一个 SidecarSet所管理的pod为10，如果下面有 3 个 Pod 带有 foo=bar 标签，且用户在打散策略中设置了这个标签，那么这 3 个 Pod 会被放在第 1、6、10 个位置发布。</p>
 <pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">SidecarSet</span>
@@ -263,14 +268,14 @@ spec.containers除了默认的k8s container字段，还扩展了如下一些字�
   <span class="hljs-attr">name:</span> <span class="hljs-string">sidecarset</span>
 <span class="hljs-attr">spec:</span>
   <span class="hljs-comment"># ...</span>
-  <span class="hljs-attr">strategy:</span>
-  	<span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
+  <span class="hljs-attr">updateStrategy:</span>
+    <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
     <span class="hljs-attr">scatterStrategy:</span>
     <span class="hljs-bullet">-</span> <span class="hljs-attr">key:</span> <span class="hljs-string">foo</span>
       <span class="hljs-attr">value:</span> <span class="hljs-string">bar</span>
 </code></pre>
 <p><strong>注意：如果使用 scatter 策略，建议只设置一对 key-value 做打散，会比较好理解。</strong></p>
-<h2>SidecarSet状态说明</h2>
+<h3>SidecarSet状态说明</h3>
 <p>通过sidecarset原地升级sidecar容器时，可以通过SidecarSet.Status来观察升级的过程</p>
 <pre><code class="language-yaml"><span class="hljs-comment"># kubectl describe sidecarsets sidecarset-example</span>
 <span class="hljs-attr">Name:</span>         <span class="hljs-string">sidecarset-example</span>

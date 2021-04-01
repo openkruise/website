@@ -28,15 +28,15 @@ spec:
     type: RollingUpdate
     maxUnavailable: 1
   containers:
-    - name: sidecar1
-      image: centos:6.7
-      command: ["sleep", "999d"] # do nothing at all
-      volumeMounts:
-        - name: log-volume
-          mountPath: /var/log
-  volumes: # this field will be merged into pod.spec.volumes
+  - name: sidecar1
+    image: centos:6.7
+    command: ["sleep", "999d"] # do nothing at all
+    volumeMounts:
     - name: log-volume
-      emptyDir: {}
+    mountPath: /var/log
+  volumes: # this field will be merged into pod.spec.volumes
+  - name: log-volume
+    emptyDir: {}
 ```
 创建这个 YAML:
 ```bash
@@ -118,16 +118,15 @@ spec:
     matchLabels:
       app: sample
   containers:
-    - name: nginx
-      image: nginx:alpine
+  - name: nginx
+    image: nginx:alpine
   initContainers:
-    - name: init-container
-      image: busybox:latest
-      command: [ "/bin/sh", "-c", "sleep 5 && echo 'init container success'" ]
+  - name: init-container
+    image: busybox:latest
+    command: [ "/bin/sh", "-c", "sleep 5 && echo 'init container success'" ]
   updateStrategy:
     type: RollingUpdate
   namespace: ns-1
-
 ```
 - spec.selector 通过label的方式选择需要注入、更新的pod，支持matchLabels、MatchExpressions两种方式，详情请参考：https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
 - spec.containers 定义需要注入、更新的pod.spec.containers容器，支持完整的k8s container字段，详情请参考：https://kubernetes.io/docs/concepts/containers/
@@ -143,33 +142,38 @@ spec:
 sidecar 的注入只会发生在 Pod 创建阶段，并且只有 Pod spec 会被更新，不会影响 Pod 所属的 workload template 模板。
 spec.containers除了默认的k8s container字段，还扩展了如下一些字段，来方便注入：
 ```yaml
+apiVersion: apps.kruise.io/v1alpha1
+kind: SidecarSet
+metadata:
+  name: sidecarset
 spec:
   selector:
     matchLabels:
       app: sample
   containers:
-      # k8s原生container字段
-    - name: nginx
-      image: nginx:alpine
-      volumeMounts:
-        - mountPath: /nginx/conf
-          name: nginx.conf
-      # 扩展sidecar container字段
-      podInjectPolicy: BeforeAppContainer
-      shareVolumePolicy: disabled
-      transferEnv:
-        - sourceContainerName: main
-          envName: PROXY_IP    
+    # default K8s Container fields
+  - name: nginx
+    image: nginx:alpine
+    volumeMounts:
+    - mountPath: /nginx/conf
+      name: nginx.conf
+    # extended sidecar container fields
+    podInjectPolicy: BeforeAppContainer
+    shareVolumePolicy:
+      type: enabled | disabled
+    transferEnv:
+    - sourceContainerName: main
+      envName: PROXY_IP    
   volumes:
-    - Name: nginx.conf
-      hostPath: /data/nginx/conf
+  - Name: nginx.conf
+    hostPath: /data/nginx/conf
 ```
 - podInjectPolicy 定义container注入到pod.spec.containers中的位置
     - BeforeAppContainer(默认) 注入到pod原containers的前面
     - AfterAppContainer 注入到pod原containers的后面
 - 数据卷共享
     - 共享指定卷：通过 spec.volumes 来定义 sidecar 自身需要的 volume，详情请参考：https://kubernetes.io/docs/concepts/storage/volumes/
-    - 共享所有卷：通过 spec.containers[i].shareVolumePolicy = enabled | disabled 来控制是否挂载pod应用容器的卷，常用于日志收集等 sidecar，配置为 enabled 后会把应用容器中所有挂载点注入 sidecar 同一路经下(sidecar中本身就有声明的数据卷和挂载点除外）
+    - 共享所有卷：通过 spec.containers[i].shareVolumePolicy.type = enabled | disabled 来控制是否挂载pod应用容器的卷，常用于日志收集等 sidecar，配置为 enabled 后会把应用容器中所有挂载点注入 sidecar 同一路经下(sidecar中本身就有声明的数据卷和挂载点除外）
 - 环境变量共享
     - 可以通过 spec.containers[i].transferEnv 来从别的容器获取环境变量，会把名为 sourceContainerName 容器中名为 envName 的环境变量拷贝到本容器
 

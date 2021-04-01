@@ -132,7 +132,6 @@ spec:
   updateStrategy:
     type: RollingUpdate
   namespace: ns-1
-
 ```
 - spec.selector Select the POD that needs to be injected and updated by Label. MatchLabels and MatchExpressions are supported. Please refer to the details: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
 - spec.containers Define pod.spec.containers[x] that need to be injected and updated, supporting the full K8S Container field. Please refer to the details: https://kubernetes.io/docs/concepts/containers/
@@ -165,7 +164,8 @@ spec:
       name: nginx.conf
     # extended sidecar container fields
     podInjectPolicy: BeforeAppContainer
-    shareVolumePolicy: disabled
+    shareVolumePolicy:
+      type: enabled | disabled
     transferEnv:
     - sourceContainerName: main
       envName: PROXY_IP    
@@ -178,7 +178,7 @@ spec:
     - AfterAppContainer Inject into the backend of the original pod containers
 - data volume sharing
     - Share specific volumes: Use spec.volumes to define the volumes needed by Sidecar itself. See details：https://kubernetes.io/docs/concepts/storage/volumes/
-    - Share pod containers volumes: If ShareVolumePolicy is enabled, the sidecar container will share the other container's VolumeMounts in the pod(don't contains the injected sidecar container)
+    - Share pod containers volumes: If ShareVolumePolicy.type is enabled, the sidecar container will share the other container's VolumeMounts in the pod(don't contains the injected sidecar container)
 - Environment variable sharing
     - Environment variables can be fetched from another container through spec.containers[x].transferenv, and the environment variable named envName from the container named sourceContainerName is copied to this container
 
