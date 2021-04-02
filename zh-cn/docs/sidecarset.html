@@ -35,15 +35,15 @@
     <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
     <span class="hljs-attr">maxUnavailable:</span> <span class="hljs-number">1</span>
   <span class="hljs-attr">containers:</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">sidecar1</span>
-      <span class="hljs-attr">image:</span> <span class="hljs-string">centos:6.7</span>
-      <span class="hljs-attr">command:</span> <span class="hljs-string">["sleep",</span> <span class="hljs-string">"999d"</span><span class="hljs-string">]</span> <span class="hljs-comment"># do nothing at all</span>
-      <span class="hljs-attr">volumeMounts:</span>
-        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">log-volume</span>
-          <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/var/log</span>
-  <span class="hljs-attr">volumes:</span> <span class="hljs-comment"># this field will be merged into pod.spec.volumes</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">sidecar1</span>
+    <span class="hljs-attr">image:</span> <span class="hljs-string">centos:6.7</span>
+    <span class="hljs-attr">command:</span> <span class="hljs-string">["sleep",</span> <span class="hljs-string">"999d"</span><span class="hljs-string">]</span> <span class="hljs-comment"># do nothing at all</span>
+    <span class="hljs-attr">volumeMounts:</span>
     <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">log-volume</span>
-      <span class="hljs-attr">emptyDir:</span> <span class="hljs-string">{}</span>
+    <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/var/log</span>
+  <span class="hljs-attr">volumes:</span> <span class="hljs-comment"># this field will be merged into pod.spec.volumes</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">log-volume</span>
+    <span class="hljs-attr">emptyDir:</span> <span class="hljs-string">{}</span>
 </code></pre>
 <p>创建这个 YAML:</p>
 <pre><code class="language-bash">kubectl apply -f sidecarset.yaml
@@ -116,16 +116,15 @@ Events:
     <span class="hljs-attr">matchLabels:</span>
       <span class="hljs-attr">app:</span> <span class="hljs-string">sample</span>
   <span class="hljs-attr">containers:</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">nginx</span>
-      <span class="hljs-attr">image:</span> <span class="hljs-string">nginx:alpine</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">nginx</span>
+    <span class="hljs-attr">image:</span> <span class="hljs-string">nginx:alpine</span>
   <span class="hljs-attr">initContainers:</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">init-container</span>
-      <span class="hljs-attr">image:</span> <span class="hljs-string">busybox:latest</span>
-      <span class="hljs-attr">command:</span> <span class="hljs-string">[</span> <span class="hljs-string">"/bin/sh"</span><span class="hljs-string">,</span> <span class="hljs-string">"-c"</span><span class="hljs-string">,</span> <span class="hljs-string">"sleep 5 &amp;&amp; echo 'init container success'"</span> <span class="hljs-string">]</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">init-container</span>
+    <span class="hljs-attr">image:</span> <span class="hljs-string">busybox:latest</span>
+    <span class="hljs-attr">command:</span> <span class="hljs-string">[</span> <span class="hljs-string">"/bin/sh"</span><span class="hljs-string">,</span> <span class="hljs-string">"-c"</span><span class="hljs-string">,</span> <span class="hljs-string">"sleep 5 &amp;&amp; echo 'init container success'"</span> <span class="hljs-string">]</span>
   <span class="hljs-attr">updateStrategy:</span>
     <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
   <span class="hljs-attr">namespace:</span> <span class="hljs-string">ns-1</span>
-
 </code></pre>
 <ul>
 <li>spec.selector 通过label的方式选择需要注入、更新的pod，支持matchLabels、MatchExpressions两种方式，详情请参考：<a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/">https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/</a></li>
@@ -147,26 +146,31 @@ Events:
 <h3 id="sidecar-container%E6%B3%A8%E5%85%A5">sidecar container注入 <a class="header-anchor" href="#sidecar-container%E6%B3%A8%E5%85%A5">#</a></h3>
 <p>sidecar 的注入只会发生在 Pod 创建阶段，并且只有 Pod spec 会被更新，不会影响 Pod 所属的 workload template 模板。
 spec.containers除了默认的k8s container字段，还扩展了如下一些字段，来方便注入：</p>
-<pre><code class="language-yaml"><span class="hljs-attr">spec:</span>
+<pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
+<span class="hljs-attr">kind:</span> <span class="hljs-string">SidecarSet</span>
+<span class="hljs-attr">metadata:</span>
+  <span class="hljs-attr">name:</span> <span class="hljs-string">sidecarset</span>
+<span class="hljs-attr">spec:</span>
   <span class="hljs-attr">selector:</span>
     <span class="hljs-attr">matchLabels:</span>
       <span class="hljs-attr">app:</span> <span class="hljs-string">sample</span>
   <span class="hljs-attr">containers:</span>
-      <span class="hljs-comment"># k8s原生container字段</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">nginx</span>
-      <span class="hljs-attr">image:</span> <span class="hljs-string">nginx:alpine</span>
-      <span class="hljs-attr">volumeMounts:</span>
-        <span class="hljs-bullet">-</span> <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/nginx/conf</span>
-          <span class="hljs-attr">name:</span> <span class="hljs-string">nginx.conf</span>
-      <span class="hljs-comment"># 扩展sidecar container字段</span>
-      <span class="hljs-attr">podInjectPolicy:</span> <span class="hljs-string">BeforeAppContainer</span>
-      <span class="hljs-attr">shareVolumePolicy:</span> <span class="hljs-string">disabled</span>
-      <span class="hljs-attr">transferEnv:</span>
-        <span class="hljs-bullet">-</span> <span class="hljs-attr">sourceContainerName:</span> <span class="hljs-string">main</span>
-          <span class="hljs-attr">envName:</span> <span class="hljs-string">PROXY_IP</span>    
+    <span class="hljs-comment"># default K8s Container fields</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">nginx</span>
+    <span class="hljs-attr">image:</span> <span class="hljs-string">nginx:alpine</span>
+    <span class="hljs-attr">volumeMounts:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/nginx/conf</span>
+      <span class="hljs-attr">name:</span> <span class="hljs-string">nginx.conf</span>
+    <span class="hljs-comment"># extended sidecar container fields</span>
+    <span class="hljs-attr">podInjectPolicy:</span> <span class="hljs-string">BeforeAppContainer</span>
+    <span class="hljs-attr">shareVolumePolicy:</span>
+      <span class="hljs-attr">type:</span> <span class="hljs-string">disabled</span> <span class="hljs-string">|</span> <span class="hljs-string">enabled</span>
+    <span class="hljs-attr">transferEnv:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-attr">sourceContainerName:</span> <span class="hljs-string">main</span>
+      <span class="hljs-attr">envName:</span> <span class="hljs-string">PROXY_IP</span>    
   <span class="hljs-attr">volumes:</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-attr">Name:</span> <span class="hljs-string">nginx.conf</span>
-      <span class="hljs-attr">hostPath:</span> <span class="hljs-string">/data/nginx/conf</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">Name:</span> <span class="hljs-string">nginx.conf</span>
+    <span class="hljs-attr">hostPath:</span> <span class="hljs-string">/data/nginx/conf</span>
 </code></pre>
 <ul>
 <li>podInjectPolicy 定义container注入到pod.spec.containers中的位置
@@ -178,7 +182,7 @@ spec.containers除了默认的k8s container字段，还扩展了如下一些字�
 <li>数据卷共享
 <ul>
 <li>共享指定卷：通过 spec.volumes 来定义 sidecar 自身需要的 volume，详情请参考：<a href="https://kubernetes.io/docs/concepts/storage/volumes/">https://kubernetes.io/docs/concepts/storage/volumes/</a></li>
-<li>共享所有卷：通过 spec.containers[i].shareVolumePolicy = enabled | disabled 来控制是否挂载pod应用容器的卷，常用于日志收集等 sidecar，配置为 enabled 后会把应用容器中所有挂载点注入 sidecar 同一路经下(sidecar中本身就有声明的数据卷和挂载点除外）</li>
+<li>共享所有卷：通过 spec.containers[i].shareVolumePolicy.type = enabled | disabled 来控制是否挂载pod应用容器的卷，常用于日志收集等 sidecar，配置为 enabled 后会把应用容器中所有挂载点注入 sidecar 同一路经下(sidecar中本身就有声明的数据卷和挂载点除外）</li>
 </ul>
 </li>
 <li>环境变量共享
