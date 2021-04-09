@@ -49,7 +49,7 @@ title: BroadcastJob
 
 ### 监控 BroadcastJob status
 
-在一个单 node 集群中创建一个 BroadcastJob，执行 `kubectl get bj` （BroadcastJob 的 short name）看到以下状态：
+在一个单 node 集群中创建一个 BroadcastJob，执行 `kubectl get bcj` （BroadcastJob 的 short name）看到以下状态：
 
 ```shell
  NAME                 DESIRED   ACTIVE   SUCCEEDED   FAILED
