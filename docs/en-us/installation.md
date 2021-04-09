@@ -13,10 +13,10 @@ It is recommended that you should install Kruise with helm v3.1+, which is a sim
 
 ```bash
 # Kubernetes 1.13 and 1.14
-helm install kruise https://github.com/openkruise/kruise/releases/download/v0.8.0/kruise-chart.tgz --disable-openapi-validation
+helm install kruise https://github.com/openkruise/kruise/releases/download/v0.8.1/kruise-chart.tgz --disable-openapi-validation
 
 # Kubernetes 1.15 and newer versions
-helm install kruise https://github.com/openkruise/kruise/releases/download/v0.8.0/kruise-chart.tgz
+helm install kruise https://github.com/openkruise/kruise/releases/download/v0.8.1/kruise-chart.tgz
 ```
 
 ## Upgrade with helm charts
@@ -25,10 +25,10 @@ If you are using Kruise with an old version, it is recommended that you should u
 
 ```bash
 # Kubernetes 1.13 and 1.14
-helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.8.0/kruise-chart.tgz --disable-openapi-validation
+helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.8.1/kruise-chart.tgz --disable-openapi-validation
 
 # Kubernetes 1.15 and newer versions
-helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.8.0/kruise-chart.tgz
+helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.8.1/kruise-chart.tgz
 ```
 
 Note that:
@@ -54,7 +54,7 @@ The following table lists the configurable parameters of the chart and their def
 | `manager.log.level`                       | Log level that kruise-manager printed                        | `4`                           |
 | `manager.replicas`                        | Replicas of kruise-controller-manager deployment             | `2`                           |
 | `manager.image.repository`                | Repository for kruise-manager image                          | `openkruise/kruise-manager`   |
-| `manager.image.tag`                       | Tag for kruise-manager image                                 | `v0.8.0`                      |
+| `manager.image.tag`                       | Tag for kruise-manager image                                 | `v0.8.1`                      |
 | `manager.resources.limits.cpu`            | CPU resource limit of kruise-manager container               | `100m`                        |
 | `manager.resources.limits.memory`         | Memory resource limit of kruise-manager container            | `256Mi`                       |
 | `manager.resources.requests.cpu`          | CPU resource request of kruise-manager container             | `100m`                        |

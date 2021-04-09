@@ -72,7 +72,7 @@ added node in the cluster, he can deploy a BroadcastJob with `Never` policy.
 
 ### Monitor BroadcastJob status
 
- Assuming the cluster has only one node, run `kubectl get bj` (shortcut name for BroadcastJob) and
+ Assuming the cluster has only one node, run `kubectl get bcj` (shortcut name for BroadcastJob) and
  we will see the following:
 
 ```shell

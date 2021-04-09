@@ -17,18 +17,18 @@
 <h2 id="%E9%80%9A%E8%BF%87-helm-charts-%E5%AE%89%E8%A3%85">通过 helm charts 安装 <a class="header-anchor" href="#%E9%80%9A%E8%BF%87-helm-charts-%E5%AE%89%E8%A3%85">#</a></h2>
 <p>建议采用 helm v3.1+ 来安装 Kruise，helm 是一个简单的命令行工具可以从 <a href="https://github.com/helm/helm/releases">这里</a> 获取。</p>
 <pre><code class="language-bash"><span class="hljs-comment"># Kubernetes 1.13 或 1.14 版本</span>
-helm install kruise https://github.com/openkruise/kruise/releases/download/v0.8.0/kruise-chart.tgz --<span class="hljs-built_in">disable</span>-openapi-validation
+helm install kruise https://github.com/openkruise/kruise/releases/download/v0.8.1/kruise-chart.tgz --<span class="hljs-built_in">disable</span>-openapi-validation
 
 <span class="hljs-comment"># Kubernetes 1.15 和更新的版本</span>
-helm install kruise https://github.com/openkruise/kruise/releases/download/v0.8.0/kruise-chart.tgz
+helm install kruise https://github.com/openkruise/kruise/releases/download/v0.8.1/kruise-chart.tgz
 </code></pre>
 <h2 id="%E9%80%9A%E8%BF%87-helm-charts-%E5%8D%87%E7%BA%A7">通过 helm charts 升级 <a class="header-anchor" href="#%E9%80%9A%E8%BF%87-helm-charts-%E5%8D%87%E7%BA%A7">#</a></h2>
 <p>如果你在使用旧版本的 Kruise，建议为了安全性和更丰富的功能，升级到最新版本：</p>
 <pre><code class="language-bash"><span class="hljs-comment"># Kubernetes 1.13 and 1.14</span>
-helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.8.0/kruise-chart.tgz --<span class="hljs-built_in">disable</span>-openapi-validation
+helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.8.1/kruise-chart.tgz --<span class="hljs-built_in">disable</span>-openapi-validation
 
 <span class="hljs-comment"># Kubernetes 1.15 and newer versions</span>
-helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.8.0/kruise-chart.tgz
+helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.8.1/kruise-chart.tgz
 </code></pre>
 <p>注意：</p>
 <ol>
@@ -71,7 +71,7 @@ helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.8.
 <tr>
 <td><code>manager.image.tag</code></td>
 <td>Tag for kruise-manager image</td>
-<td><code>v0.8.0</code></td>
+<td><code>v0.8.1</code></td>
 </tr>
 <tr>
 <td><code>manager.resources.limits.cpu</code></td>

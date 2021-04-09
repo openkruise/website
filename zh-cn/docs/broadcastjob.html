@@ -46,7 +46,7 @@
 <p>比如说，用户希望对集群中每个 node 都下发一个配置，包括后续新增的 node 都需要做，那么就可以创建一个 <code>Never</code> 策略的 BroadcastJob。</p>
 <h2 id="%E4%BE%8B%E5%AD%90">例子 <a class="header-anchor" href="#%E4%BE%8B%E5%AD%90">#</a></h2>
 <h3 id="%E7%9B%91%E6%8E%A7-broadcastjob-status">监控 BroadcastJob status <a class="header-anchor" href="#%E7%9B%91%E6%8E%A7-broadcastjob-status">#</a></h3>
-<p>在一个单 node 集群中创建一个 BroadcastJob，执行 <code>kubectl get bj</code> （BroadcastJob 的 short name）看到以下状态：</p>
+<p>在一个单 node 集群中创建一个 BroadcastJob，执行 <code>kubectl get bcj</code> （BroadcastJob 的 short name）看到以下状态：</p>
 <pre><code class="language-shell"> NAME                 DESIRED   ACTIVE   SUCCEEDED   FAILED
  broadcastjob-sample  1         0        1           0
 </code></pre>

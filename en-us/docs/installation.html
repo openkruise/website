@@ -18,18 +18,18 @@
 <h2 id="install-with-helm-charts">Install with helm charts <a class="header-anchor" href="#install-with-helm-charts">#</a></h2>
 <p>It is recommended that you should install Kruise with helm v3.1+, which is a simple command-line tool and you can get it from <a href="https://github.com/helm/helm/releases">here</a>.</p>
 <pre><code class="language-bash"><span class="hljs-comment"># Kubernetes 1.13 and 1.14</span>
-helm install kruise https://github.com/openkruise/kruise/releases/download/v0.8.0/kruise-chart.tgz --<span class="hljs-built_in">disable</span>-openapi-validation
+helm install kruise https://github.com/openkruise/kruise/releases/download/v0.8.1/kruise-chart.tgz --<span class="hljs-built_in">disable</span>-openapi-validation
 
 <span class="hljs-comment"># Kubernetes 1.15 and newer versions</span>
-helm install kruise https://github.com/openkruise/kruise/releases/download/v0.8.0/kruise-chart.tgz
+helm install kruise https://github.com/openkruise/kruise/releases/download/v0.8.1/kruise-chart.tgz
 </code></pre>
 <h2 id="upgrade-with-helm-charts">Upgrade with helm charts <a class="header-anchor" href="#upgrade-with-helm-charts">#</a></h2>
 <p>If you are using Kruise with an old version, it is recommended that you should upgrade to the latest version for safety and more features:</p>
 <pre><code class="language-bash"><span class="hljs-comment"># Kubernetes 1.13 and 1.14</span>
-helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.8.0/kruise-chart.tgz --<span class="hljs-built_in">disable</span>-openapi-validation
+helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.8.1/kruise-chart.tgz --<span class="hljs-built_in">disable</span>-openapi-validation
 
 <span class="hljs-comment"># Kubernetes 1.15 and newer versions</span>
-helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.8.0/kruise-chart.tgz
+helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.8.1/kruise-chart.tgz
 </code></pre>
 <p>Note that:</p>
 <ol>
@@ -75,7 +75,7 @@ it is recommended to add <code>--reset-values</code> flag in <code>helm upgrade<
 <tr>
 <td><code>manager.image.tag</code></td>
 <td>Tag for kruise-manager image</td>
-<td><code>v0.8.0</code></td>
+<td><code>v0.8.1</code></td>
 </tr>
 <tr>
 <td><code>manager.resources.limits.cpu</code></td>
