@@ -34,6 +34,7 @@ export default {
       title: 'Disclaimer',
       content: 'OpenKruise is an open-source project under Apache License 2.0.'
     },
+    cloudNative: 'We are a <a href="https://www.cncf.io">Cloud Native Computing Foundation</a> sandbox project.',
     documentation: {
       title: 'Documentation',
       list: [
@@ -55,7 +56,7 @@ export default {
       title: 'Resources',
       list: []
     },
-    copyright: 'Copyright © 2019 The OpenKruise Authors, The Kubernetes Authors'
+    copyright: 'Copyright © 2021 The OpenKruise Authors. All rights reserved. The Linux Foundation has registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation, please see our Trademark Usage page: <a href="https://www.linuxfoundation.org/trademark-usage">https://www.linuxfoundation.org/trademark-usage</a>',
   },
   'zh-cn': {
     pageMenu: [
@@ -86,6 +87,7 @@ export default {
       title: 'Disclaimer',
       content: 'OpenKruise is an open-source project under Apache License 2.0.'
     },
+    cloudNative: 'We are a <a href="https://www.cncf.io">Cloud Native Computing Foundation</a> sandbox project.',
     documentation: {
       title: '文档',
       list: [
@@ -107,6 +109,6 @@ export default {
       title: '资源',
       list: []
     },
-    copyright: 'Copyright © 2019 The OpenKruise Authors, The Kubernetes Authors'
+    copyright: 'Copyright © 2021 The OpenKruise Authors. All rights reserved. The Linux Foundation has registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation, please see our Trademark Usage page: <a href="https://www.linuxfoundation.org/trademark-usage">https://www.linuxfoundation.org/trademark-usage</a>',
   }
 };
