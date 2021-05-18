@@ -281,6 +281,68 @@ For example, if a SidecarSet manages 10 PODS, if there are 3 PODS below with the
       <span class="hljs-attr">value:</span> <span class="hljs-string">bar</span>
 </code></pre>
 <p><strong>Note: If you use Scatter, it is recommended to set only a pair of key-values for scatter. It will be easier to understand.</strong></p>
+<h3 id="hot-upgrade-sidecar">Hot Upgrade Sidecar <a class="header-anchor" href="#hot-upgrade-sidecar">#</a></h3>
+<p><strong>FEATURE STATE:</strong> Kruise v0.9.0</p>
+<p>SidecarSet's in-place upgrade will stop the container of old version first and then create the container of new version. Such method is more suitable for sidecar containers that cannot affects service availability, e.g. logging collector.</p>
+<p>But for many proxy or runtime sidecar containers, e.g. Istio Envoy, this upgrade method is problematic. Envoy, as a proxy container in the Pod, proxies all the traffic, and if restarted directly, the availability of service is affected. Complex grace termination and coordination is required if one need to upgrade envoy sidecar independently of the application container. So we provide a new solution for such sidecar container upgrade.</p>
+<pre><code class="language-yaml"><span class="hljs-comment"># sidecarset.yaml</span>
+<span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
+<span class="hljs-attr">kind:</span> <span class="hljs-string">SidecarSet</span>
+<span class="hljs-attr">metadata:</span>
+  <span class="hljs-attr">name:</span> <span class="hljs-string">test-sidecarset</span>
+<span class="hljs-attr">spec:</span>
+  <span class="hljs-attr">selector:</span>
+    <span class="hljs-attr">matchLabels:</span>
+      <span class="hljs-attr">app:</span> <span class="hljs-string">main</span>
+  <span class="hljs-attr">containers:</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">nginx-sidecar</span>
+    <span class="hljs-attr">image:</span> <span class="hljs-string">nginx:1.18</span>
+    <span class="hljs-attr">lifecycle:</span>
+      <span class="hljs-attr">postStart:</span>
+        <span class="hljs-attr">exec:</span>
+          <span class="hljs-comment"># If the environment variable SIDECARSET_VERSION=1, this is the first time sidecar container has been started, and it exit without doing anything</span>
+          <span class="hljs-comment"># If the environment variable SIDECARSET_VERSION&gt;1, indicates that this is a hot upgrade of sidecar container,</span>
+          <span class="hljs-comment"># then the script needs to complete the migration in the hot upgrade</span>
+          <span class="hljs-attr">command:</span>
+          <span class="hljs-bullet">-</span> <span class="hljs-string">/bin/bash</span>
+          <span class="hljs-bullet">-</span> <span class="hljs-string">-c</span>
+          <span class="hljs-bullet">-</span> <span class="hljs-string">/usr/local/bin/nginx-agent</span> <span class="hljs-string">migrate</span>
+    <span class="hljs-attr">upgradeStrategy:</span>
+      <span class="hljs-attr">upgradeType:</span> <span class="hljs-string">HotUpgrade</span>
+      <span class="hljs-attr">hotUpgradeEmptyImage:</span> <span class="hljs-string">empty:1.0.0</span>
+</code></pre>
+<ul>
+<li>upgradeType: HotUpgrade indicates hot upgrade for stateful sidecar container.</li>
+<li>hotUpgradeEmptyImage: when upgradeType=HotUpgrade, user needs to provide an empty container for hot upgrades. hotUpgradeEmptyImage has the same configuration as the sidecar container, for example: command, lifecycle, probe, etc, but it doesn't do anything.</li>
+<li>lifecycle.postStart: State Migration, the process completes the state migration of stateful container, which needs to be provided by the sidecar image developer.</li>
+</ul>
+<p>Hot upgrade consists of the following two processes:</p>
+<ul>
+<li>inject hot upgrade sidecar containers</li>
+<li>in-place hot upgrade sidecar container</li>
+</ul>
+<h4 id="inject-containers">Inject Containers <a class="header-anchor" href="#inject-containers">#</a></h4>
+<p>When the sidecar container upgradeStrategy=HotUpgrade, the SidecarSet Webhook will inject two containers into the Pod:</p>
+<ol>
+<li>{<a href="http://sidecarContainer.name">sidecarContainer.name</a>}-1: as shown in the figure below: envoy-1, the container run the actual working sidecar container, such as envoy:1.16.0</li>
+<li>{<a href="http://sidecarContainer.name">sidecarContainer.name</a>}-2: as shown in the figure below: envoy-2, the container run the hot upgrade empty container, and it doesn't have to deal with any real logic, as long as it stays in place, such as empty:1.0</li>
+</ol>
+<p><img src="/img/docs/sidecarset_hotupgrade_injection.png" alt="sidecarset hotupgrade_injection"></p>
+<h4 id="hot-upgrade">Hot Upgrade <a class="header-anchor" href="#hot-upgrade">#</a></h4>
+<p>The SidecarSet Controller breaks down the hot upgrade pgrocess of the sidecar container into three steps:</p>
+<ol>
+<li>Upgrade: upgrade the empty container to the new version of the sidecar container, such as envoy-2.Image = envoy:1.17.0</li>
+<li>Migration: the process completes the state migration of stateful container, which needs to be provided by the sidecar image developer. PostStartHook completes the migration of the above process.
+(<strong>Note: PostStartHook must block during the migration, and exit when migration complete.</strong>)</li>
+<li>Reset: the step resets the old version sidecar container into empty container, such as envoy-1.Image = empty:1.0</li>
+</ol>
+<p>The above is the complete hot upgrade process. If a Pod needs to be hot upgraded several times, the above three steps can be repeated.</p>
+<p><img src="/img/docs/sidecarset_hotupgrade.png" alt="sidecarset hotupgrade"></p>
+<p>For design documentation, please refer to: <a href="https://github.com/openkruise/kruise/blob/master/docs/proposals/20210305-sidecarset-hotupgrade.md">proposals sidecarset hot upgrade</a></p>
+<p>Currently known cases that utilize the SidecarSet hot upgrade mechanism:</p>
+<ul>
+<li><a href="https://help.aliyun.com/document_detail/193804.html?spm=a2c4g.11174283.6.647.63a35d68DEVH1S">ALIYUN ASM</a> implements lossless upgrade of Data Plane in Service Mesh.</li>
+</ul>
 <h3 id="sidecarset-status">SidecarSet Status <a class="header-anchor" href="#sidecarset-status">#</a></h3>
 <p>When upgrading sidecar containers with a SidecarSet, you can observe the process of upgrading through SidecarSet.Status</p>
 <pre><code class="language-yaml"><span class="hljs-comment"># kubectl describe sidecarsets sidecarset-example</span>

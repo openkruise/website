@@ -278,6 +278,74 @@ spec:
 ```
 **Note: If you use Scatter, it is recommended to set only a pair of key-values for scatter. It will be easier to understand.**
 
+### Hot Upgrade Sidecar
+**FEATURE STATE:** Kruise v0.9.0
+
+SidecarSet's in-place upgrade will stop the container of old version first and then create the container of new version. Such method is more suitable for sidecar containers that cannot affects service availability, e.g. logging collector.
+
+But for many proxy or runtime sidecar containers, e.g. Istio Envoy, this upgrade method is problematic. Envoy, as a proxy container in the Pod, proxies all the traffic, and if restarted directly, the availability of service is affected. Complex grace termination and coordination is required if one need to upgrade envoy sidecar independently of the application container. So we provide a new solution for such sidecar container upgrade.
+
+```yaml
+# sidecarset.yaml
+apiVersion: apps.kruise.io/v1alpha1
+kind: SidecarSet
+metadata:
+  name: test-sidecarset
+spec:
+  selector:
+    matchLabels:
+      app: main
+  containers:
+  - name: nginx-sidecar
+    image: nginx:1.18
+    lifecycle:
+      postStart:
+        exec:
+          # If the environment variable SIDECARSET_VERSION=1, this is the first time sidecar container has been started, and it exit without doing anything
+          # If the environment variable SIDECARSET_VERSION>1, indicates that this is a hot upgrade of sidecar container,
+          # then the script needs to complete the migration in the hot upgrade
+          command:
+          - /bin/bash
+          - -c
+          - /usr/local/bin/nginx-agent migrate
+    upgradeStrategy:
+      upgradeType: HotUpgrade
+      hotUpgradeEmptyImage: empty:1.0.0
+```
+- upgradeType: HotUpgrade indicates hot upgrade for stateful sidecar container.
+- hotUpgradeEmptyImage: when upgradeType=HotUpgrade, user needs to provide an empty container for hot upgrades. hotUpgradeEmptyImage has the same configuration as the sidecar container, for example: command, lifecycle, probe, etc, but it doesn't do anything.        
+- lifecycle.postStart: State Migration, the process completes the state migration of stateful container, which needs to be provided by the sidecar image developer.
+
+Hot upgrade consists of the following two processes:
+- inject hot upgrade sidecar containers
+- in-place hot upgrade sidecar container
+
+#### Inject Containers
+
+When the sidecar container upgradeStrategy=HotUpgrade, the SidecarSet Webhook will inject two containers into the Pod:
+1. {sidecarContainer.name}-1: as shown in the figure below: envoy-1, the container run the actual working sidecar container, such as envoy:1.16.0
+2. {sidecarContainer.name}-2: as shown in the figure below: envoy-2, the container run the hot upgrade empty container, and it doesn't have to deal with any real logic, as long as it stays in place, such as empty:1.0
+
+![sidecarset hotupgrade_injection](/img/docs/sidecarset_hotupgrade_injection.png)
+
+#### Hot Upgrade
+
+The SidecarSet Controller breaks down the hot upgrade pgrocess of the sidecar container into three steps:
+1. Upgrade: upgrade the empty container to the new version of the sidecar container, such as envoy-2.Image = envoy:1.17.0
+2. Migration: the process completes the state migration of stateful container, which needs to be provided by the sidecar image developer. PostStartHook completes the migration of the above process.
+(**Note: PostStartHook must block during the migration, and exit when migration complete.**)
+3. Reset: the step resets the old version sidecar container into empty container, such as envoy-1.Image = empty:1.0
+
+The above is the complete hot upgrade process. If a Pod needs to be hot upgraded several times, the above three steps can be repeated.
+
+![sidecarset hotupgrade](/img/docs/sidecarset_hotupgrade.png)
+
+For design documentation, please refer to: [proposals sidecarset hot upgrade](https://github.com/openkruise/kruise/blob/master/docs/proposals/20210305-sidecarset-hotupgrade.md)
+
+Currently known cases that utilize the SidecarSet hot upgrade mechanism:
+- [ALIYUN ASM](https://help.aliyun.com/document_detail/193804.html?spm=a2c4g.11174283.6.647.63a35d68DEVH1S) implements lossless upgrade of Data Plane in Service Mesh.
+
+
 ### SidecarSet Status
 When upgrading sidecar containers with a SidecarSet, you can observe the process of upgrading through SidecarSet.Status
 ```yaml
