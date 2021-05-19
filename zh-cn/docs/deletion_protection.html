@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="keywords" content="deletion_protection" />
+	<meta name="description" content="deletion_protection" />
+	<!-- 网页标签标题 -->
+	<title>Deletion Protection</title>
+	<link rel="shortcut icon" href="/img/kruise.ico"/>
+	<link rel="stylesheet" href="/build/documentation.css" />
+</head>
+<body>
+	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/zh-cn/index.html"><img class="logo" src="/img/kruise_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">En</span><div class="header-menu"><img class="header-menu-toggle" src="/img/system/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/zh-cn/index.html" target="_self">首页</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/zh-cn/docs/what_is_openkruise.html" target="_self">文档</a></li><li class="menu-item menu-item-normal"><a href="/zh-cn/blog/index.html" target="_self">博客</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/img/system/docs.png" class="front-img"/><span>文档</span><img src="/img/system/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span>快速开始</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/what_is_openkruise.html" target="_self">OpenKruise 是什么</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/installation.html" target="_self">安装</a></li></ul></li><li class="menu-item menu-item-level-1"><span>基础说明</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/cloneset.html" target="_self">CloneSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advanced_statefulset.html" target="_self">Advanced StatefulSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/sidecarset.html" target="_self">SidecarSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advanced_daemonset.html" target="_self">Advanced DaemonSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/uniteddeployment.html" target="_self">UnitedDeployment</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/broadcastjob.html" target="_self">BroadcastJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advancedcronjob.html" target="_self">AdvancedCronJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/imagepulljob.html" target="_self">ImagePullJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/containerrecreaterequest.html" target="_self">ContainerRecreateRequest</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/deletion_protection.html" target="_self">Deletion Protection</a></li></ul></li><li class="menu-item menu-item-level-1"><span>参考</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/components.html" target="_self">组件</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/go_client.html" target="_self">Golang 客户端</a></li></ul></li><li class="menu-item menu-item-level-1"><span>贡献</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="https://github.com/openkruise/kruise/blob/master/CONTRIBUTING.md" target="_self">指引手册</a></li></ul></li></ul></div><div class="doc-content markdown-body"><h1 id="deletion-protection">Deletion Protection <a class="header-anchor" href="#deletion-protection">#</a></h1>
+<p><strong>FEATURE STATE:</strong> Kruise v0.9.0</p>
+<p>该功能提供了一个安全策略，用来在 Kubernetes 级联删除的机制下保护用户的资源和应用可用性。</p>
+<h2 id="%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F">使用方式 <a class="header-anchor" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F">#</a></h2>
+<p>首先，需要在<a href="(./installation.html#optional%3A-feature-gate)">安装或升级 Kruise</a> 的时候启用 <code>ResourcesDeletionProtection</code> feature-gate。</p>
+<p>然后，用户可以给一些特定资源对象加上 <code>policy.kruise.io/delete-protection</code> 标签，值可以是：</p>
+<ul>
+<li><code>Always</code>: 这个对象禁止被删除，除非上述 label 被去掉</li>
+<li><code>Cascading</code>: 这个对象如果还有可用的下属资源，则禁止被删除</li>
+</ul>
+<p>目前支持的资源类型、以及 cascading 级联关系如下：</p>
+<table>
+<thead>
+<tr>
+<th>Kind</th>
+<th>Group</th>
+<th>Version</th>
+<th><strong>Cascading</strong> judgement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Namespace</code></td>
+<td>core</td>
+<td>v1</td>
+<td>namespace 下是否还有正常的 Pod</td>
+</tr>
+<tr>
+<td><code>CustomResourceDefinition</code></td>
+<td><a href="http://apiextensions.k8s.io">apiextensions.k8s.io</a></td>
+<td>v1beta1, v1</td>
+<td>CRD 下是否还有存量的 CR</td>
+</tr>
+<tr>
+<td><code>Deployment</code></td>
+<td>apps</td>
+<td>v1</td>
+<td>replicas 是否为 0</td>
+</tr>
+<tr>
+<td><code>StatefulSet</code></td>
+<td>apps</td>
+<td>v1</td>
+<td>replicas 是否为 0</td>
+</tr>
+<tr>
+<td><code>ReplicaSet</code></td>
+<td>apps</td>
+<td>v1</td>
+<td>replicas 是否为 0</td>
+</tr>
+<tr>
+<td><code>CloneSet</code></td>
+<td><a href="http://apps.kruise.io">apps.kruise.io</a></td>
+<td>v1alpha1</td>
+<td>replicas 是否为 0</td>
+</tr>
+<tr>
+<td><code>StatefulSet</code></td>
+<td><a href="http://apps.kruise.io">apps.kruise.io</a></td>
+<td>v1alpha1, v1beta1</td>
+<td>replicas 是否为 0</td>
+</tr>
+<tr>
+<td><code>UnitedDeployment</code></td>
+<td><a href="http://apps.kruise.io">apps.kruise.io</a></td>
+<td>v1alpha1</td>
+<td>replicas 是否为 0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="%E9%A3%8E%E9%99%A9">风险 <a class="header-anchor" href="#%E9%A3%8E%E9%99%A9">#</a></h2>
+<p>通过 <a href="https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#webhook-configuration">webhook configuration</a> 的 <code>objectSelector</code> 字段，
+Kruise webhook 只会拦截处理带有 <code>policy.kruise.io/delete-protection</code> 标签的 <code>Namespace/CustomResourceDefinition/Deployment/StatefulSet/ReplicaSet</code> 资源。</p>
+<p>因此，如果所有 kruise-manager pod 都挂了或者处于异常的状态，kube-apiserver 调用 deletion webhook 失败，
+只有带有 <code>policy.kruise.io/delete-protection</code> 标签的上述资源才会暂时无法删除。</p>
+</div></section><footer class="footer-container"><div class="cloud-native"><div class="container"><img src="https://d33wubrfki0l68.cloudfront.net/ea0d91fac8683c38ea9a1fb8a4e9914627ac6aae/8efa9/img/logos/cloud-native-computing.svg"/><p>We are a <a href="https://www.cncf.io">Cloud Native Computing Foundation</a> sandbox project.</p></div></div><div class="copyright"><span>Copyright © 2021 The OpenKruise Authors. All rights reserved. The Linux Foundation has registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation, please see our Trademark Usage page: <a href="https://www.linuxfoundation.org/trademark-usage">https://www.linuxfoundation.org/trademark-usage</a></span></div></footer></div></div>
+	<script src="https://f.alicdn.com/react/15.4.1/react-with-addons.min.js"></script>
+	<script src="https://f.alicdn.com/react/15.4.1/react-dom.min.js"></script>
+	<script>
+		window.rootPath = '';
+  </script>
+	<script src="/build/documentation.js"></script>
+</body>
+</html>

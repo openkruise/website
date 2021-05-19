@@ -43,6 +43,20 @@
       }
     },
     {
+      "filename": "containerrecreaterequest.md",
+      "link": "/en-us/docs/containerrecreaterequest.html",
+      "meta": {
+        "title": "ContainerRecreateRequest"
+      }
+    },
+    {
+      "filename": "deletion_protection.md",
+      "link": "/en-us/docs/deletion_protection.html",
+      "meta": {
+        "title": "Deletion Protection"
+      }
+    },
+    {
       "filename": "go_client.md",
       "link": "/en-us/docs/go_client.html",
       "meta": {
@@ -126,6 +140,20 @@
       "link": "/zh-cn/docs/components.html",
       "meta": {
         "title": "组件"
+      }
+    },
+    {
+      "filename": "containerrecreaterequest.md",
+      "link": "/zh-cn/docs/containerrecreaterequest.html",
+      "meta": {
+        "title": "ContainerRecreateRequest"
+      }
+    },
+    {
+      "filename": "deletion_protection.md",
+      "link": "/zh-cn/docs/deletion_protection.html",
+      "meta": {
+        "title": "Deletion Protection"
       }
     },
     {

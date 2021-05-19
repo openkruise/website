@@ -107,8 +107,60 @@ when controller receives above update request, it ensures the number of replicas
 deleted, the Pods listed in `podsToDelete` will be deleted first.
 Controller will clear `podsToDelete` automatically once the listed Pods are deleted. Note that:
 
-- If one just adds a Pod name to `podsToDelete` and do not modify `replicas`, controller will delete this Pod, and create a new Pod.
-- Without specifying `podsToDelete`, controller will scale down by deleting Pods in the order: not-ready < ready, unscheduled < scheduled, and pending < running.
+If one just adds a Pod name to `podsToDelete` and do not modify `replicas`, controller will delete this Pod, and create a new Pod.
+If one is unable to change CloneSet directly, an alternative way is to add a label `apps.kruise.io/specified-delete: true` onto the Pod waiting to delete.
+
+Comparing to delete the Pod directly, using `podsToDelete` or `apps.kruise.io/specified-delete: true`
+will have CloneSet protection by `maxUnavailable`/`maxSurge` and lifecycle `PreparingDelete` triggering (See below).
+
+### Pod deletion cost
+
+**FEATURE STATE:** Kruise v0.9.0
+
+The [controller.kubernetes.io/pod-deletion-cost](https://kubernetes.io/docs/reference/labels-annotations-taints/#pod-deletion-cost) annotation
+is defined in Kubernetes since `v1.21`, Deployment/ReplicaSet will remove pods according to this cost when downscaling.
+And CloneSet has also supported it since Kruise `v0.9.0`.
+
+The annotation should be set on the pod, the range is [-2147483647, 2147483647].
+It represents the cost of deleting a pod compared to other pods belonging to the same CloneSet.
+Pods with lower deletion cost are preferred to be deleted before pods with higher deletion cost.
+
+The implicit value for this annotation for pods that don't set it is 0; negative values are permitted.
+
+Note that this is honored on a best-effort basis, so it does not offer any guarantees on pod deletion order.
+For the sequence of pods to delete is like:
+
+1. Node unassigned < assigned
+2. PodPending < PodUnknown < PodRunning
+3. Not ready < ready
+4. Lower pod-deletion cost < higher pod-deletion-cost
+5. Been ready for empty time < less time < more time
+6. Pods with containers with higher restart counts < lower restart counts
+7. Empty creation time pods < newer pods < older pods
+
+### Short hash label
+
+**FEATURE STATE:** Kruise v0.9.0
+
+By default, CloneSet set the `controller-revision-hash` in Pod label to the full name of ControllerRevision, such as:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    controller-revision-hash: demo-cloneset-956df7994
+```
+
+It is joined by the name of CloneSet and the hash of the ControllerRevision.
+Length of the hash is usually 8~10 characters, and the label value in Kubernetes can not be more than 63 characters.
+So the name of CloneSet should be less than 52 characters.
+
+A new feature-gate named `CloneSetShortHash` has been introduced.
+If it is enabled, CloneSet will only set the `controller-revision-hash` to the real hash, such as `956df7994`.
+So there will be no limit to CloneSet name.
+
+Don't worry. Even if you enable the `CloneSetShortHash`, CloneSet will still recognize and manage the old Pods with full revision label.
 
 ## Update features
 
@@ -160,6 +212,7 @@ status:
   observedGeneration: 1
   readyReplicas: 5
   replicas: 5
+  currentRevision: sample-d4d4fb5bd
   updateRevision: sample-d4d4fb5bd
   updatedReadyReplicas: 5
   updatedReplicas: 5
@@ -171,6 +224,7 @@ Here are the explanations for the counters presented in CloneSet status:
 - `status.replicas`: Number of pods
 - `status.readyReplicas`: Number of **ready** pods
 - `status.availableReplicas`: Number of **ready and available** pods (satisfied with `minReadySeconds`)
+- `status.currentRevision`: Latest revision hash that has used to be updated to all Pods
 - `status.updateRevision`: Latest revision hash of this CloneSet
 - `status.updatedReplicas`: Number of pods with the latest revision
 - `status.updatedReadyReplicas`: Number of **ready** pods with the latest revision
@@ -210,6 +264,7 @@ status:
   observedGeneration: 2
   readyReplicas: 5
   replicas: 5
+  currentRevision: sample-d4d4fb5bd
   updateRevision: sample-56dfb978d4
   updatedReadyReplicas: 2
   updatedReplicas: 2
@@ -228,9 +283,20 @@ sample-jnjdp   1/1     Running   0          10s     sample-56dfb978d4
 sample-qqglp   1/1     Running   0          18s     sample-56dfb978d4
 ```
 
+#### Rollback by partition
+
+**FEATURE STATE:** Kruise v0.9.0
+
+By default, `partition` can only control Pods updating to the `status.updateRevision`.
+Which means for this CloneSet, when changes `partition 5 -> 3`, CloneSet will update 2 Pods to `status.updateRevision`.
+Then changes `partition 3 -> 5` back, CloneSet will do nothing.
+
+But if you have enabled `CloneSetPartitionRollback` feature-gate, in this case,
+CloneSet will update the 2 Pods in `status.updateRevision` back to `status.currentRevision`.
+
 ### MaxUnavailable
 
-MaxUnavailable is the maximum number of Pods that can be unavailable during the update.
+MaxUnavailable is the maximum number of Pods that can be unavailable.
 Value can be an absolute number (e.g., 5) or a percentage of desired number of Pods (e.g., 10%).
 Default value is 20%.
 
@@ -243,9 +309,14 @@ spec:
     maxUnavailable: 20%
 ```
 
+Since Kruise `v0.9.0`, `maxUnavailable` not only controls Pods update, but also affect Pods specified deletion.
+
+Which means if you declare to delete a Pod via `podsToDelete` or `apps.kruise.io/specified-delete: true`,
+CloneSet will delete it only if the number of unavailable Pods (comparing to the replicas number) is less than `maxUnavailable`.
+
 ### MaxSurge
 
-MaxSurge is the maximum number of pods that can be scheduled above the desired replicas during the update.
+MaxSurge is the maximum number of pods that can be scheduled above the desired replicas.
 Value can be an absolute number (ex: 5) or a percentage of desired pods (ex: 10%).
 Defaults to 0.
 
@@ -266,6 +337,25 @@ spec:
   updateStrategy:
     maxSurge: 3
 ```
+
+Since Kruise `v0.9.0`, `maxSurge` not only controls Pods update, but also affect Pods specified deletion.
+
+Which means if you declare to delete a Pod via `podsToDelete` or `apps.kruise.io/specified-delete: true`,
+CloneSet may create new a Pod, wait it to be ready, and them delete the old one.
+It depends on `maxUnavailable` and the current number of unavailable Pods.
+
+For example:
+
+- For a CloneSet `maxUnavailable=2, maxSurge=1` and currently only one unavailable Pods is `pod-a`,
+  if you patch `apps.kruise.io/specified-delete: true` onto `pod-b` or put the Pod name into `podsToDelete`,
+  CloneSet will delete it directly.
+- For a CloneSet `maxUnavailable=1, maxSurge=1` and currently only one unavailable Pods is `pod-a`,
+  if you patch `apps.kruise.io/specified-delete: true` onto `pod-b` or put the Pod name into `podsToDelete`,
+  CloneSet will create a new Pod, waiting it to be ready, and finally delete `pod-b`.
+- For a CloneSet `maxUnavailable=1, maxSurge=1` and currently only one unavailable Pods is `pod-a`,
+  if you patch `apps.kruise.io/specified-delete: true` onto `pod-a` or put the Pod name into `podsToDelete`,
+  CloneSet will delete it directly.
+- ...
 
 ### Update sequence
 
@@ -349,9 +439,27 @@ spec:
     paused: true
 ```
 
-### Lifecycle hook
+### Pre-download image for in-place update
 
-Since v0.6.1, kruise has supported lifecycle hook for CloneSet.
+**FEATURE STATE:** Kruise v0.9.0
+
+If you have enabled the `PreDownloadImageForInPlaceUpdate` feature-gate during [Kruise installation or upgrade](./installation.html#optional%3A-feature-gate),
+CloneSet controller will automatically pre-download the image you want to update to the nodes of all old Pods.
+It is quite useful to accelerate the progress of applications upgrade.
+
+The parallelism of each new image pre-downloading by CloneSet is `1`, which means the image is downloaded on nodes one by one.
+You can change the parallelism using the annotation on CloneSet according to the capability of image registry,
+for registries with more bandwidth and P2P image downloading ability, a larger parallelism can speed up the pre-download process.
+
+```yaml
+apiVersion: apps.kruise.io/v1alpha1
+kind: CloneSet
+metadata:
+  annotations:
+    apps.kruise.io/image-predownload-parallelism: "5"
+```
+
+### Lifecycle hook
 
 Each Pod managed by CloneSet has a clear state defined in `lifecycle.apps.kruise.io/state` label:
 
@@ -418,13 +526,6 @@ spec:
   - When user controller add label/finalizer into Pod and it matched inPlaceUpdate hook, CloneSet will finally update it to `Normal` state
 
 Besides, although our design supports to change a Pod from `PreparingDelete` back to `Normal` (through cancel specified delete), but it is not recommended. Because Pods in `PreparingDelete` state will not be updated by CloneSet, it might be updating immediately if comes back to `Normal`. This case is hard for user controller to handle.
-
-#### Another way for specified delete
-
-As we introduced above, CloneSet has `spec.scaleStrategy.podsToDelete` field and allow users to specify some Pods when reduce replicas.
-
-But if user just want to delete a Pod and let CloneSet create a new one, we provides another Pod label for specified delete: `apps.kruise.io/specified-delete: true`.
-Pods with this label, CloneSet will update it to `PreparingDelete` state, and delete it after hook has been satisfied.
 
 #### Example for user controller logic
 

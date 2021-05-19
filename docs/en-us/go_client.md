@@ -16,8 +16,9 @@ which only includes schema definition and clientsets of Kruise.
 Firstly, import `kruise-api` into your `go.mod` file (the version better to be the Kruise version you installed):
 
 ```
-# Note that if your code dependency has Kubernetes version >= 1.18, use version with '-1.18' suffix, such v0.8.0-1.18
-require github.com/openkruise/kruise-api v0.8.0
+# Note that if your code dependency has Kubernetes version >= 1.18,
+# use version with '-1.18' suffix, such v0.9.0-1.18
+require github.com/openkruise/kruise-api v0.9.0
 ```
 
 Then, there are two ways to use `kruise-api` in your code: use it directly or with `controller-runtime`.

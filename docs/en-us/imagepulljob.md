@@ -89,6 +89,8 @@ spec:
     - node-2
     matchLabels:
       node-type: xxx
+  # podSelector:         # [optional] label selector over pods that should pull image on nodes of these pods. Mutually exclusive with selector.
+  #  pod-label: xxx
   completionPolicy:
     type: Always                  # [optional] defaults to Always
     activeDeadlineSeconds: 1200   # [optional] no default, only work for Alway type
@@ -100,6 +102,8 @@ spec:
 
 You can write the names or label selector in the `selector` field to assign Nodes **(only one of them can be set)**.
 If no `selector` is set, the image will be pulled on all Nodes in the cluster.
+
+Or you can write the podSelector to pull image on nodes of these pods. `podSelector` is mutually exclusive with `selector`.
 
 Also, ImagePullJob has two completionPolicy types:
 
