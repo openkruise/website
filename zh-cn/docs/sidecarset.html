@@ -275,6 +275,67 @@ spec.containers除了默认的k8s container字段，还扩展了如下一些字�
       <span class="hljs-attr">value:</span> <span class="hljs-string">bar</span>
 </code></pre>
 <p><strong>注意：如果使用 scatter 策略，建议只设置一对 key-value 做打散，会比较好理解。</strong></p>
+<h3 id="sidecar%E7%83%AD%E5%8D%87%E7%BA%A7%E7%89%B9%E6%80%A7">Sidecar热升级特性 <a class="header-anchor" href="#sidecar%E7%83%AD%E5%8D%87%E7%BA%A7%E7%89%B9%E6%80%A7">#</a></h3>
+<p><strong>FEATURE STATE:</strong> Kruise v0.9.0</p>
+<p>SidecarSet原地升级会先停止旧版本的容器，然后创建新版本的容器。这种方式更加适合不影响Pod服务可用性的sidecar容器，比如说：日志收集Agent。</p>
+<p>但是对于很多代理或运行时的sidecar容器，例如Istio Envoy，这种升级方法就有问题了。Envoy作为Pod中的一个代理容器，代理了所有的流量，如果直接重启，Pod服务的可用性会受到影响。如果需要单独升级envoy sidecar，就需要复杂的grace终止和协调机制。所以我们为这种sidecar容器的升级提供了一种新的解决方案。</p>
+<pre><code class="language-yaml"><span class="hljs-comment"># sidecarset.yaml</span>
+<span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
+<span class="hljs-attr">kind:</span> <span class="hljs-string">SidecarSet</span>
+<span class="hljs-attr">metadata:</span>
+  <span class="hljs-attr">name:</span> <span class="hljs-string">test-sidecarset</span>
+<span class="hljs-attr">spec:</span>
+  <span class="hljs-attr">selector:</span>
+    <span class="hljs-attr">matchLabels:</span>
+      <span class="hljs-attr">app:</span> <span class="hljs-string">main</span>
+  <span class="hljs-attr">containers:</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">nginx-sidecar</span>
+    <span class="hljs-attr">image:</span> <span class="hljs-string">nginx:1.18</span>
+    <span class="hljs-attr">lifecycle:</span>
+      <span class="hljs-attr">postStart:</span>
+        <span class="hljs-attr">exec:</span>
+          <span class="hljs-comment"># If the environment variable SIDECARSET_VERSION=1, this is the first time sidecar container has been started, and it exit without doing anything</span>
+          <span class="hljs-comment"># If the environment variable SIDECARSET_VERSION&gt;1, indicates that this is a hot upgrade of sidecar container,</span>
+          <span class="hljs-comment"># then the script needs to complete the migration in the hot upgrade</span>
+          <span class="hljs-attr">command:</span>
+          <span class="hljs-bullet">-</span> <span class="hljs-string">/bin/bash</span>
+          <span class="hljs-bullet">-</span> <span class="hljs-string">-c</span>
+          <span class="hljs-bullet">-</span> <span class="hljs-string">/usr/local/bin/nginx-agent</span> <span class="hljs-string">migrate</span>
+    <span class="hljs-attr">upgradeStrategy:</span>
+      <span class="hljs-attr">upgradeType:</span> <span class="hljs-string">HotUpgrade</span>
+      <span class="hljs-attr">hotUpgradeEmptyImage:</span> <span class="hljs-string">empty:1.0.0</span>
+</code></pre>
+<ul>
+<li>upgradeType: HotUpgrade代表该sidecar容器的类型是hot upgrade，将执行热升级方案</li>
+<li>hotUpgradeEmptyImage: 当热升级sidecar容器时，业务必须要提供一个empty容器用于热升级过程中的容器切换。empty容器同sidecar容器具有相同的配置（除了镜像地址），例如：command, lifecycle, probe等，但是它不做任何工作。</li>
+<li>lifecycle.postStart: 状态迁移，该过程完成热升级过程中的状态迁移，该脚本需要由业务根据自身的特点自行实现，例如：nginx热升级需要完成Listen FD共享以及流量排水（reload）</li>
+</ul>
+<p>热升级特性总共包含以下两个过程：</p>
+<ol>
+<li>Pod创建时，注入热升级容器</li>
+<li>原地升级时，完成热升级流程</li>
+</ol>
+<h4 id="%E6%B3%A8%E5%85%A5%E7%83%AD%E5%8D%87%E7%BA%A7%E5%AE%B9%E5%99%A8">注入热升级容器 <a class="header-anchor" href="#%E6%B3%A8%E5%85%A5%E7%83%AD%E5%8D%87%E7%BA%A7%E5%AE%B9%E5%99%A8">#</a></h4>
+<p>Pod创建时，SidecarSet Webhook将会注入两个容器：</p>
+<ol>
+<li>{<a href="http://sidecarContainer.name">sidecarContainer.name</a>}-1: 如下图所示 envoy-1，这个容器代表正在实际工作的sidecar容器，例如：envoy:1.16.0</li>
+<li>{<a href="http://sidecarContainer.name">sidecarContainer.name</a>}-2: 如下图所示 envoy-2，这个容器是业务配置的hotUpgradeEmptyImage容器，例如：empty:1.0，用于后面的热升级机制</li>
+</ol>
+<p><img src="/img/docs/sidecarset_hotupgrade_injection.png" alt="sidecarset hotupgrade_injection"></p>
+<h4 id="%E7%83%AD%E5%8D%87%E7%BA%A7%E6%B5%81%E7%A8%8B">热升级流程 <a class="header-anchor" href="#%E7%83%AD%E5%8D%87%E7%BA%A7%E6%B5%81%E7%A8%8B">#</a></h4>
+<p>热升级流程主要分为一下三个步骤：</p>
+<ol>
+<li>Upgrade: 将empty容器升级为当前最新的sidecar容器，例如：envoy-2.Image = envoy:1.17.0</li>
+<li>Migration: lifecycle.postStart完成热升级流程中的状态迁移，当迁移完成后退出</li>
+<li>Reset: 状态迁移完成后，热升级流程将设置envoy-1容器为empty镜像，例如：envoy-1.Image = empty:1.0</li>
+</ol>
+<p>上述三个步骤完成了热升级中的全部流程，当对Pod执行多次热升级时，将重复性的执行上述三个步骤。</p>
+<p><img src="/img/docs/sidecarset_hotupgrade.png" alt="sidecarset hotupgrade"></p>
+<p>设计文档请参考: <a href="https://github.com/openkruise/kruise/blob/master/docs/proposals/20210305-sidecarset-hotupgrade.md">proposals sidecarset hot upgrade</a></p>
+<p>当前已知的利用SidecarSet热升级机制的案例：</p>
+<ul>
+<li><a href="https://help.aliyun.com/document_detail/193804.html?spm=a2c4g.11174283.6.647.63a35d68DEVH1S">ALIYUN ASM</a> 实现了Service Mesh中数据面的无损升级</li>
+</ul>
 <h3 id="sidecarset%E7%8A%B6%E6%80%81%E8%AF%B4%E6%98%8E">SidecarSet状态说明 <a class="header-anchor" href="#sidecarset%E7%8A%B6%E6%80%81%E8%AF%B4%E6%98%8E">#</a></h3>
 <p>通过sidecarset原地升级sidecar容器时，可以通过SidecarSet.Status来观察升级的过程</p>
 <pre><code class="language-yaml"><span class="hljs-comment"># kubectl describe sidecarsets sidecarset-example</span>
