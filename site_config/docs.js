@@ -49,6 +49,14 @@ export default {
                         title: 'ImagePullJob',
                         link: '/en-us/docs/imagepulljob.html',
                     },
+                    {
+                        title: 'ContainerRecreateRequest',
+                        link: '/en-us/docs/containerrecreaterequest.html',
+                    },
+                    {
+                        title: 'Deletion Protection',
+                        link: '/en-us/docs/deletion_protection.html',
+                    },
                 ],
             },
             {
@@ -125,6 +133,14 @@ export default {
                     {
                         title: 'ImagePullJob',
                         link: '/zh-cn/docs/imagepulljob.html',
+                    },
+                    {
+                        title: 'ContainerRecreateRequest',
+                        link: '/zh-cn/docs/containerrecreaterequest.html',
+                    },
+                    {
+                        title: 'Deletion Protection',
+                        link: '/zh-cn/docs/deletion_protection.html',
                     },
                 ],
             },

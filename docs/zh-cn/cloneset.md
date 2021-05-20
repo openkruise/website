@@ -101,10 +101,56 @@ spec:
 当控制器收到上面这个 CloneSet 更新之后，会确保 replicas 数量为 4。如果 `podsToDelete` 列表里写了一些 Pod 名字，控制器会优先删除这些 Pod。
 对于已经被删除的 Pod，控制器会自动从 `podsToDelete` 列表中清理掉。
 
-注意：
+如果你只把 Pod 名字加到 `podsToDelete`，但没有修改 `replicas` 数量，那么控制器会先把指定的 Pod 删掉，然后再扩一个新的 Pod。
+另一种直接删除 Pod 的方式是在要删除的 Pod 上打 `apps.kruise.io/specified-delete: true` 标签。
 
-- 如果你只把 Pod 名字加到 `podsToDelete`，但没有修改 `replicas` 数量，那么控制器会先把指定的 Pod 删掉，然后再扩一个新的 Pod。
-- 如果不指定 `podsToDelete`，控制器会按照默认顺序来选择 Pod 删除：not-ready < ready, unscheduled < scheduled, and pending < running。
+相比于手动直接删除 Pod，使用 `podsToDelete` 或 `apps.kruise.io/specified-delete: true` 方式会有 CloneSet 的 `maxUnavailable`/`maxSurge` 来保护删除，
+并且会触发 `PreparingDelete` 生命周期 hook （见下文）。
+
+### Pod deletion cost
+
+**FEATURE STATE:** Kruise v0.9.0
+
+[controller.kubernetes.io/pod-deletion-cost](https://kubernetes.io/docs/reference/labels-annotations-taints/#pod-deletion-cost)
+是从 Kubernetes 1.21 版本后加入的 annotation，Deployment/ReplicaSet 在缩容时会参考这个 cost 数值来排序。
+CloneSet 从 Kruise v0.9.0 版本后也同样支持了这个功能。
+
+用户可以把这个 annotation 配置到 pod 上，值的范围在 [-2147483647, 2147483647]。
+它表示这个 pod 相较于同个 CloneSet 下其他 pod 的 "删除代价"，代价越小的 pod 删除优先级相对越高。
+没有设置这个 annotation 的 pod 默认 deletion cost 是 0。
+
+注意这个删除顺序并不是强制保证的，因为真实的 pod 的删除类似于下述顺序：
+
+1. 未调度 < 已调度
+2. PodPending < PodUnknown < PodRunning
+3. Not ready < ready
+4. 较小 pod-deletion cost < 较大 pod-deletion cost
+5. 处于 Ready 时间较短 < 较长
+6. 容器重启次数较多 < 较少
+7. 创建时间较短 < 较长
+
+### 短 hash
+
+**FEATURE STATE:** Kruise v0.9.0
+
+默认情况下，CloneSet 在 Pod label 中设置的 `controller-revision-hash` 值为 ControllerRevision 的完整名字，比如
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    controller-revision-hash: demo-cloneset-956df7994
+```
+
+它是通过 CloneSet 名字和 ControllerRevision hash 值拼接而成。
+通常 hash 值长度为 8~10 个字符，而 Kubernetes 中的 label 值不能超过 63 个字符。
+因此 CloneSet 的名字一般是不能超过 52 个字符的。
+
+因此 `CloneSetShortHash` 这个新的 feature-gate 被引入。
+如果它被打开，CloneSet 会将 `controller-revision-hash` 的值只设置为 hash 值，比如 `956df7994`，因此 CloneSet 名字则不会有任何限制了。
+
+不用担心，即使打开了 `CloneSetShortHash`，CloneSet 仍然会识别和管理过去存量的 revision label 为完整格式的 Pod。
 
 ## 升级功能
 
@@ -152,6 +198,7 @@ status:
   observedGeneration: 1
   readyReplicas: 5
   replicas: 5
+  currentRevision: sample-d4d4fb5bd
   updateRevision: sample-d4d4fb5bd
   updatedReadyReplicas: 5
   updatedReplicas: 5
@@ -163,6 +210,7 @@ status:
 - `status.replicas`: Pod 总数
 - `status.readyReplicas`: **ready** Pod 数量
 - `status.availableReplicas`: **ready and available** Pod 数量 (满足 `minReadySeconds`)
+- `status.currentRevision`: 最近一次全量 Pod 推平版本的 revision hash 值
 - `status.updateRevision`: 最新版本的 revision hash 值
 - `status.updatedReplicas`: 最新版本的 Pod 数量
 - `status.updatedReadyReplicas`: 最新版本的 **ready** Pod 数量
@@ -202,6 +250,7 @@ status:
   observedGeneration: 2
   readyReplicas: 5
   replicas: 5
+  currentRevision: sample-d4d4fb5bd
   updateRevision: sample-56dfb978d4
   updatedReadyReplicas: 2
   updatedReplicas: 2
@@ -220,9 +269,20 @@ sample-jnjdp   1/1     Running   0          10s     sample-56dfb978d4
 sample-qqglp   1/1     Running   0          18s     sample-56dfb978d4
 ```
 
+### 通过 partition 回滚
+
+**FEATURE STATE:** Kruise v0.9.0
+
+默认情况下，`partition` 只控制 Pod 更新到 `status.updateRevision` 新版本。
+也就是说以上面这个 CloneSet 来看，当 `partition 5 -> 3` 时，CloneSet 会升级 2 个 Pod 到 `status.updateRevision` 版本。
+而当把 `partition 5 -> 3` 修改回去时，CloneSet 不会做任何事情。
+
+但是如果你启用了 `CloneSetPartitionRollback` 这个 feature-gate，
+上面这个场景下 CloneSet 会把 2 个 `status.updateRevision` 版本的 Pod 重新回滚为 `status.currentRevision` 版本。
+
 ### MaxUnavailable 最大不可用数量
 
-MaxUnavailable 是本次发布过程中，限制最多不可用的 Pod 数量。
+MaxUnavailable 是 CloneSet 限制下属最多不可用的 Pod 数量。
 它可以设置为一个**绝对值**或者**百分比**，如果不填 Kruise 会设置为默认值 `20%`。
 
 ```yaml
@@ -234,9 +294,14 @@ spec:
     maxUnavailable: 20%
 ```
 
+从 Kruise `v0.9.0` 版本开始，`maxUnavailable` 不仅会保护发布，也会对 Pod 指定删除生效。
+
+也就是说用户通过 `podsToDelete` 或 `apps.kruise.io/specified-delete: true` 来指定一个 Pod 期望删除，
+CloneSet 只会在当前不可用 Pod 数量（相对于 replicas 总数）小于 `maxUnavailable` 的时候才执行删除。
+
 ### MaxSurge 最大弹性数量
 
-MaxSurge 是本次发布过程中，最多能扩出来超过 `replicas` 的 Pod 数量。
+MaxSurge 是 CloneSet 控制最多能扩出来超过 `replicas` 的 Pod 数量。
 它可以设置为一个**绝对值**或者**百分比**，如果不填 Kruise 会设置为默认值 `0`。
 
 如果发布的时候设置了 maxSurge，控制器会先多扩出来 `maxSurge` 数量的 Pod（此时 Pod 总数为 `(replicas+maxSurge)`)，然后再开始发布存量的 Pod。
@@ -253,6 +318,24 @@ spec:
   updateStrategy:
     maxSurge: 3
 ```
+
+从 Kruise `v0.9.0` 版本开始，`maxSurge` 不仅会保护发布，也会对 Pod 指定删除生效。
+
+也就是说用户通过 `podsToDelete` 或 `apps.kruise.io/specified-delete: true` 来指定一个 Pod 期望删除，
+CloneSet 有可能会先创建一个新 Pod、等待它 ready 之后、再删除旧 Pod。这取决于当时的 `maxUnavailable` 和实际不可用 Pod 数量。
+
+比如：
+
+- 对于一个 CloneSet `maxUnavailable=2, maxSurge=1` 且有一个 `pod-a` 处于不可用状态，
+  如果你对另一个 `pod-b` 打标 `apps.kruise.io/specified-delete: true` 或将它的名字加入 `podsToDelete`，
+  那么 CloneSet 会立即删除它，然后创建一个新 Pod。
+- 对于一个 CloneSet `maxUnavailable=1, maxSurge=1` 且有一个 `pod-a` 处于不可用状态，
+  如果你对另一个 `pod-b` 打标 `apps.kruise.io/specified-delete: true` 或将它的名字加入 `podsToDelete`，
+  那么 CloneSet 会先新建一个 Pod、等待它 ready，最后再删除 `pod-b`。
+- 对于一个 CloneSet `maxUnavailable=1, maxSurge=1` 且有一个 `pod-a` 处于不可用状态，
+  如果你对这个 `pod-a` 打标 `apps.kruise.io/specified-delete: true` 或将它的名字加入 `podsToDelete`，
+  那么 CloneSet 会立即删除它，然后创建一个新 Pod。
+- ...
 
 ### 升级顺序
 
@@ -334,9 +417,25 @@ spec:
     paused: true
 ```
 
-### 生命周期钩子
+### 原地升级自动预热
 
-从 v0.6.1 版本开始，kruise 在 CloneSet 中新增了对 lifecycle hook 的支持。
+**FEATURE STATE:** Kruise v0.9.0
+
+如果你在[安装或升级 Kruise]((./installation.html#optional%3A-feature-gate)) 的时候启用了 `PreDownloadImageForInPlaceUpdate` feature-gate，
+CloneSet 控制器会自动在所有旧版本 pod 所在 node 节点上预热你正在灰度发布的新版本镜像。 这对于应用发布加速很有帮助。
+
+默认情况下 CloneSet 每个新镜像预热时的并发度都是 `1`，也就是一个个节点拉镜像。
+如果需要调整，你可以在 CloneSet annotation 上设置并发度：
+
+```yaml
+apiVersion: apps.kruise.io/v1alpha1
+kind: CloneSet
+metadata:
+  annotations:
+    apps.kruise.io/image-predownload-parallelism: "5"
+```
+
+### 生命周期钩子
 
 每个 CloneSet 管理的 Pod 会有明确所处的状态，在 Pod label 中的 `lifecycle.apps.kruise.io/state` 标记：
 
@@ -403,13 +502,6 @@ spec:
   - 等用户 controller 完成任务加上 label/finalizer、Pod 符合 inPlaceUpdate 条件后，kruise 将 Pod 状态改为 `Normal` 并判断为升级成功
 
 关于从 `PreparingDelete` 回到 `Normal` 状态，从设计上是支持的（通过撤销指定删除），但我们一般不建议这种用法。由于 `PreparingDelete` 状态的 Pod 不会被升级，当回到 `Normal` 状态后可能立即再进入发布阶段，对于用户处理 hook 是一个难题。
-
-#### 另一种指定 Pod 删除的方式
-
-前面介绍过，CloneSet 通过提供 `spec.scaleStrategy.podsToDelete` 字段来允许用户在缩小 replicas 的时候指定要删除的 Pod。
-但如果用户只是想删除某个 Pod 并让 CloneSet 重建，这种情况下修改 CloneSet 成本比较高，而用户直接删除 Pod 又无法触发 preDelete hook。
-
-因此我们又提供了一个 Pod 标签用于指定删除：`apps.kruise.io/specified-delete: true`。打了这个标签的 Pod，CloneSet 也视为需要删除，会先进入 `PreparingDelete`，待 lifecycle hook 完成后再删除。
 
 #### 用户 controller 逻辑示例
 

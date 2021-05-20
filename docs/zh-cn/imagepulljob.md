@@ -87,6 +87,8 @@ spec:
     - node-2
     matchLabels:
       node-type: xxx
+  # podSelector:         # [optional] pod label 选择器来在这些 pod 所在节点上拉取镜像, 与 selector 不能同时设置.
+  #  pod-label: xxx
   completionPolicy:
     type: Always                  # [optional] 默认为 Always
     activeDeadlineSeconds: 1200   # [optional] 无默认值, 只对 Alway 类型生效
@@ -97,6 +99,8 @@ spec:
 ```
 
 你可以在 `selector` 字段中指定节点的 名字列表 或 标签选择器 **(只能设置其中一种)**，如果没有设置 `selector` 则会选择所有节点做预热。
+
+或者你可以配置 `podSelector` 来在这些 pod 所在节点上拉取镜像，`podSelector` 与 `selector` 不能同时设置。
 
 同时，ImagePullJob 有两种 completionPolicy 类型:
 

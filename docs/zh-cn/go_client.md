@@ -14,8 +14,8 @@ title: Golang 客户端
 首先，在你的 `go.mod` 中引入 `kruise-api` 依赖 （版本号最好和你安装的 Kruise 版本相同）：
 
 ```
-# 注意如果你代码依赖中 Kubernetes 版本 >= 1.18，那么引入的版本要加 '1.18' 后缀，比如 v0.8.0-1.18
-require github.com/openkruise/kruise-api v0.8.0
+# 注意如果你代码依赖中 Kubernetes 版本 >= 1.18，那么引入的版本要加 '1.18' 后缀，比如 v0.9.0-1.18
+require github.com/openkruise/kruise-api v0.9.0
 ```
 
 然后，有两种方式在你的代码中使用 `kruise-api`：直接使用 或 通过 `controller-runtime` 使用。

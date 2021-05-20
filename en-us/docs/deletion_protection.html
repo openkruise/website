@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="keywords" content="deletion_protection" />
+	<meta name="description" content="deletion_protection" />
+	<!-- 网页标签标题 -->
+	<title>Deletion Protection</title>
+	<link rel="shortcut icon" href="/img/kruise.ico"/>
+	<link rel="stylesheet" href="/build/documentation.css" />
+</head>
+<body>
+	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/en-us/index.html"><img class="logo" src="/img/kruise_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">中</span><div class="header-menu"><img class="header-menu-toggle" src="/img/system/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/en-us/index.html" target="_self">HOME</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/en-us/docs/what_is_openkruise.html" target="_self">DOCS</a></li><li class="menu-item menu-item-normal"><a href="/en-us/blog/index.html" target="_self">BLOG</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/img/system/docs.png" class="front-img"/><span>Documentation</span><img src="/img/system/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span>Quick start</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/what_is_openkruise.html" target="_self">What is OpenKruise</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/installation.html" target="_self">Installation</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Basic</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/cloneset.html" target="_self">CloneSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/advanced_statefulset.html" target="_self">Advanced StatefulSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/sidecarset.html" target="_self">SidecarSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/advanced_daemonset.html" target="_self">Advanced DaemonSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/uniteddeployment.html" target="_self">UnitedDeployment</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/broadcastjob.html" target="_self">BroadcastJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/advancedcronjob.html" target="_self">AdvancedCronJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/imagepulljob.html" target="_self">ImagePullJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/containerrecreaterequest.html" target="_self">ContainerRecreateRequest</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/deletion_protection.html" target="_self">Deletion Protection</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Reference</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/components.html" target="_self">Components</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/go_client.html" target="_self">Golang Client</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Contribution</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="https://github.com/openkruise/kruise/blob/master/CONTRIBUTING.md" target="_self">Guidebook</a></li></ul></li></ul></div><div class="doc-content markdown-body"><h1 id="deletion-protection">Deletion Protection <a class="header-anchor" href="#deletion-protection">#</a></h1>
+<p><strong>FEATURE STATE:</strong> Kruise v0.9.0</p>
+<p>This feature provides a safety policy which could help users protect Kubernetes resources and
+applications' availability from the cascading deletion mechanism.</p>
+<h2 id="usage">Usage <a class="header-anchor" href="#usage">#</a></h2>
+<p>Firstly, users have to enable the <code>ResourcesDeletionProtection</code> feature-gate during <a href="./installation.html#optional%3A-feature-gate">Kruise installation or upgrade</a>.</p>
+<p>Then, users can add the label named <code>policy.kruise.io/delete-protection</code> to some specific resources. The values can be:</p>
+<ul>
+<li><code>Always</code>: this object will always be forbidden to be deleted, unless the label is removed</li>
+<li><code>Cascading</code>: this object will be forbidden to be deleted, if it has active resources owned</li>
+</ul>
+<p>The resources supported and the cascading judgement relationship:</p>
+<table>
+<thead>
+<tr>
+<th>Kind</th>
+<th>Group</th>
+<th>Version</th>
+<th><strong>Cascading</strong> judgement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Namespace</code></td>
+<td>core</td>
+<td>v1</td>
+<td>whether there is active Pods in this namespace</td>
+</tr>
+<tr>
+<td><code>CustomResourceDefinition</code></td>
+<td><a href="http://apiextensions.k8s.io">apiextensions.k8s.io</a></td>
+<td>v1beta1, v1</td>
+<td>whether there is existing CRs of this CRD</td>
+</tr>
+<tr>
+<td><code>Deployment</code></td>
+<td>apps</td>
+<td>v1</td>
+<td>whether the replicas is 0</td>
+</tr>
+<tr>
+<td><code>StatefulSet</code></td>
+<td>apps</td>
+<td>v1</td>
+<td>whether the replicas is 0</td>
+</tr>
+<tr>
+<td><code>ReplicaSet</code></td>
+<td>apps</td>
+<td>v1</td>
+<td>whether the replicas is 0</td>
+</tr>
+<tr>
+<td><code>CloneSet</code></td>
+<td><a href="http://apps.kruise.io">apps.kruise.io</a></td>
+<td>v1alpha1</td>
+<td>whether the replicas is 0</td>
+</tr>
+<tr>
+<td><code>StatefulSet</code></td>
+<td><a href="http://apps.kruise.io">apps.kruise.io</a></td>
+<td>v1alpha1, v1beta1</td>
+<td>whether the replicas is 0</td>
+</tr>
+<tr>
+<td><code>UnitedDeployment</code></td>
+<td><a href="http://apps.kruise.io">apps.kruise.io</a></td>
+<td>v1alpha1</td>
+<td>whether the replicas is 0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="risk">Risk <a class="header-anchor" href="#risk">#</a></h2>
+<p>Using <code>objectSelector</code> in <a href="https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#webhook-configuration">webhook configuration</a>,
+Kruise webhook will only handle those <code>Namespace/CustomResourceDefinition/Deployment/StatefulSet/ReplicaSet</code> resources with <code>policy.kruise.io/delete-protection</code> label.</p>
+<p>So, if all kruise-manager Pods are crashed or in other abnormal states, kube-apiserver fails to call the deletion webhook,
+only the resources with <code>policy.kruise.io/delete-protection</code> label can not be deleted temporarily.</p>
+</div></section><footer class="footer-container"><div class="cloud-native"><div class="container"><img src="https://d33wubrfki0l68.cloudfront.net/ea0d91fac8683c38ea9a1fb8a4e9914627ac6aae/8efa9/img/logos/cloud-native-computing.svg"/><p>We are a <a href="https://www.cncf.io">Cloud Native Computing Foundation</a> sandbox project.</p></div></div><div class="copyright"><span>Copyright © 2021 The OpenKruise Authors. All rights reserved. The Linux Foundation has registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation, please see our Trademark Usage page: <a href="https://www.linuxfoundation.org/trademark-usage">https://www.linuxfoundation.org/trademark-usage</a></span></div></footer></div></div>
+	<script src="https://f.alicdn.com/react/15.4.1/react-with-addons.min.js"></script>
+	<script src="https://f.alicdn.com/react/15.4.1/react-dom.min.js"></script>
+	<script>
+		window.rootPath = '';
+  </script>
+	<script src="/build/documentation.js"></script>
+</body>
+</html>

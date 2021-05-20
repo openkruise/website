@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="keywords" content="containerrecreaterequest" />
+	<meta name="description" content="containerrecreaterequest" />
+	<!-- 网页标签标题 -->
+	<title>ContainerRecreateRequest</title>
+	<link rel="shortcut icon" href="/img/kruise.ico"/>
+	<link rel="stylesheet" href="/build/documentation.css" />
+</head>
+<body>
+	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/en-us/index.html"><img class="logo" src="/img/kruise_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">中</span><div class="header-menu"><img class="header-menu-toggle" src="/img/system/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/en-us/index.html" target="_self">HOME</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/en-us/docs/what_is_openkruise.html" target="_self">DOCS</a></li><li class="menu-item menu-item-normal"><a href="/en-us/blog/index.html" target="_self">BLOG</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/img/system/docs.png" class="front-img"/><span>Documentation</span><img src="/img/system/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span>Quick start</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/what_is_openkruise.html" target="_self">What is OpenKruise</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/installation.html" target="_self">Installation</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Basic</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/cloneset.html" target="_self">CloneSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/advanced_statefulset.html" target="_self">Advanced StatefulSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/sidecarset.html" target="_self">SidecarSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/advanced_daemonset.html" target="_self">Advanced DaemonSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/uniteddeployment.html" target="_self">UnitedDeployment</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/broadcastjob.html" target="_self">BroadcastJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/advancedcronjob.html" target="_self">AdvancedCronJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/imagepulljob.html" target="_self">ImagePullJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/containerrecreaterequest.html" target="_self">ContainerRecreateRequest</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/deletion_protection.html" target="_self">Deletion Protection</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Reference</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/components.html" target="_self">Components</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/go_client.html" target="_self">Golang Client</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Contribution</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="https://github.com/openkruise/kruise/blob/master/CONTRIBUTING.md" target="_self">Guidebook</a></li></ul></li></ul></div><div class="doc-content markdown-body"><h1 id="containerrecreaterequest">ContainerRecreateRequest <a class="header-anchor" href="#containerrecreaterequest">#</a></h1>
+<p><strong>FEATURE STATE:</strong> Kruise v0.9.0</p>
+<p>ContainerRecreateRequest provides a way to let users <strong>restart/recreate</strong> one or more containers in an existing Pod.</p>
+<p>Just like the in-place update provided in Kruise, during container recreation, other containers in the same Pod are still running.
+Once the recreation is completed, nothing changes in the Pod except that the recreated container's restartCount is increased.
+Note that the files written into the <strong>rootfs of the previous container will be lost</strong>, but the data in volume mounts remain.</p>
+<p>This feature relies on <code>kruise-daemon</code> to stop the container in Pod.
+So if the <code>KruiseDaemon</code> feature-gate is closed, ContainerRecreateRequest will also be disabled.</p>
+<h2 id="usage">Usage <a class="header-anchor" href="#usage">#</a></h2>
+<h3 id="submit-request">Submit request <a class="header-anchor" href="#submit-request">#</a></h3>
+<p>Create a <code>ContainerRecreateRequest</code> (short name <code>CRR</code>) for each Pod container recreation:</p>
+<pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
+<span class="hljs-attr">kind:</span> <span class="hljs-string">ContainerRecreateRequest</span>
+<span class="hljs-attr">metadata:</span>
+  <span class="hljs-attr">namespace:</span> <span class="hljs-string">pod-namespace</span>
+  <span class="hljs-attr">name:</span> <span class="hljs-string">xxx</span>
+<span class="hljs-attr">spec:</span>
+  <span class="hljs-attr">podName:</span> <span class="hljs-string">pod-name</span>
+  <span class="hljs-attr">containers:</span>       <span class="hljs-comment"># list of container name that need to be recreated, at least one</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">app</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">sidecar</span>
+  <span class="hljs-attr">strategy:</span>
+    <span class="hljs-attr">failurePolicy:</span> <span class="hljs-string">Fail</span>                 <span class="hljs-comment"># or 'Ignore'. If 'Fail', the CRR will abort when one container failed to stop or recreate</span>
+    <span class="hljs-attr">orderedRecreate:</span> <span class="hljs-literal">false</span>              <span class="hljs-comment"># 'true' indicates to recreate the next container only if the previous one has recreated completely</span>
+    <span class="hljs-attr">terminationGracePeriodSeconds:</span> <span class="hljs-number">30</span>   <span class="hljs-comment"># optional duration in seconds to wait the container terminating gracefully</span>
+    <span class="hljs-attr">unreadyGracePeriodSeconds:</span> <span class="hljs-number">3</span>        <span class="hljs-comment"># duration for the Pod is marked as not ready before its preStop hook is executed and it is stopped</span>
+    <span class="hljs-attr">minStartedSeconds:</span> <span class="hljs-number">10</span>               <span class="hljs-comment"># the new container will be consider as Succeeded only if it has started over minStartedSeconds</span>
+  <span class="hljs-attr">activeDeadlineSeconds:</span> <span class="hljs-number">300</span>        <span class="hljs-comment"># the CRR will be marked as Completed immediately if it has ran over deadline duration since created</span>
+  <span class="hljs-attr">ttlSecondsAfterFinished:</span> <span class="hljs-number">1800</span>     <span class="hljs-comment"># the time CRR remain as completed before the CRR is deleted</span>
+</code></pre>
+<p><em>All fields in <code>strategy</code> and the <code>activeDeadlineSeconds</code>/<code>ttlSecondsAfterFinished</code> in <code>spec</code> are optional.</em></p>
+<ol>
+<li>Typically, containers in list will be stopped one by one, but they may be recreating together, unless the <code>orderedRecreate</code> is <code>true</code>.</li>
+<li>The <code>unreadyGracePeriodSeconds</code> depends on a new feature-gate named <code>KruisePodReadinessGate</code>, which indicates to inject a readinessGate during each Pod creating.
+Otherwise <code>unreadyGracePeriodSeconds</code> can only work for those new Pods created by Kruise that have the readinessGate.</li>
+<li>If users set <code>ttlSecondsAfterFinished</code>, then CRR will automatically be deleted after completed over this time.
+Otherwise, users have to delete the CRR manually.</li>
+</ol>
+<pre><code class="language-bash"><span class="hljs-comment"># for commandline you can</span>
+$ kubectl get containerrecreateqequest -n pod-namespace
+<span class="hljs-comment"># or just short name</span>
+$ kubectl get crr -n pod-namespace
+</code></pre>
+<h3 id="check-request-status">Check request status <a class="header-anchor" href="#check-request-status">#</a></h3>
+<p>Status of CRR looks like this:</p>
+<pre><code class="language-yaml"><span class="hljs-attr">status:</span>
+  <span class="hljs-attr">completionTime:</span> <span class="hljs-string">"2021-03-22T11:53:48Z"</span>
+  <span class="hljs-attr">containerRecreateStates:</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">app</span>
+    <span class="hljs-attr">phase:</span> <span class="hljs-string">Succeeded</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">sidecar</span>
+    <span class="hljs-attr">phase:</span> <span class="hljs-string">Succeeded</span>
+  <span class="hljs-attr">phase:</span> <span class="hljs-string">Completed</span>
+</code></pre>
+<p>The <code>status.phase</code> can be:</p>
+<ul>
+<li><code>Pending</code>: the CRR waits to be executed</li>
+<li><code>Recreating</code>: the CRR is executing</li>
+<li><code>Completed</code>: this CRR has completed, and <code>status.completionTime</code> is the timestamp of completion</li>
+</ul>
+<p>Note that <code>status.phase=Completed</code> does not mean all containers in CRR have recreated successfully.
+Users should find the information in <code>status.containerRecreateStates</code>.</p>
+<p>The <code>status.containerRecreateStates[x].phase</code> can be:</p>
+<ul>
+<li><code>Pending</code>: this container waits to recreate</li>
+<li><code>Recreating</code>: this container is recreating</li>
+<li><code>Failed</code>: this container has failed to recreate</li>
+<li><code>Succeeded</code>: this container has succeeded to recreate</li>
+</ul>
+<p><strong>When the CRR has completed, only the containers in <code>Succeeded</code> phase are successfully recreated.</strong></p>
+<h2 id="implementation">Implementation <a class="header-anchor" href="#implementation">#</a></h2>
+<p>When users create a CRR, Kruise webhook will inject the current containerID and restartCount into <code>spec.containers[x].statusContext</code>.
+And, when <strong>kruise-daemon</strong> starts to execute, it will skip the container if its containerID is not equal to the one in statusContext or the restartCount has been bigger,
+which means the container has already been recreated (maybe by in-place update).</p>
+<p><img src="/img/docs/containerrecreaterequest.png" alt="ContainerRecreateRequest"></p>
+<p>Typically, <strong>kruise-daemon</strong> will stop the container with or without preStop hook, then <strong>kubelet</strong> will create a new container and start again.
+Finally, <strong>kruise-daemon</strong> will report the container phase as <code>Succeeded</code> only if the new container has started over <code>minStartedSeconds</code> duration.</p>
+<p>If the recreation occurs with an in-place update in the same time:</p>
+<ul>
+<li>If <strong>Kubelet</strong> has stopped or recreated the container because of in-place update, <strong>kruise-daemon</strong> will consider it already recreated.</li>
+<li>If <strong>kruise-daemon</strong> stops the container, <strong>Kubelet</strong> will keep to in-place update the container to the new image.</li>
+</ul>
+<p>If multiple ContainerRecreateRequests are submitted for one Pod, they will be executed one by one.</p>
+</div></section><footer class="footer-container"><div class="cloud-native"><div class="container"><img src="https://d33wubrfki0l68.cloudfront.net/ea0d91fac8683c38ea9a1fb8a4e9914627ac6aae/8efa9/img/logos/cloud-native-computing.svg"/><p>We are a <a href="https://www.cncf.io">Cloud Native Computing Foundation</a> sandbox project.</p></div></div><div class="copyright"><span>Copyright © 2021 The OpenKruise Authors. All rights reserved. The Linux Foundation has registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation, please see our Trademark Usage page: <a href="https://www.linuxfoundation.org/trademark-usage">https://www.linuxfoundation.org/trademark-usage</a></span></div></footer></div></div>
+	<script src="https://f.alicdn.com/react/15.4.1/react-with-addons.min.js"></script>
+	<script src="https://f.alicdn.com/react/15.4.1/react-dom.min.js"></script>
+	<script>
+		window.rootPath = '';
+  </script>
+	<script src="/build/documentation.js"></script>
+</body>
+</html>

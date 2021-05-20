@@ -11,10 +11,10 @@ OpenKruise 要求 Kubernetes 版本高于 1.13+，注意在 1.13 和 1.14 版本
 
 ```bash
 # Kubernetes 1.13 或 1.14 版本
-helm install kruise https://github.com/openkruise/kruise/releases/download/v0.8.1/kruise-chart.tgz --disable-openapi-validation
+helm install kruise https://github.com/openkruise/kruise/releases/download/v0.9.0/kruise-chart.tgz --disable-openapi-validation
 
 # Kubernetes 1.15 和更新的版本
-helm install kruise https://github.com/openkruise/kruise/releases/download/v0.8.1/kruise-chart.tgz
+helm install kruise https://github.com/openkruise/kruise/releases/download/v0.9.0/kruise-chart.tgz
 ```
 
 ## 通过 helm charts 升级
@@ -23,10 +23,10 @@ helm install kruise https://github.com/openkruise/kruise/releases/download/v0.8.
 
 ```bash
 # Kubernetes 1.13 and 1.14
-helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.8.1/kruise-chart.tgz --disable-openapi-validation
+helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.9.0/kruise-chart.tgz --disable-openapi-validation
 
 # Kubernetes 1.15 and newer versions
-helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.8.1/kruise-chart.tgz
+helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.9.0/kruise-chart.tgz
 ```
 
 注意：
@@ -44,31 +44,32 @@ helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.8.
 
 | Parameter                                 | Description                                                  | Default                       |
 | ----------------------------------------- | ------------------------------------------------------------ | ----------------------------- |
-| `featureGates`                            | Feature gates for Kruise, empty string means all enabled     | ``                            |
-| `manager.log.level`                       | Log level that kruise-manager printed                        | `4`                           |
-| `manager.replicas`                        | Replicas of kruise-controller-manager deployment             | `2`                           |
-| `manager.image.repository`                | Repository for kruise-manager image                          | `openkruise/kruise-manager`   |
-| `manager.image.tag`                       | Tag for kruise-manager image                                 | `v0.8.1`                      |
-| `manager.resources.limits.cpu`            | CPU resource limit of kruise-manager container               | `100m`                        |
-| `manager.resources.limits.memory`         | Memory resource limit of kruise-manager container            | `256Mi`                       |
-| `manager.resources.requests.cpu`          | CPU resource request of kruise-manager container             | `100m`                        |
-| `manager.resources.requests.memory`       | Memory resource request of kruise-manager container          | `256Mi`                       |
-| `manager.metrics.port`                    | Port of metrics served                                       | `8080`                        |
-| `manager.webhook.port`                    | Port of webhook served                                       | `9443`                        |
-| `manager.nodeAffinity`                    | Node affinity policy for kruise-manager pod                  | `{}`                          |
-| `manager.nodeSelector`                    | Node labels for kruise-manager pod                           | `{}`                          |
-| `manager.tolerations`                     | Tolerations for kruise-manager pod                           | `[]`                          |
-| `daemon.log.level`                        | Log level that kruise-daemon printed                         | `4`                           |
-| `daemon.port`                             | Port of metrics and healthz that kruise-daemon served        | `10221`                       |
-| `daemon.resources.limits.cpu`             | CPU resource limit of kruise-daemon container                | `50m`                         |
-| `daemon.resources.limits.memory`          | Memory resource limit of kruise-daemon container             | `64Mi`                        |
-| `daemon.resources.requests.cpu`           | CPU resource request of kruise-daemon container              | `0`                           |
-| `daemon.resources.requests.memory`        | Memory resource request of kruise-daemon container           | `0`                           |
-| `daemon.affinity`                         | Affinity policy for kruise-daemon pod                        | `{}`                          |
-| `daemon.socketLocation`                   | Location of the container manager control socket             | `/var/run`                    |
-| `webhookConfiguration.failurePolicy.pods` | The failurePolicy for pods in mutating webhook configuration | `Ignore`                      |
-| `webhookConfiguration.timeoutSeconds`     | The timeoutSeconds for all webhook configuration             | `30`                          |
-| `crds.managed`                            | Kruise will not install CRDs with chart if this is false     | `true`                        |
+| `featureGates`                            | 可配置的 feature gates 参数，空表示按默认开关处理                  | ``                            |
+| `installation.namespace`                  | kruise 安装到的 namespace，一般不建议修改                        | `kruise-system`               |
+| `manager.log.level`                       | kruise-manager 日志输出级别                                    | `4`                           |
+| `manager.replicas`                        | kruise-manager 的期望副本数                                    | `2`                           |
+| `manager.image.repository`                | kruise-manager/kruise-daemon 镜像仓库                         | `openkruise/kruise-manager`   |
+| `manager.image.tag`                       | kruise-manager/kruise-daemon 镜像版本                         | `v0.9.0`                      |
+| `manager.resources.limits.cpu`            | kruise-manager 的 limit CPU 资源                              | `100m`                        |
+| `manager.resources.limits.memory`         | kruise-manager 的 limit memory 资源                           | `256Mi`                       |
+| `manager.resources.requests.cpu`          | kruise-manager 的 request CPU 资源                            | `100m`                        |
+| `manager.resources.requests.memory`       | kruise-manager 的 request memory 资源                         | `256Mi`                       |
+| `manager.metrics.port`                    | metrics 服务的监听端口                                         | `8080`                        |
+| `manager.webhook.port`                    | webhook 服务的监听端口                                         | `9443`                        |
+| `manager.nodeAffinity`                    | kruise-manager 部署的 node affinity 亲和性                     | `{}`                          |
+| `manager.nodeSelector`                    | kruise-manager 部署的 node selector 亲和性                     | `{}`                          |
+| `manager.tolerations`                     | kruise-manager 部署的 tolerations                             | `[]`                          |
+| `daemon.log.level`                        | kruise-daemon 日志输出级别                                     | `4`                           |
+| `daemon.port`                             | kruise-daemon 的 metrics/healthz 服务监听端口                  | `10221`                       |
+| `daemon.resources.limits.cpu`             | kruise-daemon 的 limit CPU 资源                               | `50m`                         |
+| `daemon.resources.limits.memory`          | kruise-daemon 的 limit memory 资源                            | `128Mi`                       |
+| `daemon.resources.requests.cpu`           | kruise-daemon 的 request CPU 资源                             | `0`                           |
+| `daemon.resources.requests.memory`        | kruise-daemon 的 request memory 资源                          | `0`                           |
+| `daemon.affinity`                         | kruise-daemon 部署的 affinity 亲和性 (可以排除一些 node 不部署 daemon) | `{}`                     |
+| `daemon.socketLocation`                   | Node 节点上 CRI socket 文件所在目录                              | `/var/run`                    |
+| `webhookConfiguration.failurePolicy.pods` | Pod webhook 的失败策略                                         | `Ignore`                      |
+| `webhookConfiguration.timeoutSeconds`     | 所有 Kruise webhook 的调用超时时间                               | `30`                          |
+| `crds.managed`                            | 是否安装 Kruise CRD (如何关闭则 chart 不会安装任何 CRD)            | `true`                        |
 
 这些参数可以通过 `--set key=value[,key=value]` 参数在 `helm install` 或 `helm upgrade` 命令中生效。
 
@@ -76,20 +77,23 @@ helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.8.
 
 Feature-gate 控制了 Kruise 中一些有影响性的功能：
 
-| Name                   | Description                                                  | Default | Side effect (if closed)              |
-| ---------------------- | ------------------------------------------------------------ | ------- | --------------------------------------
-| `PodWebhook`           | Whether to open a webhook for Pod **create**                 | `true`  | SidecarSet disabled                  |
-| `KruiseDaemon`         | Whether to deploy `kruise-daemon` DaemonSet                  | `true`  | Image pulling disabled               |
+| Name                   | Description                                                  | Default | Side effect (if closed)                 |
+| ---------------------- | ------------------------------------------------------------ | ------- | -----------------------------------------
+| `PodWebhook`           | 启用对于 Pod **创建** 的 webhook (不建议关闭)                 | `true`  | SidecarSet/KruisePodReadinessGate 不可用    |
+| `KruiseDaemon`         | 启用 `kruise-daemon` DaemonSet (不建议关闭)                 | `true`  | 镜像预热/容器重启 不可用                       |
+| `CloneSetShortHash`    | 启用 CloneSet controller 只在 pod label 中设置短 hash 值     | `false` | CloneSet 名字不能超过 54 个字符（默认行为）     |
+| `KruisePodReadinessGate` | 启用 Kruise webhook 将 'KruisePodReady' readiness-gate 在所有 Pod 创建时注入 | `false` | 只会注入到 Kruise workloads 创建的 Pod 中 |
+| `PreDownloadImageForInPlaceUpdate` | 启用 CloneSet 自动为原地升级的过程创建 ImagePullJob 来预热镜像 | `false` | 原地升级无镜像提前预热 |
+| `CloneSetPartitionRollback` | 启用如果 partition 被调大， CloneSet controller 会回滚 Pod 到 currentRevision 老版本 | `false` | CloneSet 只会正向发布 Pod 到 updateRevision |
+| `ResourcesDeletionProtection` | Enables protection for resources deletion              | `false` | 资源删除无保护 |
 
-如果你要配置 feature-gate，只要在安装或升级时配置参数：
+如果你要配置 feature-gate，只要在安装或升级时配置参数即可，比如：
 
 ```bash
-# one
-$ helm install kruise https://... --set featureGates="PodWebhook=false"
-
-# or more
-$ helm install kruise https://... --set featureGates="PodWebhook=false\,KruiseDaemon=false"
+$ helm install kruise https://... --set featureGates="ResourcesDeletionProtection=true\,PreDownloadImageForInPlaceUpdate=true"
 ```
+
+如果你希望打开所有 feature-gate 功能，配置参数 `featureGates=AllAlpha=true`。
 
 ### 可选: 中国本地镜像
 
