@@ -66,7 +66,7 @@
 }
 </code></pre>
 <h3 id="%E5%8D%87%E7%BA%A7%E6%96%B9%E5%BC%8F">升级方式 <a class="header-anchor" href="#%E5%8D%87%E7%BA%A7%E6%96%B9%E5%BC%8F">#</a></h3>
-<p>Advanced DaemonSet 在 <code>spec.updateStrategy.rollingUpdate</code> 中有一个 <code>type</code> 字段，标识了如何进行滚动升级：</p>
+<p>Advanced DaemonSet 在 <code>spec.updateStrategy.rollingUpdate</code> 中有一个 <code>rollingUpdateType</code> 字段，标识了如何进行滚动升级：</p>
 <ul>
 <li><code>Standard</code>: 对于每个 node，控制器会先删除旧的 daemon Pod，再创建一个新 Pod，和原生 DaemonSet 行为一致。</li>
 <li><code>Surging</code>: 对于每个 node，控制器会先创建一个新 Pod，等它 ready 之后再删除老 Pod。</li>
@@ -78,7 +78,7 @@
   <span class="hljs-attr">updateStrategy:</span>
     <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
     <span class="hljs-attr">rollingUpdate:</span>
-      <span class="hljs-attr">type:</span> <span class="hljs-string">Standard</span>
+      <span class="hljs-attr">rollingUpdateType:</span> <span class="hljs-string">Standard</span>
 </code></pre>
 <h3 id="selector-%E6%A0%87%E7%AD%BE%E9%80%89%E6%8B%A9%E5%8D%87%E7%BA%A7">Selector 标签选择升级 <a class="header-anchor" href="#selector-%E6%A0%87%E7%AD%BE%E9%80%89%E6%8B%A9%E5%8D%87%E7%BA%A7">#</a></h3>
 <p>这个策略支持用户通过配置 node 标签的 selector，来指定灰度升级某些特定类型 node 上的 Pod。</p>
@@ -106,7 +106,7 @@
       <span class="hljs-attr">partition:</span> <span class="hljs-number">10</span>
 </code></pre>
 <h3 id="%E7%83%AD%E5%8D%87%E7%BA%A7">热升级 <a class="header-anchor" href="#%E7%83%AD%E5%8D%87%E7%BA%A7">#</a></h3>
-<p>MaxSurge 是 DaemonSet pods 最大扩出来超过预期的数量，只有在 <code>type=SurgingRollingUpdateType</code> 的时候会生效。</p>
+<p>MaxSurge 是 DaemonSet pods 最大扩出来超过预期的数量，只有在 <code>rollingUpdateType=Surging</code> 的时候会生效。</p>
 <p>MaxSurge 可以设置为绝对值或者一个百分比，控制器针对百分比会基于 status.desiredNumberScheduled 做计算并向上取整，默认值为 1。</p>
 <p>比如当设置为 30% 时，最多有总数的 30% 的 node 上会同时有 2 个 Pod 在运行。
 当新 Pod 变为 available 之后控制器会下线老 Pod，然后开始更新下一个 node，在整个过程中所有正常 Pod 数量不会超过总 node 数量的 130%。</p>
@@ -116,6 +116,7 @@
   <span class="hljs-comment"># ...</span>
   <span class="hljs-attr">updateStrategy:</span>
     <span class="hljs-attr">rollingUpdate:</span>
+      <span class="hljs-attr">rollingUpdateType:</span> <span class="hljs-string">Surging</span>
       <span class="hljs-attr">maxSurge:</span> <span class="hljs-number">30</span><span class="hljs-string">%</span>
 </code></pre>
 <h3 id="%E6%9A%82%E5%81%9C%E5%8D%87%E7%BA%A7">暂停升级 <a class="header-anchor" href="#%E6%9A%82%E5%81%9C%E5%8D%87%E7%BA%A7">#</a></h3>

@@ -69,7 +69,7 @@ file from <code>apps/v1</code> to <code>apps.kruise.io/v1alpha1</code> after ins
 }
 </code></pre>
 <h3 id="type-for-rolling-update">Type for rolling update <a class="header-anchor" href="#type-for-rolling-update">#</a></h3>
-<p>Advanced DaemonSet has a <code>Type</code> field in <code>spec.updateStrategy.rollingUpdate</code>
+<p>Advanced DaemonSet has a <code>rollingUpdateType</code> field in <code>spec.updateStrategy.rollingUpdate</code>
 which controls the way to rolling update.</p>
 <ul>
 <li><code>Standard</code>: controller will replace the old daemons by new ones using rolling update i.e replace them on each node one after the other.
@@ -84,7 +84,7 @@ after the other, creating the new pod and then killing the old one.</li>
   <span class="hljs-attr">updateStrategy:</span>
     <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span>
     <span class="hljs-attr">rollingUpdate:</span>
-      <span class="hljs-attr">type:</span> <span class="hljs-string">Standard</span>
+      <span class="hljs-attr">rollingUpdateType:</span> <span class="hljs-string">Standard</span>
 </code></pre>
 <h3 id="selector-for-rolling-update">Selector for rolling update <a class="header-anchor" href="#selector-for-rolling-update">#</a></h3>
 <p>It helps users to update Pods on specific nodes whose labels could be matched with the selector.</p>
@@ -113,7 +113,7 @@ Partition is the number of DaemonSet pods that should be remained to be old vers
 </code></pre>
 <h3 id="maxsurge-for-rolling-update">MaxSurge for rolling update <a class="header-anchor" href="#maxsurge-for-rolling-update">#</a></h3>
 <p>MaxSurge is the maximum number of DaemonSet pods that can be scheduled above the desired number of pods during the update.
-Only when type=SurgingRollingUpdateType, it works.</p>
+Only when <code>rollingUpdateType=Surging</code>, it works.</p>
 <p>Value can be an absolute number (ex: 5) or a percentage of the total number of DaemonSet pods at the start of the update (ex: 10%).
 The absolute number is calculated from the percentage by rounding up. This cannot be 0. The default value is 1.</p>
 <p>Example: when this is set to 30%, at most 30% of the total number of nodes that should be running the daemon pod (i.e. status.desiredNumberScheduled) can have 2 pods running at any given time.
@@ -126,6 +126,7 @@ thus ensuring that at most 130% of the desired final number of DaemonSet pods ar
   <span class="hljs-comment"># ...</span>
   <span class="hljs-attr">updateStrategy:</span>
     <span class="hljs-attr">rollingUpdate:</span>
+      <span class="hljs-attr">rollingUpdateType:</span> <span class="hljs-string">Surging</span>
       <span class="hljs-attr">maxSurge:</span> <span class="hljs-number">30</span><span class="hljs-string">%</span>
 </code></pre>
 <h3 id="paused-for-rolling-update">Paused for rolling update <a class="header-anchor" href="#paused-for-rolling-update">#</a></h3>
