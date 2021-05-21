@@ -66,7 +66,7 @@ type RollingUpdateDaemonSet struct {
 
 ### 升级方式
 
-Advanced DaemonSet 在 `spec.updateStrategy.rollingUpdate` 中有一个 `type` 字段，标识了如何进行滚动升级：
+Advanced DaemonSet 在 `spec.updateStrategy.rollingUpdate` 中有一个 `rollingUpdateType` 字段，标识了如何进行滚动升级：
 
 - `Standard`: 对于每个 node，控制器会先删除旧的 daemon Pod，再创建一个新 Pod，和原生 DaemonSet 行为一致。
 - `Surging`: 对于每个 node，控制器会先创建一个新 Pod，等它 ready 之后再删除老 Pod。
@@ -79,7 +79,7 @@ spec:
   updateStrategy:
     type: RollingUpdate
     rollingUpdate:
-      type: Standard
+      rollingUpdateType: Standard
 ```
 
 ### Selector 标签选择升级
@@ -117,7 +117,7 @@ spec:
 
 ### 热升级
 
-MaxSurge 是 DaemonSet pods 最大扩出来超过预期的数量，只有在 `type=SurgingRollingUpdateType` 的时候会生效。
+MaxSurge 是 DaemonSet pods 最大扩出来超过预期的数量，只有在 `rollingUpdateType=Surging` 的时候会生效。
 
 MaxSurge 可以设置为绝对值或者一个百分比，控制器针对百分比会基于 status.desiredNumberScheduled 做计算并向上取整，默认值为 1。
 
@@ -131,6 +131,7 @@ spec:
   # ...
   updateStrategy:
     rollingUpdate:
+      rollingUpdateType: Surging
       maxSurge: 30%
 ```
 

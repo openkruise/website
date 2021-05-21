@@ -68,7 +68,7 @@ type RollingUpdateDaemonSet struct {
 
 ### Type for rolling update
 
-Advanced DaemonSet has a `Type` field in `spec.updateStrategy.rollingUpdate`
+Advanced DaemonSet has a `rollingUpdateType` field in `spec.updateStrategy.rollingUpdate`
 which controls the way to rolling update.
 
 - `Standard`: controller will replace the old daemons by new ones using rolling update i.e replace them on each node one after the other.
@@ -84,7 +84,7 @@ spec:
   updateStrategy:
     type: RollingUpdate
     rollingUpdate:
-      type: Standard
+      rollingUpdateType: Standard
 ```
 
 ### Selector for rolling update
@@ -123,7 +123,7 @@ spec:
 ### MaxSurge for rolling update
 
 MaxSurge is the maximum number of DaemonSet pods that can be scheduled above the desired number of pods during the update.
-Only when type=SurgingRollingUpdateType, it works.
+Only when `rollingUpdateType=Surging`, it works.
 
 Value can be an absolute number (ex: 5) or a percentage of the total number of DaemonSet pods at the start of the update (ex: 10%).
 The absolute number is calculated from the percentage by rounding up. This cannot be 0. The default value is 1.
@@ -140,6 +140,7 @@ spec:
   # ...
   updateStrategy:
     rollingUpdate:
+      rollingUpdateType: Surging
       maxSurge: 30%
 ```
 
