@@ -25,9 +25,13 @@ OpenKruise 是 Kubernetes 的一个标准扩展，它可以配合原生 Kubernet
 
   支持用户指定在任意范围的节点上下载镜像。
 
+- **容器重建/重启**
+
+  支持用户重建/重启存量 Pod 中一个或多个容器。
+
 - **...**
 
-## CRD 列表
+## Controllers 与 Webhooks
 
 - **CloneSet**
 
@@ -60,3 +64,12 @@ OpenKruise 是 Kubernetes 的一个标准扩展，它可以配合原生 Kubernet
 - **ImagePullJob**
 
     支持用户指定在任意范围的节点上下载镜像。
+
+- **ContainerRecreateRequest**
+
+  为用户提供了重建/重启存量 Pod 中一个或多个容器的能力。
+
+- **Deletion Protection**
+
+  该功能提供了删除安全策略，用来在 Kubernetes 级联删除的机制下保护用户的资源和应用可用性。
+
