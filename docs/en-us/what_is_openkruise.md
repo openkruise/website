@@ -25,9 +25,13 @@ OpenKruise is a full set of standard extensions for Kubernetes. It works well wi
 
   Help users download images on any nodes they want.
 
+- **Container recreate/restart**
+
+  Help users restart/recreate one or more containers in an existing Pod.
+
 - **...**
 
-## CRDs
+## Controllers and Webhooks
 
 - **CloneSet**
 
@@ -60,3 +64,12 @@ OpenKruise is a full set of standard extensions for Kubernetes. It works well wi
 - **ImagePullJob**
 
     Help users download images on any nodes they want.
+
+- **ContainerRecreateRequest**
+
+    Provides a way to let users restart/recreate one or more containers in an existing Pod.
+
+- **Deletion Protection**
+
+    Provides a safety policy which could help users protect Kubernetes resources and applications' availability from the cascading deletion mechanism.
+

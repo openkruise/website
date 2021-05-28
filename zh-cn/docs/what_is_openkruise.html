@@ -34,10 +34,14 @@
 <p>支持用户指定在任意范围的节点上下载镜像。</p>
 </li>
 <li>
+<p><strong>容器重建/重启</strong></p>
+<p>支持用户重建/重启存量 Pod 中一个或多个容器。</p>
+</li>
+<li>
 <p><strong>...</strong></p>
 </li>
 </ul>
-<h2 id="crd-%E5%88%97%E8%A1%A8">CRD 列表 <a class="header-anchor" href="#crd-%E5%88%97%E8%A1%A8">#</a></h2>
+<h2 id="controllers-%E4%B8%8E-webhooks">Controllers 与 Webhooks <a class="header-anchor" href="#controllers-%E4%B8%8E-webhooks">#</a></h2>
 <ul>
 <li>
 <p><strong>CloneSet</strong></p>
@@ -70,6 +74,14 @@
 <li>
 <p><strong>ImagePullJob</strong></p>
 <p>支持用户指定在任意范围的节点上下载镜像。</p>
+</li>
+<li>
+<p><strong>ContainerRecreateRequest</strong></p>
+<p>为用户提供了重建/重启存量 Pod 中一个或多个容器的能力。</p>
+</li>
+<li>
+<p><strong>Deletion Protection</strong></p>
+<p>该功能提供了删除安全策略，用来在 Kubernetes 级联删除的机制下保护用户的资源和应用可用性。</p>
 </li>
 </ul>
 </div></section><footer class="footer-container"><div class="cloud-native"><div class="container"><img src="https://d33wubrfki0l68.cloudfront.net/ea0d91fac8683c38ea9a1fb8a4e9914627ac6aae/8efa9/img/logos/cloud-native-computing.svg"/><p>We are a <a href="https://www.cncf.io">Cloud Native Computing Foundation</a> sandbox project.</p></div></div><div class="copyright"><span>Copyright © 2021 The OpenKruise Authors. All rights reserved. The Linux Foundation has registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation, please see our Trademark Usage page: <a href="https://www.linuxfoundation.org/trademark-usage">https://www.linuxfoundation.org/trademark-usage</a></span></div></footer></div></div>
