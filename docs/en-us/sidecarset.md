@@ -286,31 +286,27 @@ SidecarSet's in-place upgrade will stop the container of old version first and t
 But for many proxy or runtime sidecar containers, e.g. Istio Envoy, this upgrade method is problematic. Envoy, as a proxy container in the Pod, proxies all the traffic, and if restarted directly, the availability of service is affected. Complex grace termination and coordination is required if one need to upgrade envoy sidecar independently of the application container. So we provide a new solution for such sidecar container upgrade.
 
 ```yaml
-# sidecarset.yaml
 apiVersion: apps.kruise.io/v1alpha1
 kind: SidecarSet
 metadata:
-  name: test-sidecarset
+  name: hotupgrade-sidecarset
 spec:
   selector:
     matchLabels:
-      app: main
+      app: hotupgrade
   containers:
-  - name: nginx-sidecar
-    image: nginx:1.18
+  - name: sidecar
+    image: openkruise/hotupgrade-sample:sidecarv1
+    imagePullPolicy: Always
     lifecycle:
       postStart:
         exec:
-          # If the environment variable SIDECARSET_VERSION=1, this is the first time sidecar container has been started, and it exit without doing anything
-          # If the environment variable SIDECARSET_VERSION>1, indicates that this is a hot upgrade of sidecar container,
-          # then the script needs to complete the migration in the hot upgrade
           command:
-          - /bin/bash
-          - -c
-          - /usr/local/bin/nginx-agent migrate
+          - /bin/sh
+          - /migrate.sh
     upgradeStrategy:
       upgradeType: HotUpgrade
-      hotUpgradeEmptyImage: empty:1.0.0
+      hotUpgradeEmptyImage: openkruise/hotupgrade-sample:empty
 ```
 - upgradeType: HotUpgrade indicates hot upgrade for stateful sidecar container.
 - hotUpgradeEmptyImage: when upgradeType=HotUpgrade, user needs to provide an empty container for hot upgrades. hotUpgradeEmptyImage has the same configuration as the sidecar container, for example: command, lifecycle, probe, etc, but it doesn't do anything.        
@@ -339,6 +335,10 @@ The SidecarSet Controller breaks down the hot upgrade pgrocess of the sidecar co
 The above is the complete hot upgrade process. If a Pod needs to be hot upgraded several times, the above three steps can be repeated.
 
 ![sidecarset hotupgrade](/img/docs/sidecarset_hotupgrade.png)
+
+#### Migration Demo
+The SidecarSet hot upgrade mechanism not only completes the switching between mesh containers，but also provides a coordination mechanism for old and new versions. Yet this is only the first step of a long journey. The mesh container also needs to provide a PostStartHook script to complete the hot migration of the mesh service itself (the above Migration process), such as Envoy hot restart and Mosn lossless restart.
+To facilitate a better understanding of the Migration process, a migration demo is provided below the kruise repository: [Migration Demo](https://github.com/openkruise/samples/tree/master/hotupgrade)
 
 For design documentation, please refer to: [proposals sidecarset hot upgrade](https://github.com/openkruise/kruise/blob/master/docs/proposals/20210305-sidecarset-hotupgrade.md)
 

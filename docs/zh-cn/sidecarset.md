@@ -278,31 +278,27 @@ SidecarSet原地升级会先停止旧版本的容器，然后创建新版本的�
 但是对于很多代理或运行时的sidecar容器，例如Istio Envoy，这种升级方法就有问题了。Envoy作为Pod中的一个代理容器，代理了所有的流量，如果直接重启，Pod服务的可用性会受到影响。如果需要单独升级envoy sidecar，就需要复杂的grace终止和协调机制。所以我们为这种sidecar容器的升级提供了一种新的解决方案。
                                                                       
 ```yaml
-# sidecarset.yaml
 apiVersion: apps.kruise.io/v1alpha1
 kind: SidecarSet
 metadata:
-  name: test-sidecarset
+  name: hotupgrade-sidecarset
 spec:
   selector:
     matchLabels:
-      app: main
+      app: hotupgrade
   containers:
-  - name: nginx-sidecar
-    image: nginx:1.18
+  - name: sidecar
+    image: openkruise/hotupgrade-sample:sidecarv1
+    imagePullPolicy: Always
     lifecycle:
       postStart:
         exec:
-          # If the environment variable SIDECARSET_VERSION=1, this is the first time sidecar container has been started, and it exit without doing anything
-          # If the environment variable SIDECARSET_VERSION>1, indicates that this is a hot upgrade of sidecar container,
-          # then the script needs to complete the migration in the hot upgrade
           command:
-          - /bin/bash
-          - -c
-          - /usr/local/bin/nginx-agent migrate
+          - /bin/sh
+          - /migrate.sh
     upgradeStrategy:
       upgradeType: HotUpgrade
-      hotUpgradeEmptyImage: empty:1.0.0
+      hotUpgradeEmptyImage: openkruise/hotupgrade-sample:empty
 ```
 - upgradeType: HotUpgrade代表该sidecar容器的类型是hot upgrade，将执行热升级方案
 - hotUpgradeEmptyImage: 当热升级sidecar容器时，业务必须要提供一个empty容器用于热升级过程中的容器切换。empty容器同sidecar容器具有相同的配置（除了镜像地址），例如：command, lifecycle, probe等，但是它不做任何工作。
@@ -330,6 +326,10 @@ Pod创建时，SidecarSet Webhook将会注入两个容器：
 上述三个步骤完成了热升级中的全部流程，当对Pod执行多次热升级时，将重复性的执行上述三个步骤。
 
 ![sidecarset hotupgrade](/img/docs/sidecarset_hotupgrade.png)
+
+#### Migration Demo
+SidecarSet热升级机制不仅完成了mesh容器的切换，并且提供了新老版本的协调机制（PostStartHook），但是至此还只是万里长征的第一步，Mesh容器同时还需要提供 PostStartHook 脚本来完成mesh服务自身的平滑升级（上述Migration过程），如：Envoy热重启、Mosn无损重启。
+为了方便大家能更好的理解Migration过程，在kruise仓库下面提供了一个包含代码和镜像的demo，供大家参考：[Migration Demo](https://github.com/openkruise/samples/tree/master/hotupgrade)
 
 设计文档请参考: [proposals sidecarset hot upgrade](https://github.com/openkruise/kruise/blob/master/docs/proposals/20210305-sidecarset-hotupgrade.md)
 
