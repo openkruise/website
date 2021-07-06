@@ -38,7 +38,7 @@ spec:
     command: ["sleep", "999d"] # do nothing at all
     volumeMounts:
     - name: log-volume
-    mountPath: /var/log
+      mountPath: /var/log
   volumes: # this field will be merged into pod.spec.volumes
   - name: log-volume
     emptyDir: {}
