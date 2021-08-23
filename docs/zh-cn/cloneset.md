@@ -275,7 +275,7 @@ sample-qqglp   1/1     Running   0          18s     sample-56dfb978d4
 
 默认情况下，`partition` 只控制 Pod 更新到 `status.updateRevision` 新版本。
 也就是说以上面这个 CloneSet 来看，当 `partition 5 -> 3` 时，CloneSet 会升级 2 个 Pod 到 `status.updateRevision` 版本。
-而当把 `partition 5 -> 3` 修改回去时，CloneSet 不会做任何事情。
+而当把 `partition 3 -> 5` 修改回去时，CloneSet 不会做任何事情。
 
 但是如果你启用了 `CloneSetPartitionRollback` 这个 feature-gate，
 上面这个场景下 CloneSet 会把 2 个 `status.updateRevision` 版本的 Pod 重新回滚为 `status.currentRevision` 版本。
