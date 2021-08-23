@@ -235,7 +235,7 @@ sample-qqglp   1/1     Running   0          18s     sample-56dfb978d4
 <p><strong>FEATURE STATE:</strong> Kruise v0.9.0</p>
 <p>默认情况下，<code>partition</code> 只控制 Pod 更新到 <code>status.updateRevision</code> 新版本。
 也就是说以上面这个 CloneSet 来看，当 <code>partition 5 -&gt; 3</code> 时，CloneSet 会升级 2 个 Pod 到 <code>status.updateRevision</code> 版本。
-而当把 <code>partition 5 -&gt; 3</code> 修改回去时，CloneSet 不会做任何事情。</p>
+而当把 <code>partition 3 -&gt; 5</code> 修改回去时，CloneSet 不会做任何事情。</p>
 <p>但是如果你启用了 <code>CloneSetPartitionRollback</code> 这个 feature-gate，
 上面这个场景下 CloneSet 会把 2 个 <code>status.updateRevision</code> 版本的 Pod 重新回滚为 <code>status.currentRevision</code> 版本。</p>
 <h3 id="maxunavailable-%E6%9C%80%E5%A4%A7%E4%B8%8D%E5%8F%AF%E7%94%A8%E6%95%B0%E9%87%8F">MaxUnavailable 最大不可用数量 <a class="header-anchor" href="#maxunavailable-%E6%9C%80%E5%A4%A7%E4%B8%8D%E5%8F%AF%E7%94%A8%E6%95%B0%E9%87%8F">#</a></h3>
