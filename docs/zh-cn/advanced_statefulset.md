@@ -5,7 +5,7 @@ title: Advanced StatefulSet
 
 这个控制器基于原生 [StatefulSet](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/) 上增强了发布能力，比如 maxUnavailable 并行发布、原地升级等。
 
-注意 `Advanced StatefulSet` 是一个 CRD，kind 名字也是 `StatefulSet`，但是 apiVersion 是 `apps.kruise.io/v1alpha1` 和 `apps.kruise.io/v1beta1`。
+注意 `Advanced StatefulSet` 是一个 CRD，kind 名字也是 `StatefulSet`，但是 apiVersion 是 `apps.kruise.io/v1beta1`。
 这个 CRD 的所有默认字段、默认行为与原生 StatefulSet 完全一致，除此之外还提供了一些 optional 字段来扩展增强的策略。
 
 因此，用户从原生 `StatefulSet` 迁移到 `Advanced StatefulSet`，只需要把 `apiVersion` 修改后提交即可：
@@ -21,6 +21,12 @@ title: Advanced StatefulSet
 ```
 
 注意从 Kruise 0.7.0 开始，Advanced StatefulSet 版本升级到了 `v1beta1`，并与 `v1alpha1` 兼容。对于低于 v0.7.0 版本的 Kruise，只能使用 `v1alpha1`。
+
+## Scaling with rate limiting
+
+**FEATURE STATE:** Kruise v0.10.0
+
+
 
 ## `MaxUnavailable` 策略
 
@@ -176,6 +182,26 @@ spec:
       paused: true
 ```
 
+## 原地升级自动预热
+
+**FEATURE STATE:** Kruise v0.10.0
+
+如果你在[安装或升级 Kruise]((./installation.html#optional%3A-feature-gate)) 的时候启用了 `PreDownloadImageForInPlaceUpdate` feature-gate，
+Advanced StatefulSet 控制器会自动在所有旧版本 pod 所在 node 节点上预热你正在灰度发布的新版本镜像。 这对于应用发布加速很有帮助。
+
+默认情况下 Advanced StatefulSet 每个新镜像预热时的并发度都是 `1`，也就是一个个节点拉镜像。
+如果需要调整，你可以在 annotation 上设置并发度：
+
+```yaml
+apiVersion: apps.kruise.io/v1beta1
+kind: StatefulSet
+metadata:
+  annotations:
+    apps.kruise.io/image-predownload-parallelism: "5"
+```
+
+注意，为了避免大部分不必要的镜像拉取，目前只针对 replicas > 3 的 Advanced StatefulSet 做自动预热。
+
 ## 序号保留（跳过）
 
 从 Advanced StatefulSet 的 v1beta1 版本开始（Kruise >= v0.7.0），支持序号保留功能。
@@ -197,3 +223,25 @@ spec:
 
 - 如果要把 Pod-3 做迁移并保留序号，则把 `3` 追加到 `reserveOrdinals` 列表中。控制器会把 Pod-3 删除并创建 Pod-5（此时运行中 Pod 为 `[0,2,4,5]`）。
 - 如果只想删除 Pod-3，则把 `3` 追加到 `reserveOrdinals` 列表并同时把 `replicas` 减一修改为 `3`。控制器会把 Pod-3 删除（此时运行中 Pod 为 `[0,2,4]`）。
+
+## 流式扩容
+
+**FEATURE STATE:** Kruise v0.10.0
+
+为了避免在一个新 Advanced StatefulSet 创建后有大量失败的 pod 被创建出来，从 Kruise `v0.10.0` 版本开始引入了在 scale strategy 中的 `maxUnavailable` 策略。
+
+```yaml
+apiVersion: apps.kruise.io/v1beta1
+kind: StatefulSet
+spec:
+  # ...
+  replicas: 100
+  scaleStrategy:
+    maxUnavailable: 10% # percentage or absolute number
+```
+
+当这个字段被设置之后，Advanced StatefulSet 会保证创建 pod 之后不可用 pod 数量不超过这个限制值。
+
+比如说，上面这个 StatefulSet 一开始只会一次性创建 10 个 pod。在此之后，每当一个 pod 变为 running、ready 状态后，才会再创建一个新 pod 出来。
+
+注意，这个功能只允许在 podManagementPolicy 是 `Parallel` 的 StatefulSet 中使用。

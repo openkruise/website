@@ -19,7 +19,7 @@ controller from aspects, such as adding maxUnavailable and introducing in-place 
 The CRD kind name is still <code>StatefulSet</code>.
 This is done on purpose so that user can easily migrate workload to the Advanced StatefulSet from the
 default StatefulSet. For example, one may simply replace the value of <code>apiVersion</code> in the StatefulSet yaml
-file from <code>apps/v1</code> to <code>apps.kruise.io/v1alpha1</code> or <code>apps.kruise.io/v1beta1</code> after installing Kruise manager.</p>
+file from <code>apps/v1</code> to <code>apps.kruise.io/v1beta1</code> after installing Kruise manager.</p>
 <pre><code class="language-yaml"><span class="hljs-bullet">-</span>  <span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span>
 <span class="hljs-string">+</span>  <span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1beta1</span>
    <span class="hljs-attr">kind:</span> <span class="hljs-string">StatefulSet</span>
@@ -37,7 +37,7 @@ It is only allowed to use when the podManagementPolicy is <code>Parallel</code>.
 <p>This feature achieves similar update efficiency like Deployment for cases where the order of
 update is not critical to the workload. Without this feature, the native <code>StatefulSet</code> controller can only
 update Pods one by one even if the podManagementPolicy is <code>Parallel</code>.</p>
-<pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
+<pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1beta1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">StatefulSet</span>
 <span class="hljs-attr">spec:</span>
   <span class="hljs-comment"># ...</span>
@@ -74,7 +74,7 @@ have not noticed the Pod has turned to not-ready. This may lead to requests dama
 <p>So we bring <strong>graceful period</strong> into in-place update. Advanced StatefulSet has supported <code>gracePeriodSeconds</code>, which is a period
 duration between controller update pod status and update pod images.
 So that endpoints-controller could have enough time to remove this Pod from endpoints.</p>
-<pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
+<pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1beta1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">StatefulSet</span>
 <span class="hljs-attr">spec:</span>
   <span class="hljs-comment"># ...</span>
@@ -91,7 +91,7 @@ when using <code>InPlaceIfPossible</code> or <code>InPlaceOnly</code>. The condi
 update and updated to True after the update is finished. This ensures that pod remain at NotReady state while the in-place
 update is happening.</p>
 <p>An example for StatefulSet using in-place update:</p>
-<pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
+<pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1beta1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">StatefulSet</span>
 <span class="hljs-attr">metadata:</span>
   <span class="hljs-attr">name:</span> <span class="hljs-string">sample</span>
@@ -132,7 +132,7 @@ All update candidates will be applied with the priority terms.
 <ul>
 <li><code>weight</code>: Priority is determined by the sum of weights for terms that match selector. For example,</li>
 </ul>
-<pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
+<pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1beta1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">StatefulSet</span>
 <span class="hljs-attr">spec:</span>
   <span class="hljs-comment"># ...</span>
@@ -153,7 +153,7 @@ All update candidates will be applied with the priority terms.
 <ul>
 <li><code>order</code>: Priority will be determined by the value of the orderKey. The update candidates are sorted based on the &quot;int&quot; part of the value string. For example, 5 in string &quot;5&quot; and 10 in string &quot;sts-10&quot;.</li>
 </ul>
-<pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
+<pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1beta1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">StatefulSet</span>
 <span class="hljs-attr">spec:</span>
   <span class="hljs-comment"># ...</span>
@@ -166,7 +166,7 @@ All update candidates will be applied with the priority terms.
 </code></pre>
 <h2 id="paused-update">Paused update <a class="header-anchor" href="#paused-update">#</a></h2>
 <p><code>paused</code> indicates that Pods updating is paused, controller will not update Pods but just maintain the number of replicas.</p>
-<pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
+<pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1beta1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">StatefulSet</span>
 <span class="hljs-attr">spec:</span>
   <span class="hljs-comment"># ...</span>
@@ -174,6 +174,21 @@ All update candidates will be applied with the priority terms.
     <span class="hljs-attr">rollingUpdate:</span>
       <span class="hljs-attr">paused:</span> <span class="hljs-literal">true</span>
 </code></pre>
+<h2 id="pre-download-image-for-in-place-update">Pre-download image for in-place update <a class="header-anchor" href="#pre-download-image-for-in-place-update">#</a></h2>
+<p><strong>FEATURE STATE:</strong> Kruise v0.10.0</p>
+<p>If you have enabled the <code>PreDownloadImageForInPlaceUpdate</code> feature-gate during <a href="./installation.html#optional%3A-feature-gate">Kruise installation or upgrade</a>,
+Advanced StatefulSet controller will automatically pre-download the image you want to update to the nodes of all old Pods.
+It is quite useful to accelerate the progress of applications upgrade.</p>
+<p>The parallelism of each new image pre-downloading by Advanced StatefulSet is <code>1</code>, which means the image is downloaded on nodes one by one.
+You can change the parallelism using the annotation on Advanced StatefulSet according to the capability of image registry,
+for registries with more bandwidth and P2P image downloading ability, a larger parallelism can speed up the pre-download process.</p>
+<pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1beta1</span>
+<span class="hljs-attr">kind:</span> <span class="hljs-string">StatefulSet</span>
+<span class="hljs-attr">metadata:</span>
+  <span class="hljs-attr">annotations:</span>
+    <span class="hljs-attr">apps.kruise.io/image-predownload-parallelism:</span> <span class="hljs-string">"5"</span>
+</code></pre>
+<p>Note that to avoid most unnecessary image downloading, now controller will only pre-download images for Advanced StatefulSet with replicas &gt; <code>3</code>.</p>
 <h2 id="ordinals-reserve(skip)">Ordinals reserve(skip) <a class="header-anchor" href="#ordinals-reserve(skip)">#</a></h2>
 <p>Since Advanced StatefulSet <code>v1beta1</code> (Kruise &gt;= v0.7.0), it supports ordinals reserve.</p>
 <p>By adding the ordinals to reserve into <code>reserveOrdinals</code> fields, Advanced StatefulSet will skip to create Pods with those ordinals.
@@ -194,6 +209,20 @@ Then controller will delete Pod-3 and create Pod-5 (existing Pods will be <code>
 <li>If you just want to delete Pod-3, you should append <code>3</code> into <code>reserveOrdinals</code> list and set <code>replicas</code> to <code>3</code>.
 Then controller will delete Pod-3 (existing Pods will be <code>[0,2,4]</code>).</li>
 </ul>
+<h2 id="scaling-with-rate-limiting">Scaling with rate limiting <a class="header-anchor" href="#scaling-with-rate-limiting">#</a></h2>
+<p><strong>FEATURE STATE:</strong> Kruise v0.10.0</p>
+<p>To avoid creating all failure pods at once when a new CloneSet applied, a <code>maxUnavailable</code> field for scale strategy has been added since Kruise <code>v0.10.0</code>.</p>
+<pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1beta1</span>
+<span class="hljs-attr">kind:</span> <span class="hljs-string">StatefulSet</span>
+<span class="hljs-attr">spec:</span>
+  <span class="hljs-comment"># ...</span>
+  <span class="hljs-attr">replicas:</span> <span class="hljs-number">100</span>
+  <span class="hljs-attr">scaleStrategy:</span>
+    <span class="hljs-attr">maxUnavailable:</span> <span class="hljs-number">10</span><span class="hljs-string">%</span> <span class="hljs-comment"># percentage or absolute number</span>
+</code></pre>
+<p>When this field has been set, Advanced StatefulSet will create pods with the guarantee that the number of unavailable pods during the update cannot exceed this value.</p>
+<p>For example, the StatefulSet will firstly create 10 pods. After that, it will create one more pod only if one pod created has been running and ready.</p>
+<p>Note that it can just be allowed to work with Parallel podManagementPolicy.</p>
 </div></section><footer class="footer-container"><div class="cloud-native"><div class="container"><img src="https://d33wubrfki0l68.cloudfront.net/ea0d91fac8683c38ea9a1fb8a4e9914627ac6aae/8efa9/img/logos/cloud-native-computing.svg"/><p>We are a <a href="https://www.cncf.io">Cloud Native Computing Foundation</a> sandbox project.</p></div></div><div class="copyright"><span>Copyright © 2021 The OpenKruise Authors. All rights reserved. The Linux Foundation has registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation, please see our Trademark Usage page: <a href="https://www.linuxfoundation.org/trademark-usage">https://www.linuxfoundation.org/trademark-usage</a></span></div></footer></div></div>
 	<script src="https://f.alicdn.com/react/15.4.1/react-with-addons.min.js"></script>
 	<script src="https://f.alicdn.com/react/15.4.1/react-dom.min.js"></script>

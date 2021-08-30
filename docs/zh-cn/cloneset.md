@@ -107,6 +107,17 @@ spec:
 相比于手动直接删除 Pod，使用 `podsToDelete` 或 `apps.kruise.io/specified-delete: true` 方式会有 CloneSet 的 `maxUnavailable`/`maxSurge` 来保护删除，
 并且会触发 `PreparingDelete` 生命周期 hook （见下文）。
 
+### 缩容顺序
+
+1. 未调度 < 已调度
+2. PodPending < PodUnknown < PodRunning
+3. Not ready < ready
+4. [较小 pod-deletion cost < 较大 pod-deletion cost]((#pod-deletion-cost))
+5. [较大打散权重 < 较小]((#deletion-by-spread-constraints))
+6. 处于 Ready 时间较短 < 较长
+7. 容器重启次数较多 < 较少
+8. 创建时间较短 < 较长
+
 ### Pod deletion cost
 
 **FEATURE STATE:** Kruise v0.9.0
@@ -119,15 +130,16 @@ CloneSet 从 Kruise v0.9.0 版本后也同样支持了这个功能。
 它表示这个 pod 相较于同个 CloneSet 下其他 pod 的 "删除代价"，代价越小的 pod 删除优先级相对越高。
 没有设置这个 annotation 的 pod 默认 deletion cost 是 0。
 
-注意这个删除顺序并不是强制保证的，因为真实的 pod 的删除类似于下述顺序：
+### Deletion by Spread Constraints
 
-1. 未调度 < 已调度
-2. PodPending < PodUnknown < PodRunning
-3. Not ready < ready
-4. 较小 pod-deletion cost < 较大 pod-deletion cost
-5. 处于 Ready 时间较短 < 较长
-6. 容器重启次数较多 < 较少
-7. 创建时间较短 < 较长
+**FEATURE STATE:** Kruise v0.10.0
+
+原始 proposal（设计文档）在[这里](https://github.com/openkruise/kruise/blob/master/docs/proposals/20210624-cloneset-scaledown-topology-spread.md)。
+
+目前，CloneSet 支持 **按同节点打散** 和 **按 [pod topolocy spread constraints](https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/) 打散**。
+
+如果在 CloneSet template 中存在 Pod Topology Spread Constraints 规则定义，则 controller 在这个 CloneSet 缩容的时候会根据 spread constraints 规则来所打散并选择要删除的 pod。
+否则，controller 默认情况下是按同节点打散来选择要缩容的 pod。
 
 ### 短 hash
 
@@ -434,6 +446,8 @@ metadata:
   annotations:
     apps.kruise.io/image-predownload-parallelism: "5"
 ```
+
+注意，为了避免大部分不必要的镜像拉取，目前只针对 replicas > 3 的 CloneSet 做自动预热。
 
 ### 生命周期钩子
 

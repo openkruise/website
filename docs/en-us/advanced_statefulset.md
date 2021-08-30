@@ -10,7 +10,7 @@ Note that Advanced StatefulSet extends the same CRD schema of default StatefulSe
 The CRD kind name is still `StatefulSet`.
 This is done on purpose so that user can easily migrate workload to the Advanced StatefulSet from the
 default StatefulSet. For example, one may simply replace the value of `apiVersion` in the StatefulSet yaml
-file from `apps/v1` to `apps.kruise.io/v1alpha1` or `apps.kruise.io/v1beta1` after installing Kruise manager.
+file from `apps/v1` to `apps.kruise.io/v1beta1` after installing Kruise manager.
 
 ```yaml
 -  apiVersion: apps/v1
@@ -36,7 +36,7 @@ update is not critical to the workload. Without this feature, the native `Statef
 update Pods one by one even if the podManagementPolicy is `Parallel`.
 
 ```yaml
-apiVersion: apps.kruise.io/v1alpha1
+apiVersion: apps.kruise.io/v1beta1
 kind: StatefulSet
 spec:
   # ...
@@ -78,7 +78,7 @@ duration between controller update pod status and update pod images.
 So that endpoints-controller could have enough time to remove this Pod from endpoints.
 
 ```yaml
-apiVersion: apps.kruise.io/v1alpha1
+apiVersion: apps.kruise.io/v1beta1
 kind: StatefulSet
 spec:
   # ...
@@ -99,7 +99,7 @@ update is happening.
 An example for StatefulSet using in-place update:
 
 ```yaml
-apiVersion: apps.kruise.io/v1alpha1
+apiVersion: apps.kruise.io/v1beta1
 kind: StatefulSet
 metadata:
   name: sample
@@ -146,7 +146,7 @@ All update candidates will be applied with the priority terms.
 - `weight`: Priority is determined by the sum of weights for terms that match selector. For example,
 
 ```yaml
-apiVersion: apps.kruise.io/v1alpha1
+apiVersion: apps.kruise.io/v1beta1
 kind: StatefulSet
 spec:
   # ...
@@ -168,7 +168,7 @@ spec:
 - `order`: Priority will be determined by the value of the orderKey. The update candidates are sorted based on the "int" part of the value string. For example, 5 in string "5" and 10 in string "sts-10".
 
 ```yaml
-apiVersion: apps.kruise.io/v1alpha1
+apiVersion: apps.kruise.io/v1beta1
 kind: StatefulSet
 spec:
   # ...
@@ -185,7 +185,7 @@ spec:
 `paused` indicates that Pods updating is paused, controller will not update Pods but just maintain the number of replicas.
 
 ```yaml
-apiVersion: apps.kruise.io/v1alpha1
+apiVersion: apps.kruise.io/v1beta1
 kind: StatefulSet
 spec:
   # ...
@@ -193,6 +193,28 @@ spec:
     rollingUpdate:
       paused: true
 ```
+
+## Pre-download image for in-place update
+
+**FEATURE STATE:** Kruise v0.10.0
+
+If you have enabled the `PreDownloadImageForInPlaceUpdate` feature-gate during [Kruise installation or upgrade](./installation.html#optional%3A-feature-gate),
+Advanced StatefulSet controller will automatically pre-download the image you want to update to the nodes of all old Pods.
+It is quite useful to accelerate the progress of applications upgrade.
+
+The parallelism of each new image pre-downloading by Advanced StatefulSet is `1`, which means the image is downloaded on nodes one by one.
+You can change the parallelism using the annotation on Advanced StatefulSet according to the capability of image registry,
+for registries with more bandwidth and P2P image downloading ability, a larger parallelism can speed up the pre-download process.
+
+```yaml
+apiVersion: apps.kruise.io/v1beta1
+kind: StatefulSet
+metadata:
+  annotations:
+    apps.kruise.io/image-predownload-parallelism: "5"
+```
+
+Note that to avoid most unnecessary image downloading, now controller will only pre-download images for Advanced StatefulSet with replicas > `3`.
 
 ## Ordinals reserve(skip)
 
@@ -218,3 +240,25 @@ For an Advanced StatefulSet with `replicas=4, reserveOrdinals=[1]`, the ordinals
   Then controller will delete Pod-3 and create Pod-5 (existing Pods will be `[0,2,4,5]`).
 - If you just want to delete Pod-3, you should append `3` into `reserveOrdinals` list and set `replicas` to `3`.
   Then controller will delete Pod-3 (existing Pods will be `[0,2,4]`).
+
+## Scaling with rate limiting
+
+**FEATURE STATE:** Kruise v0.10.0
+
+To avoid creating all failure pods at once when a new CloneSet applied, a `maxUnavailable` field for scale strategy has been added since Kruise `v0.10.0`.
+
+```yaml
+apiVersion: apps.kruise.io/v1beta1
+kind: StatefulSet
+spec:
+  # ...
+  replicas: 100
+  scaleStrategy:
+    maxUnavailable: 10% # percentage or absolute number
+```
+
+When this field has been set, Advanced StatefulSet will create pods with the guarantee that the number of unavailable pods during the update cannot exceed this value.
+
+For example, the StatefulSet will firstly create 10 pods. After that, it will create one more pod only if one pod created has been running and ready.
+
+Note that it can just be allowed to work with Parallel podManagementPolicy.
