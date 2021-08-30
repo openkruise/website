@@ -113,6 +113,17 @@ If one is unable to change CloneSet directly, an alternative way is to add a lab
 Comparing to delete the Pod directly, using `podsToDelete` or `apps.kruise.io/specified-delete: true`
 will have CloneSet protection by `maxUnavailable`/`maxSurge` and lifecycle `PreparingDelete` triggering (See below).
 
+### Deletion Sequence
+
+1. Node unassigned < assigned
+2. PodPending < PodUnknown < PodRunning
+3. Not ready < ready
+4. [Lower pod-deletion cost < higher pod-deletion-cost](#pod-deletion-cost)
+5. [Higher spread rank < lower spread rank](#deletion-by-spread-constraints)
+6. Been ready for empty time < less time < more time
+7. Pods with containers with higher restart counts < lower restart counts
+8. Empty creation time pods < newer pods < older pods
+
 ### Pod deletion cost
 
 **FEATURE STATE:** Kruise v0.9.0
@@ -127,16 +138,16 @@ Pods with lower deletion cost are preferred to be deleted before pods with highe
 
 The implicit value for this annotation for pods that don't set it is 0; negative values are permitted.
 
-Note that this is honored on a best-effort basis, so it does not offer any guarantees on pod deletion order.
-For the sequence of pods to delete is like:
+### Deletion by Spread Constraints
 
-1. Node unassigned < assigned
-2. PodPending < PodUnknown < PodRunning
-3. Not ready < ready
-4. Lower pod-deletion cost < higher pod-deletion-cost
-5. Been ready for empty time < less time < more time
-6. Pods with containers with higher restart counts < lower restart counts
-7. Empty creation time pods < newer pods < older pods
+**FEATURE STATE:** Kruise v0.10.0
+
+The original proposal(design doc) is [here](https://github.com/openkruise/kruise/blob/master/docs/proposals/20210624-cloneset-scaledown-topology-spread.md).
+
+Currently, it supports **deletion by same node spread** and **deletion by [pod topolocy spread constraints](https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/)**.
+
+If there are Pod Topology Spread Constraints defined in CloneSet template, controller will choose pods according to spread constraints when the cloneset needs to scale down.
+Otherwise, controller will choose pods by same node spread by default when scaling down.
 
 ### Short hash label
 
@@ -458,6 +469,8 @@ metadata:
   annotations:
     apps.kruise.io/image-predownload-parallelism: "5"
 ```
+
+Note that to avoid most unnecessary image downloading, now controller will only pre-download images for CloneSet with replicas > `3`.
 
 ### Lifecycle hook
 

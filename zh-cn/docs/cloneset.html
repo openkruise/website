@@ -99,6 +99,17 @@
 另一种直接删除 Pod 的方式是在要删除的 Pod 上打 <code>apps.kruise.io/specified-delete: true</code> 标签。</p>
 <p>相比于手动直接删除 Pod，使用 <code>podsToDelete</code> 或 <code>apps.kruise.io/specified-delete: true</code> 方式会有 CloneSet 的 <code>maxUnavailable</code>/<code>maxSurge</code> 来保护删除，
 并且会触发 <code>PreparingDelete</code> 生命周期 hook （见下文）。</p>
+<h3 id="%E7%BC%A9%E5%AE%B9%E9%A1%BA%E5%BA%8F">缩容顺序 <a class="header-anchor" href="#%E7%BC%A9%E5%AE%B9%E9%A1%BA%E5%BA%8F">#</a></h3>
+<ol>
+<li>未调度 &lt; 已调度</li>
+<li>PodPending &lt; PodUnknown &lt; PodRunning</li>
+<li>Not ready &lt; ready</li>
+<li><a href="(#pod-deletion-cost)">较小 pod-deletion cost &lt; 较大 pod-deletion cost</a></li>
+<li><a href="(#deletion-by-spread-constraints)">较大打散权重 &lt; 较小</a></li>
+<li>处于 Ready 时间较短 &lt; 较长</li>
+<li>容器重启次数较多 &lt; 较少</li>
+<li>创建时间较短 &lt; 较长</li>
+</ol>
 <h3 id="pod-deletion-cost">Pod deletion cost <a class="header-anchor" href="#pod-deletion-cost">#</a></h3>
 <p><strong>FEATURE STATE:</strong> Kruise v0.9.0</p>
 <p><a href="https://kubernetes.io/docs/reference/labels-annotations-taints/#pod-deletion-cost">controller.kubernetes.io/pod-deletion-cost</a>
@@ -107,16 +118,12 @@ CloneSet 从 Kruise v0.9.0 版本后也同样支持了这个功能。</p>
 <p>用户可以把这个 annotation 配置到 pod 上，值的范围在 [-2147483647, 2147483647]。
 它表示这个 pod 相较于同个 CloneSet 下其他 pod 的 &quot;删除代价&quot;，代价越小的 pod 删除优先级相对越高。
 没有设置这个 annotation 的 pod 默认 deletion cost 是 0。</p>
-<p>注意这个删除顺序并不是强制保证的，因为真实的 pod 的删除类似于下述顺序：</p>
-<ol>
-<li>未调度 &lt; 已调度</li>
-<li>PodPending &lt; PodUnknown &lt; PodRunning</li>
-<li>Not ready &lt; ready</li>
-<li>较小 pod-deletion cost &lt; 较大 pod-deletion cost</li>
-<li>处于 Ready 时间较短 &lt; 较长</li>
-<li>容器重启次数较多 &lt; 较少</li>
-<li>创建时间较短 &lt; 较长</li>
-</ol>
+<h3 id="deletion-by-spread-constraints">Deletion by Spread Constraints <a class="header-anchor" href="#deletion-by-spread-constraints">#</a></h3>
+<p><strong>FEATURE STATE:</strong> Kruise v0.10.0</p>
+<p>原始 proposal（设计文档）在<a href="https://github.com/openkruise/kruise/blob/master/docs/proposals/20210624-cloneset-scaledown-topology-spread.md">这里</a>。</p>
+<p>目前，CloneSet 支持 <strong>按同节点打散</strong> 和 <strong>按 <a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/">pod topolocy spread constraints</a> 打散</strong>。</p>
+<p>如果在 CloneSet template 中存在 Pod Topology Spread Constraints 规则定义，则 controller 在这个 CloneSet 缩容的时候会根据 spread constraints 规则来所打散并选择要删除的 pod。
+否则，controller 默认情况下是按同节点打散来选择要缩容的 pod。</p>
 <h3 id="%E7%9F%AD-hash">短 hash <a class="header-anchor" href="#%E7%9F%AD-hash">#</a></h3>
 <p><strong>FEATURE STATE:</strong> Kruise v0.9.0</p>
 <p>默认情况下，CloneSet 在 Pod label 中设置的 <code>controller-revision-hash</code> 值为 ControllerRevision 的完整名字，比如</p>
@@ -358,6 +365,7 @@ CloneSet 控制器会自动在所有旧版本 pod 所在 node 节点上预热你
   <span class="hljs-attr">annotations:</span>
     <span class="hljs-attr">apps.kruise.io/image-predownload-parallelism:</span> <span class="hljs-string">"5"</span>
 </code></pre>
+<p>注意，为了避免大部分不必要的镜像拉取，目前只针对 replicas &gt; 3 的 CloneSet 做自动预热。</p>
 <h3 id="%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E9%92%A9%E5%AD%90">生命周期钩子 <a class="header-anchor" href="#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E9%92%A9%E5%AD%90">#</a></h3>
 <p>每个 CloneSet 管理的 Pod 会有明确所处的状态，在 Pod label 中的 <code>lifecycle.apps.kruise.io/state</code> 标记：</p>
 <ul>
