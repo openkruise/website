@@ -45,6 +45,10 @@ OpenKruise is a full set of standard extensions for Kubernetes. It works well wi
 
     A controller that injects sidecar containers into the Pod spec based on selectors and also is able to upgrade the sidecar containers.
 
+- **WorkloadSpread**
+
+    Constrain the spread of stateless workload, which empower single workload the abilities for multi-domain deploy and elastic deploy.
+
 - **UnitedDeployment**
 
     This controller manages application pods spread in multiple fault domains by using multiple workloads.
