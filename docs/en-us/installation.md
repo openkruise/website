@@ -92,6 +92,8 @@ Feature-gate controls some influential features in Kruise:
 | `PreDownloadImageForInPlaceUpdate` | Enables CloneSet controller to create ImagePullJobs to pre-download images for in-place update | `false` | No image pre-download for in-place update |
 | `CloneSetPartitionRollback` | Enables CloneSet controller to rollback Pods to currentRevision when number of updateRevision pods is bigger than (replicas - partition) | `false` | CloneSet will only update Pods to updateRevision |
 | `ResourcesDeletionProtection` | Enables protection for resources deletion              | `false` | No protection for resources deletion |
+| `PodUnavailableBudgetDeleteGate` | Enables protection for pod deletion, eviction              | `false` | No protection for pod deletion, eviction |
+| `PodUnavailableBudgetUpdateGate` | Enables protection for pod.Spec update              | `false` | No protection for pod.Spec update |
 
 If you want to configure the feature-gate, just set the parameter when install or upgrade. Such as:
 

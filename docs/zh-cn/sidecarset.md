@@ -33,7 +33,7 @@ spec:
     command: ["sleep", "999d"] # do nothing at all
     volumeMounts:
     - name: log-volume
-    mountPath: /var/log
+      mountPath: /var/log
   volumes: # this field will be merged into pod.spec.volumes
   - name: log-volume
     emptyDir: {}
@@ -176,6 +176,38 @@ spec:
     - 共享所有卷：通过 spec.containers[i].shareVolumePolicy.type = enabled | disabled 来控制是否挂载pod应用容器的卷，常用于日志收集等 sidecar，配置为 enabled 后会把应用容器中所有挂载点注入 sidecar 同一路经下(sidecar中本身就有声明的数据卷和挂载点除外）
 - 环境变量共享
     - 可以通过 spec.containers[i].transferEnv 来从别的容器获取环境变量，会把名为 sourceContainerName 容器中名为 envName 的环境变量拷贝到本容器
+  
+#### 注入暂停
+**FEATURE STATE:** Kruise v0.10.0
+
+对于已经创建的 SidecarSet，可通过设置 `spec.injectionStrategy.paused=true` 实现sidecar container的暂停注入：
+```yaml
+apiVersion: apps.kruise.io/v1alpha1
+kind: SidecarSet
+metadata:
+  name: sidecarset
+spec:
+  ... ...
+  injectionStrategy:
+    paused: true
+```
+上述方法只作用于新创建的 Pod，对于已注入 Pod 的存量 sidecar container 不产生任何影响。
+
+#### imagePullSecrets
+**FEATURE STATE:** Kruise v0.10.0
+
+SidecarSet 可以通过配置 spec.imagePullSecrets，来配合 [Secret](https://kubernetes.io/zh/docs/concepts/configuration/secret/) 拉取私有 sidecar 镜像。其实现原理为: 当sidecar注入时，SidecarSet 会将其 spec.imagePullSecrets 注入到[ Pod 的 spec.imagePullSecrets](https://kubernetes.io/zh/docs/tasks/configure-pod-container/pull-image-private-registry/)。
+```yaml
+apiVersion: apps.kruise.io/v1alpha1
+kind: SidecarSet
+metadata:
+  name: sidecarset
+spec:
+  ... ....
+  imagePullSecrets:
+  - name: my-secret
+```
+需要特别注意的是，**对于需要拉取私有 sidecar 镜像的 Pod，用户必需确保这些 Pod 所在的命名空间中已存在对应的 Secret**，否则会导致拉取私有镜像失败。
 
 ### sidecar更新策略
 SidecarSet不仅支持sidecar容器的原地升级，而且提供了非常丰富的升级、灰度策略。
@@ -217,7 +249,7 @@ spec:
 - 当 {matched pod}=100,partition=50,maxUnavailable=10，控制器会发布 50 个 Pod 到新版本，但是发布窗口为 10，即同一时间只会发布 10 个 Pod，每发布好一个 Pod 才会再找一个发布，直到 50 个发布完成。
 - 当 {matched pod}=100,partition=80,maxUnavailable=30，控制器会发布 20 个 Pod 到新版本，因为满足 maxUnavailable 数量，所以这 20 个 Pod 会同时发布。
 
-#### 发布暂停
+#### 更新暂停
 用户可以通过设置 paused 为 true 暂停发布，此时对于新创建的、扩容的pod依旧会实现注入能力，已经更新的pod会保持更新后的版本不动，还没有更新的pod会暂停更新。
 ```yaml
 apiVersion: apps.kruise.io/v1alpha1

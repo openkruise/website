@@ -86,6 +86,8 @@ Feature-gate 控制了 Kruise 中一些有影响性的功能：
 | `PreDownloadImageForInPlaceUpdate` | 启用 CloneSet 自动为原地升级的过程创建 ImagePullJob 来预热镜像 | `false` | 原地升级无镜像提前预热 |
 | `CloneSetPartitionRollback` | 启用如果 partition 被调大， CloneSet controller 会回滚 Pod 到 currentRevision 老版本 | `false` | CloneSet 只会正向发布 Pod 到 updateRevision |
 | `ResourcesDeletionProtection` | Enables protection for resources deletion              | `false` | 资源删除无保护 |
+| `PodUnavailableBudgetDeleteGate` | Enables protection for pod deletion, eviction   | `false` | Pod删除、Eviction无保护 |
+| `PodUnavailableBudgetUpdateGate` | Enables protection for pod in-place update   | `false` | Pod原地升级无保护 |
 
 如果你要配置 feature-gate，只要在安装或升级时配置参数即可，比如：
 

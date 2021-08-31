@@ -57,6 +57,10 @@ export default {
                         title: 'Deletion Protection',
                         link: '/en-us/docs/deletion_protection.html',
                     },
+                    {
+                        title: 'PodUnavailableBudget',
+                        link: '/en-us/docs/podunavailablebudget.html',
+                    },
                 ],
             },
             {
@@ -141,6 +145,10 @@ export default {
                     {
                         title: 'Deletion Protection',
                         link: '/zh-cn/docs/deletion_protection.html',
+                    },
+                    {
+                        title: 'PodUnavailableBudget',
+                        link: '/zh-cn/docs/podunavailablebudget.html',
                     },
                 ],
             },
