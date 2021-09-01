@@ -38,7 +38,7 @@ spec:
     command: ["sleep", "999d"] # do nothing at all
     volumeMounts:
     - name: log-volume
-    mountPath: /var/log
+      mountPath: /var/log
   volumes: # this field will be merged into pod.spec.volumes
   - name: log-volume
     emptyDir: {}
@@ -181,6 +181,39 @@ spec:
     - Share pod containers volumes: If ShareVolumePolicy.type is enabled, the sidecar container will share the other container's VolumeMounts in the pod(don't contains the injected sidecar container)
 - Environment variable sharing
     - Environment variables can be fetched from another container through spec.containers[x].transferenv, and the environment variable named envName from the container named sourceContainerName is copied to this container
+
+#### injection pause
+**FEATURE STATE:** Kruise v0.10.0
+
+For existing SidecarSets，users can pause sidecar injection by setting `spec.injectionStrategy.paused=true`：
+```yaml
+apiVersion: apps.kruise.io/v1alpha1
+kind: SidecarSet
+metadata:
+  name: sidecarset
+spec:
+  ... ...
+  injectionStrategy:
+    paused: true
+```
+This feature only works on the newly-created Pods, and has no impact on the sidecar containers that have been injected.
+
+#### imagePullSecrets
+**FEATURE STATE:** Kruise v0.10.0
+
+Users can use private images in SidecarSet by configuring [spec.imagePullSecrets](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/).
+SidecarSet will inject it in to Pods at injection stage.
+```yaml
+apiVersion: apps.kruise.io/v1alpha1
+kind: SidecarSet
+metadata:
+  name: sidecarset
+spec:
+  ... ....
+  imagePullSecrets:
+  - name: my-secret
+```
+**Note**: Users must ensure that the corresponding [Secrets]() have already existed in the namespaces where Pods need to pull the private images. Otherwise, pulling private images will not succeed.
 
 ### sidecarset update strategy
 Sidecarset not only supports the in-place update of Sidecar container, but also provides a very rich upgrade strategy.

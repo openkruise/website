@@ -73,3 +73,7 @@ OpenKruise 是 Kubernetes 的一个标准扩展，它可以配合原生 Kubernet
 
   该功能提供了删除安全策略，用来在 Kubernetes 级联删除的机制下保护用户的资源和应用可用性。
 
+- **PodUnavailableBudget**
+
+  对比Kubernetes PDB只提供针对Pod Eviction的防护，PUB能够防护Pod Deletion、Eviction、Update多种voluntary disruption场景。 
+

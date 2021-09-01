@@ -73,3 +73,7 @@ OpenKruise is a full set of standard extensions for Kubernetes. It works well wi
 
     Provides a safety policy which could help users protect Kubernetes resources and applications' availability from the cascading deletion mechanism.
 
+- **PodUnavailableBudget**
+
+    In voluntary disruption scenarios, PodUnavailableBudget can achieve the effect of preventing application disruption or SLA degradation, which greatly improves the high availability of application services.
+

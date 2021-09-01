@@ -78,6 +78,13 @@
       }
     },
     {
+      "filename": "podunavailablebudget.md",
+      "link": "/en-us/docs/podunavailablebudget.html",
+      "meta": {
+        "title": "PodUnavailableBudget"
+      }
+    },
+    {
       "filename": "sidecarset.md",
       "link": "/en-us/docs/sidecarset.html",
       "meta": {
@@ -175,6 +182,13 @@
       "link": "/zh-cn/docs/installation.html",
       "meta": {
         "title": "安装"
+      }
+    },
+    {
+      "filename": "podunavailablebudget.md",
+      "link": "/zh-cn/docs/podunavailablebudget.html",
+      "meta": {
+        "title": "PodUnavailableBudget"
       }
     },
     {
