@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="keywords" content="workloadspread" />
+	<meta name="description" content="workloadspread" />
+	<!-- 网页标签标题 -->
+	<title>WorkloadSpread</title>
+	<link rel="shortcut icon" href="/img/kruise.ico"/>
+	<link rel="stylesheet" href="/build/documentation.css" />
+</head>
+<body>
+	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/zh-cn/index.html"><img class="logo" src="/img/kruise_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">En</span><div class="header-menu"><img class="header-menu-toggle" src="/img/system/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/zh-cn/index.html" target="_self">首页</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/zh-cn/docs/what_is_openkruise.html" target="_self">文档</a></li><li class="menu-item menu-item-normal"><a href="/zh-cn/blog/index.html" target="_self">博客</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/img/system/docs.png" class="front-img"/><span>文档</span><img src="/img/system/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span>快速开始</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/what_is_openkruise.html" target="_self">OpenKruise 是什么</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/installation.html" target="_self">安装</a></li></ul></li><li class="menu-item menu-item-level-1"><span>基础说明</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/cloneset.html" target="_self">CloneSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advanced_statefulset.html" target="_self">Advanced StatefulSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/sidecarset.html" target="_self">SidecarSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advanced_daemonset.html" target="_self">Advanced DaemonSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/workloadspread.html" target="_self">WorkloadSpread</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/uniteddeployment.html" target="_self">UnitedDeployment</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/broadcastjob.html" target="_self">BroadcastJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advancedcronjob.html" target="_self">AdvancedCronJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/imagepulljob.html" target="_self">ImagePullJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/containerrecreaterequest.html" target="_self">ContainerRecreateRequest</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/deletion_protection.html" target="_self">Deletion Protection</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/podunavailablebudget.html" target="_self">PodUnavailableBudget</a></li></ul></li><li class="menu-item menu-item-level-1"><span>参考</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/components.html" target="_self">组件</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/go_client.html" target="_self">Golang 客户端</a></li></ul></li><li class="menu-item menu-item-level-1"><span>贡献</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="https://github.com/openkruise/kruise/blob/master/CONTRIBUTING.md" target="_self">指引手册</a></li></ul></li></ul></div><div class="doc-content markdown-body"><h1 id="workloadspread">WorkloadSpread <a class="header-anchor" href="#workloadspread">#</a></h1>
+<p>WorkloadSpread可以用来约束无状态Workload的区域分布，赋予单一workload的多域部署和弹性部署的能力。</p>
+<p>WorkloadSpread与Kruise社区的UnitedDeployment功能相似，每一个WorkloadSpread定义多个区域（定义为<code>subset</code>），
+<code>subset</code>对应一个<code>maxReplicas</code>数量。WorkloadSpread利用Webhook注入<code>subset</code>定义的域信息，且控制Pod的扩缩容顺序。</p>
+<p>目前支持的Workload类型：<code>CloneSet</code>、<code>Deployment</code>、<code>ReplicaSet</code>。</p>
+<p>API定义：<a href="https://github.com/openkruise/kruise/blob/819125ddbd4fb4ffb5f3b1ecf03490349a8f6727/apis/apps/v1alpha1/workloadspread_types.go">https://github.com/openkruise/kruise/blob/819125ddbd4fb4ffb5f3b1ecf03490349a8f6727/apis/apps/v1alpha1/workloadspread_types.go</a></p>
+<h2 id="workloadspread-spec">WorkloadSpread Spec <a class="header-anchor" href="#workloadspread-spec">#</a></h2>
+<pre><code class="language-yaml"><span class="hljs-string">//</span> <span class="hljs-string">WorkloadSpreadSpec</span> <span class="hljs-string">defines</span> <span class="hljs-string">the</span> <span class="hljs-string">desired</span> <span class="hljs-string">state</span> <span class="hljs-string">of</span> <span class="hljs-string">WorkloadSpread.</span>
+<span class="hljs-string">type</span> <span class="hljs-string">WorkloadSpreadSpec</span> <span class="hljs-string">struct</span> <span class="hljs-string">{</span>
+	<span class="hljs-string">//</span> <span class="hljs-string">TargetReference</span> <span class="hljs-string">is</span> <span class="hljs-string">the</span> <span class="hljs-string">target</span> <span class="hljs-string">workload</span> <span class="hljs-string">that</span> <span class="hljs-string">WorkloadSpread</span> <span class="hljs-string">want</span> <span class="hljs-string">to</span> <span class="hljs-string">control.</span>
+	<span class="hljs-string">TargetReference</span> <span class="hljs-string">*TargetReference</span> <span class="hljs-string">`json:"targetRef"`</span>
+
+	<span class="hljs-string">//</span> <span class="hljs-string">Subsets</span> <span class="hljs-string">describes</span> <span class="hljs-string">the</span> <span class="hljs-string">pods</span> <span class="hljs-string">distribution</span> <span class="hljs-string">details</span> <span class="hljs-string">between</span> <span class="hljs-string">each</span> <span class="hljs-string">of</span> <span class="hljs-string">subsets.</span>
+	<span class="hljs-string">Subsets</span> <span class="hljs-string">[]WorkloadSpreadSubset</span> <span class="hljs-string">`json:"subsets"`</span>
+
+	<span class="hljs-string">//</span> <span class="hljs-string">ScheduleStrategy</span> <span class="hljs-string">indicates</span> <span class="hljs-string">the</span> <span class="hljs-string">strategy</span> <span class="hljs-string">the</span> <span class="hljs-string">WorkloadSpread</span> <span class="hljs-string">used</span> <span class="hljs-string">to</span> <span class="hljs-string">preform</span> <span class="hljs-string">the</span> <span class="hljs-string">schedule</span> <span class="hljs-string">between</span> <span class="hljs-string">each</span> <span class="hljs-string">of</span> <span class="hljs-string">subsets.</span>
+	<span class="hljs-string">//</span> <span class="hljs-string">+optional</span>
+	<span class="hljs-string">ScheduleStrategy</span> <span class="hljs-string">WorkloadSpreadScheduleStrategy</span> <span class="hljs-string">`json:"scheduleStrategy,omitempty"`</span>
+<span class="hljs-string">}</span>
+</code></pre>
+<p><strong>注意</strong>：<code>targetRef</code>不可以变更，且一个Workload只能对应一个WorkloadSpread。</p>
+<h3 id="subset">Subset <a class="header-anchor" href="#subset">#</a></h3>
+<pre><code class="language-yaml"><span class="hljs-string">//</span> <span class="hljs-string">WorkloadSpreadSubset</span> <span class="hljs-string">defines</span> <span class="hljs-string">the</span> <span class="hljs-string">details</span> <span class="hljs-string">of</span> <span class="hljs-string">a</span> <span class="hljs-string">subset.</span>
+<span class="hljs-string">type</span> <span class="hljs-string">WorkloadSpreadSubset</span> <span class="hljs-string">struct</span> <span class="hljs-string">{</span>
+	<span class="hljs-string">//</span> <span class="hljs-string">Name</span> <span class="hljs-string">should</span> <span class="hljs-string">be</span> <span class="hljs-string">unique</span> <span class="hljs-string">between</span> <span class="hljs-string">all</span> <span class="hljs-string">of</span> <span class="hljs-string">the</span> <span class="hljs-string">subsets</span> <span class="hljs-string">under</span> <span class="hljs-string">one</span> <span class="hljs-string">WorkloadSpread.</span>
+	<span class="hljs-string">Name</span> <span class="hljs-string">string</span> <span class="hljs-string">`json:"name"`</span>
+
+	<span class="hljs-string">//</span> <span class="hljs-string">Indicates</span> <span class="hljs-string">the</span> <span class="hljs-string">node</span> <span class="hljs-string">required</span> <span class="hljs-string">selector</span> <span class="hljs-string">to</span> <span class="hljs-string">form</span> <span class="hljs-string">the</span> <span class="hljs-string">subset.</span>
+	<span class="hljs-string">//</span> <span class="hljs-string">+optional</span>
+	<span class="hljs-string">RequiredNodeSelectorTerm</span> <span class="hljs-string">*corev1.NodeSelectorTerm</span> <span class="hljs-string">`json:"requiredNodeSelectorTerm,omitempty"`</span>
+
+	<span class="hljs-string">//</span> <span class="hljs-string">Indicates</span> <span class="hljs-string">the</span> <span class="hljs-string">node</span> <span class="hljs-string">preferred</span> <span class="hljs-string">selector</span> <span class="hljs-string">to</span> <span class="hljs-string">form</span> <span class="hljs-string">the</span> <span class="hljs-string">subset.</span>
+	<span class="hljs-string">//</span> <span class="hljs-string">+optional</span>
+	<span class="hljs-string">PreferredNodeSelectorTerms</span> <span class="hljs-string">[]corev1.PreferredSchedulingTerm</span> <span class="hljs-string">`json:"preferredNodeSelectorTerms,omitempty"`</span>
+
+	<span class="hljs-string">//</span> <span class="hljs-string">Indicates</span> <span class="hljs-string">the</span> <span class="hljs-string">tolerations</span> <span class="hljs-string">the</span> <span class="hljs-string">pods</span> <span class="hljs-string">under</span> <span class="hljs-string">this</span> <span class="hljs-string">subset</span> <span class="hljs-string">have.</span>
+	<span class="hljs-string">//</span> <span class="hljs-string">+optional</span>
+	<span class="hljs-string">Tolerations</span> <span class="hljs-string">[]corev1.Toleration</span> <span class="hljs-string">`json:"tolerations,omitempty"`</span>
+
+	<span class="hljs-string">//</span> <span class="hljs-string">MaxReplicas</span> <span class="hljs-string">indicates</span> <span class="hljs-string">the</span> <span class="hljs-string">desired</span> <span class="hljs-string">max</span> <span class="hljs-string">replicas</span> <span class="hljs-string">of</span> <span class="hljs-string">this</span> <span class="hljs-string">subset.</span>
+	<span class="hljs-string">//</span> <span class="hljs-string">+optional</span>
+	<span class="hljs-string">MaxReplicas</span> <span class="hljs-string">*intstr.IntOrString</span> <span class="hljs-string">`json:"maxReplicas,omitempty"`</span>
+
+	<span class="hljs-string">//</span> <span class="hljs-string">Patch</span> <span class="hljs-string">indicates</span> <span class="hljs-string">patching</span> <span class="hljs-string">podTemplate</span> <span class="hljs-string">to</span> <span class="hljs-string">the</span> <span class="hljs-string">Pod.</span>
+	<span class="hljs-string">//</span> <span class="hljs-string">+optional</span>
+	<span class="hljs-string">Patch</span> <span class="hljs-string">runtime.RawExtension</span> <span class="hljs-string">`json:"patch,omitempty"`</span>
+<span class="hljs-string">}</span>
+</code></pre>
+<p><code>MaxReplicas</code>：当前版本暂不支持百分比；若设置为空，代表不限制subset的副本数。</p>
+<p><code>Patch</code>: 自定义<code>subset</code>的Pod配置，可以是Annotations、Labels、Env等。</p>
+<pre><code class="language-yaml"><span class="hljs-comment"># patch metadata:</span>
+<span class="hljs-attr">patch:</span>
+  <span class="hljs-attr">metadata:</span>
+    <span class="hljs-attr">labels:</span>
+      <span class="hljs-attr">xxx-specific-label:</span> <span class="hljs-string">xxx</span>
+</code></pre>
+<pre><code class="language-yaml"><span class="hljs-comment"># patch container resources:</span>
+<span class="hljs-attr">patch:</span>
+  <span class="hljs-attr">spec:</span>
+    <span class="hljs-attr">containers:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">main</span>
+      <span class="hljs-attr">resources:</span>
+        <span class="hljs-attr">limit:</span>
+          <span class="hljs-attr">cpu:</span> <span class="hljs-string">"2"</span>
+          <span class="hljs-attr">memory:</span> <span class="hljs-string">800Mi</span>
+</code></pre>
+<pre><code class="language-yaml"><span class="hljs-comment"># patch container environments:</span>
+<span class="hljs-attr">patch:</span>
+  <span class="hljs-attr">spec:</span>
+    <span class="hljs-attr">containers:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">main</span>
+      <span class="hljs-attr">env:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">K8S_CONTAINER_NAME</span>
+        <span class="hljs-attr">value:</span> <span class="hljs-string">main</span>
+</code></pre>
+<h2 id="%E6%A8%A1%E6%8B%9F%E8%B0%83%E5%BA%A6%E5%92%8Creschedule">模拟调度和Reschedule <a class="header-anchor" href="#%E6%A8%A1%E6%8B%9F%E8%B0%83%E5%BA%A6%E5%92%8Creschedule">#</a></h2>
+<p>WorkloadSpread提供了两种调度策略，默认为<code>Fixed</code>:</p>
+<h3 id="fixed%3A">Fixed: <a class="header-anchor" href="#fixed%3A">#</a></h3>
+<p>Workload严格按照<code>subset</code>定义分布。</p>
+<h3 id="adaptive">Adaptive <a class="header-anchor" href="#adaptive">#</a></h3>
+<pre><code class="language-yaml"><span class="hljs-string">//</span> <span class="hljs-string">AdaptiveWorkloadSpreadStrategy</span> <span class="hljs-string">is</span> <span class="hljs-string">used</span> <span class="hljs-string">to</span> <span class="hljs-string">communicate</span> <span class="hljs-string">parameters</span> <span class="hljs-string">when</span> <span class="hljs-string">Type</span> <span class="hljs-string">is</span> <span class="hljs-string">AdaptiveWorkloadSpreadScheduleStrategyType.</span>
+<span class="hljs-string">type</span> <span class="hljs-string">AdaptiveWorkloadSpreadStrategy</span> <span class="hljs-string">struct</span> <span class="hljs-string">{</span>
+	<span class="hljs-string">//</span> <span class="hljs-string">DisableSimulationSchedule</span> <span class="hljs-string">indicates</span> <span class="hljs-string">whether</span> <span class="hljs-string">to</span> <span class="hljs-string">disable</span> <span class="hljs-string">the</span> <span class="hljs-string">feature</span> <span class="hljs-string">of</span> <span class="hljs-string">simulation</span> <span class="hljs-string">schedule.</span>
+	<span class="hljs-string">//</span> <span class="hljs-string">Default</span> <span class="hljs-string">is</span> <span class="hljs-literal">false</span>.
+	<span class="hljs-string">//</span> <span class="hljs-string">Webhook</span> <span class="hljs-string">can</span> <span class="hljs-string">take</span> <span class="hljs-string">a</span> <span class="hljs-string">simple</span> <span class="hljs-string">general</span> <span class="hljs-string">predicates</span> <span class="hljs-string">to</span> <span class="hljs-string">check</span> <span class="hljs-string">whether</span> <span class="hljs-string">Pod</span> <span class="hljs-string">can</span> <span class="hljs-string">be</span> <span class="hljs-string">scheduled</span> <span class="hljs-string">into</span> <span class="hljs-string">this</span> <span class="hljs-string">subset,</span>
+	<span class="hljs-string">//</span> <span class="hljs-string">but</span> <span class="hljs-string">it</span> <span class="hljs-string">just</span> <span class="hljs-string">considers</span> <span class="hljs-string">the</span> <span class="hljs-string">Node</span> <span class="hljs-string">resource</span> <span class="hljs-string">and</span> <span class="hljs-string">cannot</span> <span class="hljs-string">replace</span> <span class="hljs-string">scheduler</span> <span class="hljs-string">to</span> <span class="hljs-string">do</span> <span class="hljs-string">richer</span> <span class="hljs-string">predicates</span> <span class="hljs-string">practically.</span>
+	<span class="hljs-string">//</span> <span class="hljs-string">+optional</span>
+	<span class="hljs-string">DisableSimulationSchedule</span> <span class="hljs-string">bool</span> <span class="hljs-string">`json:"disableSimulationSchedule,omitempty"`</span>
+
+	<span class="hljs-string">//</span> <span class="hljs-string">RescheduleCriticalSeconds</span> <span class="hljs-string">indicates</span> <span class="hljs-string">how</span> <span class="hljs-string">long</span> <span class="hljs-string">controller</span> <span class="hljs-string">will</span> <span class="hljs-string">reschedule</span> <span class="hljs-string">a</span> <span class="hljs-string">schedule</span> <span class="hljs-string">failed</span> <span class="hljs-string">Pod</span> <span class="hljs-string">to</span> <span class="hljs-string">the</span> <span class="hljs-string">subset</span> <span class="hljs-string">that</span> <span class="hljs-string">has</span>
+	<span class="hljs-string">//</span> <span class="hljs-string">redundant</span> <span class="hljs-string">capacity</span> <span class="hljs-string">after</span> <span class="hljs-string">the</span> <span class="hljs-string">subset</span> <span class="hljs-string">where</span> <span class="hljs-string">the</span> <span class="hljs-string">Pod</span> <span class="hljs-string">lives.</span> <span class="hljs-string">If</span> <span class="hljs-string">a</span> <span class="hljs-string">Pod</span> <span class="hljs-string">was</span> <span class="hljs-string">scheduled</span> <span class="hljs-string">failed</span> <span class="hljs-string">and</span> <span class="hljs-string">still</span> <span class="hljs-string">in</span> <span class="hljs-string">a</span> <span class="hljs-string">unschedulabe</span> <span class="hljs-string">status</span>
+	<span class="hljs-string">//</span> <span class="hljs-string">over</span> <span class="hljs-string">RescheduleCriticalSeconds</span> <span class="hljs-string">duration,</span> <span class="hljs-string">the</span> <span class="hljs-string">controller</span> <span class="hljs-string">will</span> <span class="hljs-string">reschedule</span> <span class="hljs-string">it</span> <span class="hljs-string">to</span> <span class="hljs-string">a</span> <span class="hljs-string">suitable</span> <span class="hljs-string">subset.</span>
+	<span class="hljs-string">//</span> <span class="hljs-string">+optional</span>
+	<span class="hljs-string">RescheduleCriticalSeconds</span> <span class="hljs-string">*int32</span> <span class="hljs-string">`json:"rescheduleCriticalSeconds,omitempty"`</span>
+<span class="hljs-string">}</span>
+</code></pre>
+<p><strong>模拟调度</strong>： Kruise会对<code>subset</code>的Node资源做简单过滤，若资源不足会调度到下一个<code>subset</code>。</p>
+<p><strong>Reschedule</strong>：Kruise检查<code>subset</code>调度失败的Pod，若超过用户定义的时间就调度到其他<code>subset</code>。</p>
+<h2 id="%E7%8E%AF%E5%A2%83%E8%A6%81%E6%B1%82">环境要求 <a class="header-anchor" href="#%E7%8E%AF%E5%A2%83%E8%A6%81%E6%B1%82">#</a></h2>
+<h3 id="pod-webhook">Pod Webhook <a class="header-anchor" href="#pod-webhook">#</a></h3>
+<p>WorkloadSpread利用<code>webhook</code>向Pod注入域规则并且关心Pod的驱逐和删除事件。</p>
+<p>如果<code>PodWebhook</code> feature-gate被设置为<code>false</code>，WorkloadSpread也将不可用。</p>
+<h3 id="deletion-cost-feature">deletion-cost feature <a class="header-anchor" href="#deletion-cost-feature">#</a></h3>
+<p>CloneSet已经支持该特性。</p>
+<p>其他native workload需kubernetes version &gt;= 1.21。1.21版本需要开启 <code>PodDeletionCost</code> feature-gate。自1.22起默认开启。</p>
+<h2 id="%E6%89%A9%E7%BC%A9%E5%AE%B9%E9%A1%BA%E5%BA%8F%EF%BC%9A">扩缩容顺序： <a class="header-anchor" href="#%E6%89%A9%E7%BC%A9%E5%AE%B9%E9%A1%BA%E5%BA%8F%EF%BC%9A">#</a></h2>
+<h3 id="%E6%89%A9%E5%AE%B9">扩容 <a class="header-anchor" href="#%E6%89%A9%E5%AE%B9">#</a></h3>
+<ul>
+<li>按照<code>spec.subsets</code>中<code>subset</code>定义的顺序调度Pod，当前<code>subset</code>的Pod数量达到<code>maxReplicas</code>时再调度到下一个<code>subset</code>。</li>
+</ul>
+<h3 id="%E7%BC%A9%E5%AE%B9">缩容 <a class="header-anchor" href="#%E7%BC%A9%E5%AE%B9">#</a></h3>
+<ul>
+<li>当<code>subset</code>的副本数大于定义的maxReplicas时，优先缩容多余的Pod。</li>
+<li>按照<code>spec.subsets</code>中<code>subset</code>定义的顺序，后面的<code>subset</code>的Pod先于前面的被删除。</li>
+</ul>
+<h2 id="%E4%BE%8B%E5%AD%90">例子 <a class="header-anchor" href="#%E4%BE%8B%E5%AD%90">#</a></h2>
+<h3 id="%E5%BC%B9%E6%80%A7%E9%83%A8%E7%BD%B2">弹性部署 <a class="header-anchor" href="#%E5%BC%B9%E6%80%A7%E9%83%A8%E7%BD%B2">#</a></h3>
+<p>zone-a（ack）固定100个Pod，zone-b（eci）做弹性区域</p>
+<ol>
+<li>创建WorkloadSpread实例</li>
+</ol>
+<pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
+<span class="hljs-attr">kind:</span> <span class="hljs-string">WorkloadSpread</span>
+<span class="hljs-attr">metadta:</span>
+  <span class="hljs-attr">name:</span> <span class="hljs-string">ws-demo</span>
+  <span class="hljs-attr">namespace:</span> <span class="hljs-string">deploy</span>
+<span class="hljs-attr">spec:</span>
+  <span class="hljs-attr">targetRef:</span> <span class="hljs-comment"># 相同namespace下的workload</span>
+    <span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
+    <span class="hljs-attr">kind:</span> <span class="hljs-string">CloneSet</span>
+    <span class="hljs-attr">name:</span> <span class="hljs-string">workload-xxx</span>
+  <span class="hljs-attr">subsets:</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">ack</span> <span class="hljs-comment"># zone ack，最多100个副本。</span>
+    <span class="hljs-attr">requiredNodeSelectorTerm:</span>
+      <span class="hljs-attr">matchExpressions:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">key:</span> <span class="hljs-string">topology.kubernetes.io/zone</span>
+        <span class="hljs-attr">operator:</span> <span class="hljs-string">In</span>
+        <span class="hljs-attr">values:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">ack</span>
+    <span class="hljs-attr">maxReplicas:</span> <span class="hljs-number">100</span>
+    <span class="hljs-attr">patch:</span> <span class="hljs-comment"># 注入label</span>
+      <span class="hljs-attr">metadata:</span>
+        <span class="hljs-attr">labels:</span>
+          <span class="hljs-attr">deploy/zone:</span> <span class="hljs-string">ack</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">eci</span> <span class="hljs-comment"># 弹性区域eci，副本数量不限。</span>
+    <span class="hljs-attr">requiredNodeSelectorTerm:</span>
+      <span class="hljs-attr">matchExpressions:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">key:</span> <span class="hljs-string">topology.kubernetes.io/zone</span>
+        <span class="hljs-attr">operator:</span> <span class="hljs-string">In</span>
+        <span class="hljs-attr">values:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">eci</span>
+    <span class="hljs-attr">patch:</span>
+      <span class="hljs-attr">metadata:</span>
+        <span class="hljs-attr">labels:</span>
+          <span class="hljs-attr">deploy/zone:</span> <span class="hljs-string">eci</span>
+</code></pre>
+<ol start="2">
+<li>创建workload，副本数可以自由调整。</li>
+</ol>
+<h4 id="%E9%83%A8%E7%BD%B2%E6%95%88%E6%9E%9C">部署效果 <a class="header-anchor" href="#%E9%83%A8%E7%BD%B2%E6%95%88%E6%9E%9C">#</a></h4>
+<ul>
+<li>当replicas &lt;= 100 时，Pod被调度到ack上。</li>
+<li>当replicas &gt; 100 时，100个在ack，多余的Pod在弹性域eci。</li>
+<li>缩容时优先从弹性域eci上缩容。</li>
+</ul>
+<h3 id="%E5%A4%9A%E5%9F%9F%E9%83%A8%E7%BD%B2">多域部署 <a class="header-anchor" href="#%E5%A4%9A%E5%9F%9F%E9%83%A8%E7%BD%B2">#</a></h3>
+<p>分别部署100个副本的Pod到两个机房（zone-a, zone-b）</p>
+<ol>
+<li>创建WorkloadSpread实例</li>
+</ol>
+<pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
+<span class="hljs-attr">kind:</span> <span class="hljs-string">WorkloadSpread</span>
+<span class="hljs-attr">metadta:</span>
+  <span class="hljs-attr">name:</span> <span class="hljs-string">ws-demo</span>
+  <span class="hljs-attr">namespace:</span> <span class="hljs-string">deploy</span>
+<span class="hljs-attr">spec:</span>
+  <span class="hljs-attr">targetRef:</span> <span class="hljs-comment"># 相同namespace下的workload</span>
+    <span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
+    <span class="hljs-attr">kind:</span> <span class="hljs-string">CloneSet</span>
+    <span class="hljs-attr">name:</span> <span class="hljs-string">workload-xxx</span>
+  <span class="hljs-attr">subsets:</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">subset-a</span> <span class="hljs-comment"># 区域A，100个副本。</span>
+    <span class="hljs-attr">requiredNodeSelectorTerm:</span>
+      <span class="hljs-attr">matchExpressions:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">key:</span> <span class="hljs-string">topology.kubernetes.io/zone</span>
+        <span class="hljs-attr">operator:</span> <span class="hljs-string">In</span>
+        <span class="hljs-attr">values:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">zone-a</span>
+    <span class="hljs-attr">maxReplicas:</span> <span class="hljs-number">100</span>
+    <span class="hljs-attr">patch:</span>
+      <span class="hljs-attr">metadata:</span>
+        <span class="hljs-attr">labels:</span>
+          <span class="hljs-attr">deploy/zone:</span> <span class="hljs-string">zonb-a</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">subset-b</span> <span class="hljs-comment"># 区域B，100个副本。</span>
+    <span class="hljs-attr">requiredNodeSelectorTerm:</span>
+      <span class="hljs-attr">matchExpressions:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">key:</span> <span class="hljs-string">topology.kubernetes.io/zone</span>
+        <span class="hljs-attr">operator:</span> <span class="hljs-string">In</span>
+        <span class="hljs-attr">values:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">zone-b</span>
+    <span class="hljs-attr">maxReplicas:</span> <span class="hljs-number">100</span>
+    <span class="hljs-attr">patch:</span>
+      <span class="hljs-attr">metadata:</span>
+        <span class="hljs-attr">labels:</span>
+          <span class="hljs-attr">deploy/zone:</span> <span class="hljs-string">zone-b</span>
+</code></pre>
+<ol start="2">
+<li>
+<p>创建200副本的workload，或者对已有的workload执行滚动更新。</p>
+</li>
+<li>
+<p>如zone副本分布需要变动，先调整对应<code>subset</code>的<code>maxReplicas</code>，再调整workload副本数。</p>
+</li>
+</ol>
+</div></section><footer class="footer-container"><div class="cloud-native"><div class="container"><img src="https://d33wubrfki0l68.cloudfront.net/ea0d91fac8683c38ea9a1fb8a4e9914627ac6aae/8efa9/img/logos/cloud-native-computing.svg"/><p>We are a <a href="https://www.cncf.io">Cloud Native Computing Foundation</a> sandbox project.</p></div></div><div class="copyright"><span>Copyright © 2021 The OpenKruise Authors. All rights reserved. The Linux Foundation has registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation, please see our Trademark Usage page: <a href="https://www.linuxfoundation.org/trademark-usage">https://www.linuxfoundation.org/trademark-usage</a></span></div></footer></div></div>
+	<script src="https://f.alicdn.com/react/15.4.1/react-with-addons.min.js"></script>
+	<script src="https://f.alicdn.com/react/15.4.1/react-dom.min.js"></script>
+	<script>
+		window.rootPath = '';
+  </script>
+	<script src="/build/documentation.js"></script>
+</body>
+</html>

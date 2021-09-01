@@ -34,6 +34,10 @@ export default {
                         link: '/en-us/docs/advanced_daemonset.html',
                     },
                     {
+                        title: 'WorkloadSpread',
+                        link: '/en-us/docs/workloadspread.html',
+                    },
+                    {
                         title: 'UnitedDeployment',
                         link: '/en-us/docs/uniteddeployment.html',
                     },
@@ -121,6 +125,10 @@ export default {
                     {
                         title: 'Advanced DaemonSet',
                         link: '/zh-cn/docs/advanced_daemonset.html',
+                    },
+                    {
+                        title: 'WorkloadSpread',
+                        link: '/zh-cn/docs/workloadspread.html',
                     },
                     {
                         title: 'UnitedDeployment',

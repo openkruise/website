@@ -104,6 +104,13 @@
       "meta": {
         "title": "What is OpenKruise"
       }
+    },
+    {
+      "filename": "workloadspread.md",
+      "link": "/en-us/docs/workloadspread.html",
+      "meta": {
+        "title": "WorkloadSpread"
+      }
     }
   ],
   "zh-cn": [
@@ -210,6 +217,13 @@
       "link": "/zh-cn/docs/what_is_openkruise.html",
       "meta": {
         "title": "OpenKruise 是什么"
+      }
+    },
+    {
+      "filename": "workloadspread.md",
+      "link": "/zh-cn/docs/workloadspread.html",
+      "meta": {
+        "title": "WorkloadSpread"
       }
     }
   ]
