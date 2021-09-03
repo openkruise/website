@@ -181,6 +181,13 @@ The workload managed by WorkloadSpread will scale according to the defined order
 # deletion order: b -> a -> c
 ```
 
+## feature-gates
+WorkloadSpread feature is turned off by default, if you want to turn it on set feature-gates *WorkloadSpread*.
+
+```bash
+$ helm install kruise https://... --set featureGates="WorkloadSpread=true"
+```
+
 ## Example
 
 ### Elastic deployment

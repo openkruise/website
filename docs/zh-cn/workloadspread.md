@@ -187,6 +187,13 @@ WorkloadSpread所管理的workload会按照`subsets`中定义的顺序扩缩容�
 # 删除顺序为: b -> a -> c
 ```
 
+## feature-gates
+WorkloadSpread默认是关闭的，如果要开启请通过设置 feature-gates *WorkloadSpread*.
+
+```bash
+$ helm install kruise https://... --set featureGates="WorkloadSpread=true"
+```
+
 ## 例子
 
 ### 弹性部署
