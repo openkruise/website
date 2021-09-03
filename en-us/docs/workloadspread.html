@@ -13,64 +13,113 @@
 </head>
 <body>
 	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/en-us/index.html"><img class="logo" src="/img/kruise_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">中</span><div class="header-menu"><img class="header-menu-toggle" src="/img/system/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/en-us/index.html" target="_self">HOME</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/en-us/docs/what_is_openkruise.html" target="_self">DOCS</a></li><li class="menu-item menu-item-normal"><a href="/en-us/blog/index.html" target="_self">BLOG</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/img/system/docs.png" class="front-img"/><span>Documentation</span><img src="/img/system/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span>Quick start</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/what_is_openkruise.html" target="_self">What is OpenKruise</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/installation.html" target="_self">Installation</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Basic</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/cloneset.html" target="_self">CloneSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/advanced_statefulset.html" target="_self">Advanced StatefulSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/sidecarset.html" target="_self">SidecarSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/advanced_daemonset.html" target="_self">Advanced DaemonSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/workloadspread.html" target="_self">WorkloadSpread</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/uniteddeployment.html" target="_self">UnitedDeployment</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/broadcastjob.html" target="_self">BroadcastJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/advancedcronjob.html" target="_self">AdvancedCronJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/imagepulljob.html" target="_self">ImagePullJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/containerrecreaterequest.html" target="_self">ContainerRecreateRequest</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/deletion_protection.html" target="_self">Deletion Protection</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/podunavailablebudget.html" target="_self">PodUnavailableBudget</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Reference</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/components.html" target="_self">Components</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/go_client.html" target="_self">Golang Client</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Contribution</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="https://github.com/openkruise/kruise/blob/master/CONTRIBUTING.md" target="_self">Guidebook</a></li></ul></li></ul></div><div class="doc-content markdown-body"><h1 id="workloadspread">WorkloadSpread <a class="header-anchor" href="#workloadspread">#</a></h1>
-<p>WorkloadSpread can be used to constrain the spread of stateless workload, which empower single workload the abilities for
-multi-domain deploy and elastic deploy.</p>
-<p>The feature of WorkloadSpread is similar with UnitedDeployment in Kruise community. Each WorkloadSpread defines multi-domain
+<p><strong>FEATURE STATE:</strong> Kruise v0.10.0</p>
+<p>WorkloadSpread can distribute Pods of workload to different types of Node according to some rules, which empowers single workload the abilities for
+multi-domain deployment and elastic deployment.</p>
+<p>Some common rules include:</p>
+<ul>
+<li>Horizontal spread (for example, average spread in dimensions such as host, az, etc.)</li>
+<li>Spread according to the specified ratio (for example, deploy Pod to several specified az according to the proportion)</li>
+<li>Different subset management with priority, such as
+<ul>
+<li>deploy Pods to ecs first, and deploy to eci when its resources are insufficient.</li>
+<li>deploy a fixed number of Pods to ecs first, and the rest Pods are deployed to eci.</li>
+</ul>
+</li>
+</ul>
+<p>The feature of WorkloadSpread is similar with UnitedDeployment in OpenKruise community. Each WorkloadSpread defines multi-domain
 called <code>subset</code>. Each domain should at least provide the capacity to run the replicas number of pods called <code>maxReplicas</code>.
-WorkloadSpread injects the domain config into the Pod by Webhook, and it also controls the order of scale in and scale out.</p>
+WorkloadSpread injects the domain configuration into the Pod by Webhook, and it also controls the order of scale in and scale out.</p>
 <p>Currently, supported workload: <code>CloneSet</code>、<code>Deployment</code>、<code>ReplicaSet</code>.</p>
-<p>API definition：<a href="https://github.com/openkruise/kruise/blob/819125ddbd4fb4ffb5f3b1ecf03490349a8f6727/apis/apps/v1alpha1/workloadspread_types.go">https://github.com/openkruise/kruise/blob/819125ddbd4fb4ffb5f3b1ecf03490349a8f6727/apis/apps/v1alpha1/workloadspread_types.go</a></p>
-<h2 id="workloadspread-spec">WorkloadSpread Spec <a class="header-anchor" href="#workloadspread-spec">#</a></h2>
-<pre><code class="language-yaml"><span class="hljs-string">//</span> <span class="hljs-string">WorkloadSpreadSpec</span> <span class="hljs-string">defines</span> <span class="hljs-string">the</span> <span class="hljs-string">desired</span> <span class="hljs-string">state</span> <span class="hljs-string">of</span> <span class="hljs-string">WorkloadSpread.</span>
-<span class="hljs-string">type</span> <span class="hljs-string">WorkloadSpreadSpec</span> <span class="hljs-string">struct</span> <span class="hljs-string">{</span>
-	<span class="hljs-string">//</span> <span class="hljs-string">TargetReference</span> <span class="hljs-string">is</span> <span class="hljs-string">the</span> <span class="hljs-string">target</span> <span class="hljs-string">workload</span> <span class="hljs-string">that</span> <span class="hljs-string">WorkloadSpread</span> <span class="hljs-string">want</span> <span class="hljs-string">to</span> <span class="hljs-string">control.</span>
-	<span class="hljs-string">TargetReference</span> <span class="hljs-string">*TargetReference</span> <span class="hljs-string">`json:"targetRef"`</span>
-
-	<span class="hljs-string">//</span> <span class="hljs-string">Subsets</span> <span class="hljs-string">describes</span> <span class="hljs-string">the</span> <span class="hljs-string">pods</span> <span class="hljs-string">distribution</span> <span class="hljs-string">details</span> <span class="hljs-string">between</span> <span class="hljs-string">each</span> <span class="hljs-string">of</span> <span class="hljs-string">subsets.</span>
-	<span class="hljs-string">Subsets</span> <span class="hljs-string">[]WorkloadSpreadSubset</span> <span class="hljs-string">`json:"subsets"`</span>
-
-	<span class="hljs-string">//</span> <span class="hljs-string">ScheduleStrategy</span> <span class="hljs-string">indicates</span> <span class="hljs-string">the</span> <span class="hljs-string">strategy</span> <span class="hljs-string">the</span> <span class="hljs-string">WorkloadSpread</span> <span class="hljs-string">used</span> <span class="hljs-string">to</span> <span class="hljs-string">preform</span> <span class="hljs-string">the</span> <span class="hljs-string">schedule</span> <span class="hljs-string">between</span> <span class="hljs-string">each</span> <span class="hljs-string">of</span> <span class="hljs-string">subsets.</span>
-	<span class="hljs-string">//</span> <span class="hljs-string">+optional</span>
-	<span class="hljs-string">ScheduleStrategy</span> <span class="hljs-string">WorkloadSpreadScheduleStrategy</span> <span class="hljs-string">`json:"scheduleStrategy,omitempty"`</span>
-<span class="hljs-string">}</span>
+<h2 id="workloadspread-demo">WorkloadSpread Demo <a class="header-anchor" href="#workloadspread-demo">#</a></h2>
+<pre><code class="language-yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
+<span class="hljs-attr">kind:</span> <span class="hljs-string">WorkloadSpread</span>
+<span class="hljs-attr">metadata:</span>
+  <span class="hljs-attr">name:</span> <span class="hljs-string">workloadspread-demo</span>
+<span class="hljs-attr">spec:</span>
+  <span class="hljs-attr">targetRef:</span>
+    <span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span> <span class="hljs-string">|</span> <span class="hljs-string">apps.kruise.io/v1alpha1</span>
+    <span class="hljs-attr">kind:</span> <span class="hljs-string">Deployment</span> <span class="hljs-string">|</span> <span class="hljs-string">CloneSet</span>
+    <span class="hljs-attr">name:</span> <span class="hljs-string">workload-xxx</span>
+  <span class="hljs-attr">subsets:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">subset-a</span>
+      <span class="hljs-attr">requiredNodeSelectorTerm:</span>
+        <span class="hljs-attr">matchExpressions:</span>
+          <span class="hljs-bullet">-</span> <span class="hljs-attr">key:</span> <span class="hljs-string">topology.kubernetes.io/zone</span>
+            <span class="hljs-attr">operator:</span> <span class="hljs-string">In</span>
+            <span class="hljs-attr">values:</span>
+              <span class="hljs-bullet">-</span> <span class="hljs-string">zone-a</span>
+    <span class="hljs-attr">preferredNodeSelectorTerms:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">weight:</span> <span class="hljs-number">1</span>
+        <span class="hljs-attr">preference:</span>
+        <span class="hljs-attr">matchExpressions:</span>
+          <span class="hljs-bullet">-</span> <span class="hljs-attr">key:</span> <span class="hljs-string">another-node-label-key</span>
+            <span class="hljs-attr">operator:</span> <span class="hljs-string">In</span>
+            <span class="hljs-attr">values:</span>
+              <span class="hljs-bullet">-</span> <span class="hljs-string">another-node-label-value</span>
+      <span class="hljs-attr">maxReplicas:</span> <span class="hljs-number">3</span>
+      <span class="hljs-attr">tolertions:</span> <span class="hljs-string">[]</span>
+      <span class="hljs-attr">patch:</span>
+        <span class="hljs-attr">metadata:</span>
+          <span class="hljs-attr">labels:</span>
+            <span class="hljs-attr">xxx-specific-label:</span> <span class="hljs-string">xxx</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">subset-b</span>
+      <span class="hljs-attr">requiredNodeSelectorTerm:</span>
+        <span class="hljs-attr">matchExpressions:</span>
+          <span class="hljs-bullet">-</span> <span class="hljs-attr">key:</span> <span class="hljs-string">topology.kubernetes.io/zone</span>
+            <span class="hljs-attr">operator:</span> <span class="hljs-string">In</span>
+            <span class="hljs-attr">values:</span>
+              <span class="hljs-bullet">-</span> <span class="hljs-string">zone-b</span>
+  <span class="hljs-attr">scheduleStrategy:</span>
+    <span class="hljs-attr">type:</span> <span class="hljs-string">Adaptive</span> <span class="hljs-string">|</span> <span class="hljs-string">Fixed</span>
+    <span class="hljs-attr">adaptive:</span>
+      <span class="hljs-attr">rescheduleCriticalSeconds:</span> <span class="hljs-number">30</span>
 </code></pre>
-<p><strong>Caution</strong>：<code>targetRef</code>can not be mutated，and one workload can only correspond to one WorkloadSpread.</p>
-<h3 id="subset">Subset <a class="header-anchor" href="#subset">#</a></h3>
-<pre><code class="language-yaml"><span class="hljs-string">//</span> <span class="hljs-string">WorkloadSpreadSubset</span> <span class="hljs-string">defines</span> <span class="hljs-string">the</span> <span class="hljs-string">details</span> <span class="hljs-string">of</span> <span class="hljs-string">a</span> <span class="hljs-string">subset.</span>
-<span class="hljs-string">type</span> <span class="hljs-string">WorkloadSpreadSubset</span> <span class="hljs-string">struct</span> <span class="hljs-string">{</span>
-	<span class="hljs-string">//</span> <span class="hljs-string">Name</span> <span class="hljs-string">should</span> <span class="hljs-string">be</span> <span class="hljs-string">unique</span> <span class="hljs-string">between</span> <span class="hljs-string">all</span> <span class="hljs-string">of</span> <span class="hljs-string">the</span> <span class="hljs-string">subsets</span> <span class="hljs-string">under</span> <span class="hljs-string">one</span> <span class="hljs-string">WorkloadSpread.</span>
-	<span class="hljs-string">Name</span> <span class="hljs-string">string</span> <span class="hljs-string">`json:"name"`</span>
-
-	<span class="hljs-string">//</span> <span class="hljs-string">Indicates</span> <span class="hljs-string">the</span> <span class="hljs-string">node</span> <span class="hljs-string">required</span> <span class="hljs-string">selector</span> <span class="hljs-string">to</span> <span class="hljs-string">form</span> <span class="hljs-string">the</span> <span class="hljs-string">subset.</span>
-	<span class="hljs-string">//</span> <span class="hljs-string">+optional</span>
-	<span class="hljs-string">RequiredNodeSelectorTerm</span> <span class="hljs-string">*corev1.NodeSelectorTerm</span> <span class="hljs-string">`json:"requiredNodeSelectorTerm,omitempty"`</span>
-
-	<span class="hljs-string">//</span> <span class="hljs-string">Indicates</span> <span class="hljs-string">the</span> <span class="hljs-string">node</span> <span class="hljs-string">preferred</span> <span class="hljs-string">selector</span> <span class="hljs-string">to</span> <span class="hljs-string">form</span> <span class="hljs-string">the</span> <span class="hljs-string">subset.</span>
-	<span class="hljs-string">//</span> <span class="hljs-string">+optional</span>
-	<span class="hljs-string">PreferredNodeSelectorTerms</span> <span class="hljs-string">[]corev1.PreferredSchedulingTerm</span> <span class="hljs-string">`json:"preferredNodeSelectorTerms,omitempty"`</span>
-
-	<span class="hljs-string">//</span> <span class="hljs-string">Indicates</span> <span class="hljs-string">the</span> <span class="hljs-string">tolerations</span> <span class="hljs-string">the</span> <span class="hljs-string">pods</span> <span class="hljs-string">under</span> <span class="hljs-string">this</span> <span class="hljs-string">subset</span> <span class="hljs-string">have.</span>
-	<span class="hljs-string">//</span> <span class="hljs-string">+optional</span>
-	<span class="hljs-string">Tolerations</span> <span class="hljs-string">[]corev1.Toleration</span> <span class="hljs-string">`json:"tolerations,omitempty"`</span>
-
-	<span class="hljs-string">//</span> <span class="hljs-string">MaxReplicas</span> <span class="hljs-string">indicates</span> <span class="hljs-string">the</span> <span class="hljs-string">desired</span> <span class="hljs-string">max</span> <span class="hljs-string">replicas</span> <span class="hljs-string">of</span> <span class="hljs-string">this</span> <span class="hljs-string">subset.</span>
-	<span class="hljs-string">//</span> <span class="hljs-string">+optional</span>
-	<span class="hljs-string">MaxReplicas</span> <span class="hljs-string">*intstr.IntOrString</span> <span class="hljs-string">`json:"maxReplicas,omitempty"`</span>
-
-	<span class="hljs-string">//</span> <span class="hljs-string">Patch</span> <span class="hljs-string">indicates</span> <span class="hljs-string">patching</span> <span class="hljs-string">podTemplate</span> <span class="hljs-string">to</span> <span class="hljs-string">the</span> <span class="hljs-string">Pod.</span>
-	<span class="hljs-string">//</span> <span class="hljs-string">+optional</span>
-	<span class="hljs-string">Patch</span> <span class="hljs-string">runtime.RawExtension</span> <span class="hljs-string">`json:"patch,omitempty"`</span>
-<span class="hljs-string">}</span>
+<p><code>targetRef</code>: specify the target workload. Can not be mutated，and one workload can only correspond to one WorkloadSpread.</p>
+<h2 id="spec.subsets">spec.subsets <a class="header-anchor" href="#spec.subsets">#</a></h2>
+<p><code>subsets</code> consists of multiple domain called <code>subset</code>, and each topology has different configuration.</p>
+<h3 id="subset-sub-fields">subset sub-fields <a class="header-anchor" href="#subset-sub-fields">#</a></h3>
+<ul>
+<li>
+<p><code>name</code>: the name of <code>subset</code>, it is distinct in a WorkloadSpread, which represents a topology.</p>
+</li>
+<li>
+<p><code>maxReplicas</code>：the capacity of <code>subset</code>, and must be Integer and &gt;= 0. There is no replicas limit while the <code>maxReplicas</code> is nil.</p>
+</li>
+</ul>
+<blockquote>
+<p>Don't support percentage type in current version.</p>
+</blockquote>
+<ul>
+<li>
+<p><code>requiredNodeSelectorTerm</code>: match zone hardly。</p>
+</li>
+<li>
+<p><code>preferredNodeSelectorTerms</code>: match zone softly。</p>
+</li>
+</ul>
+<p><strong>Caution</strong>：<code>requiredNodeSelectorTerm</code> corresponds the <code>requiredDuringSchedulingIgnoredDuringExecution</code> of nodeAffinity.
+<code>preferredNodeSelectorTerms</code> corresponds the <code>preferredDuringSchedulingIgnoredDuringExecution</code> of nodeAffinity.</p>
+<ul>
+<li><code>tolerations</code>: the tolerations of Pod in <code>subset</code>.</li>
+</ul>
+<pre><code class="language-yaml"><span class="hljs-attr">tolerations:</span>
+<span class="hljs-bullet">-</span> <span class="hljs-attr">key:</span> <span class="hljs-string">"key1"</span>
+  <span class="hljs-attr">operator:</span> <span class="hljs-string">"Equal"</span>
+  <span class="hljs-attr">value:</span> <span class="hljs-string">"value1"</span>
+  <span class="hljs-attr">effect:</span> <span class="hljs-string">"NoSchedule"</span>
 </code></pre>
-<p><code>MaxReplicas</code>: the format of percentage is not supported in current version; It can be nil, which means there is no replicas limits in this subset.</p>
-<p><code>Patch</code>: the customized config of Pod in subset, such as Annotations、Labels、Env.</p>
-<pre><code class="language-yaml"><span class="hljs-comment"># patch metadata:</span>
+<ul>
+<li><code>patch</code>: customize the Pod configuration of <code>subset</code>, such as Annotations, Labels, Env.</li>
+</ul>
+<p>Example:</p>
+<pre><code class="language-yaml"><span class="hljs-comment"># patch pod with a topology label:</span>
 <span class="hljs-attr">patch:</span>
   <span class="hljs-attr">metadata:</span>
     <span class="hljs-attr">labels:</span>
-      <span class="hljs-attr">xxx-specific-label:</span> <span class="hljs-string">xxx</span>
+      <span class="hljs-attr">topology.application.deploy/zone:</span> <span class="hljs-string">"zone-a"</span>
 </code></pre>
-<pre><code class="language-yaml"><span class="hljs-comment"># patch container resources:</span>
+<pre><code class="language-yaml"><span class="hljs-comment"># patch pod container resources:</span>
 <span class="hljs-attr">patch:</span>
   <span class="hljs-attr">spec:</span>
     <span class="hljs-attr">containers:</span>
@@ -80,46 +129,31 @@ WorkloadSpread injects the domain config into the Pod by Webhook, and it also co
           <span class="hljs-attr">cpu:</span> <span class="hljs-string">"2"</span>
           <span class="hljs-attr">memory:</span> <span class="hljs-string">800Mi</span>
 </code></pre>
-<pre><code class="language-yaml"><span class="hljs-comment"># patch container environments:</span>
+<pre><code class="language-yaml"><span class="hljs-comment"># patch pod container env with a zone name:</span>
 <span class="hljs-attr">patch:</span>
   <span class="hljs-attr">spec:</span>
     <span class="hljs-attr">containers:</span>
     <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">main</span>
       <span class="hljs-attr">env:</span>
-      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">K8S_CONTAINER_NAME</span>
-        <span class="hljs-attr">value:</span> <span class="hljs-string">main</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">K8S_AZ_NAME</span>
+        <span class="hljs-attr">value:</span> <span class="hljs-string">zone-a</span>
 </code></pre>
-<h2 id="simulateschedule-%26-reschedule">SimulateSchedule &amp; Reschedule <a class="header-anchor" href="#simulateschedule-%26-reschedule">#</a></h2>
-<p>WorkloadSpread provides two kind strategies, the default strategy is 'Fixed'.</p>
+<h2 id="schedule-strategy">Schedule strategy <a class="header-anchor" href="#schedule-strategy">#</a></h2>
+<p>WorkloadSpread provides two kind strategies, the default strategy is <code>Fixed</code>.</p>
 <h3 id="fixed%3A">Fixed: <a class="header-anchor" href="#fixed%3A">#</a></h3>
 <p>Workload is strictly spread according to the definition of the subset.</p>
 <h3 id="adaptive">Adaptive <a class="header-anchor" href="#adaptive">#</a></h3>
-<pre><code class="language-yaml"><span class="hljs-string">//</span> <span class="hljs-string">AdaptiveWorkloadSpreadStrategy</span> <span class="hljs-string">is</span> <span class="hljs-string">used</span> <span class="hljs-string">to</span> <span class="hljs-string">communicate</span> <span class="hljs-string">parameters</span> <span class="hljs-string">when</span> <span class="hljs-string">Type</span> <span class="hljs-string">is</span> <span class="hljs-string">AdaptiveWorkloadSpreadScheduleStrategyType.</span>
-<span class="hljs-string">type</span> <span class="hljs-string">AdaptiveWorkloadSpreadStrategy</span> <span class="hljs-string">struct</span> <span class="hljs-string">{</span>
-	<span class="hljs-string">//</span> <span class="hljs-string">DisableSimulationSchedule</span> <span class="hljs-string">indicates</span> <span class="hljs-string">whether</span> <span class="hljs-string">to</span> <span class="hljs-string">disable</span> <span class="hljs-string">the</span> <span class="hljs-string">feature</span> <span class="hljs-string">of</span> <span class="hljs-string">simulation</span> <span class="hljs-string">schedule.</span>
-	<span class="hljs-string">//</span> <span class="hljs-string">Default</span> <span class="hljs-string">is</span> <span class="hljs-literal">false</span>.
-	<span class="hljs-string">//</span> <span class="hljs-string">Webhook</span> <span class="hljs-string">can</span> <span class="hljs-string">take</span> <span class="hljs-string">a</span> <span class="hljs-string">simple</span> <span class="hljs-string">general</span> <span class="hljs-string">predicates</span> <span class="hljs-string">to</span> <span class="hljs-string">check</span> <span class="hljs-string">whether</span> <span class="hljs-string">Pod</span> <span class="hljs-string">can</span> <span class="hljs-string">be</span> <span class="hljs-string">scheduled</span> <span class="hljs-string">into</span> <span class="hljs-string">this</span> <span class="hljs-string">subset,</span>
-	<span class="hljs-string">//</span> <span class="hljs-string">but</span> <span class="hljs-string">it</span> <span class="hljs-string">just</span> <span class="hljs-string">considers</span> <span class="hljs-string">the</span> <span class="hljs-string">Node</span> <span class="hljs-string">resource</span> <span class="hljs-string">and</span> <span class="hljs-string">cannot</span> <span class="hljs-string">replace</span> <span class="hljs-string">scheduler</span> <span class="hljs-string">to</span> <span class="hljs-string">do</span> <span class="hljs-string">richer</span> <span class="hljs-string">predicates</span> <span class="hljs-string">practically.</span>
-	<span class="hljs-string">//</span> <span class="hljs-string">+optional</span>
-	<span class="hljs-string">DisableSimulationSchedule</span> <span class="hljs-string">bool</span> <span class="hljs-string">`json:"disableSimulationSchedule,omitempty"`</span>
-
-	<span class="hljs-string">//</span> <span class="hljs-string">RescheduleCriticalSeconds</span> <span class="hljs-string">indicates</span> <span class="hljs-string">how</span> <span class="hljs-string">long</span> <span class="hljs-string">controller</span> <span class="hljs-string">will</span> <span class="hljs-string">reschedule</span> <span class="hljs-string">a</span> <span class="hljs-string">schedule</span> <span class="hljs-string">failed</span> <span class="hljs-string">Pod</span> <span class="hljs-string">to</span> <span class="hljs-string">the</span> <span class="hljs-string">subset</span> <span class="hljs-string">that</span> <span class="hljs-string">has</span>
-	<span class="hljs-string">//</span> <span class="hljs-string">redundant</span> <span class="hljs-string">capacity</span> <span class="hljs-string">after</span> <span class="hljs-string">the</span> <span class="hljs-string">subset</span> <span class="hljs-string">where</span> <span class="hljs-string">the</span> <span class="hljs-string">Pod</span> <span class="hljs-string">lives.</span> <span class="hljs-string">If</span> <span class="hljs-string">a</span> <span class="hljs-string">Pod</span> <span class="hljs-string">was</span> <span class="hljs-string">scheduled</span> <span class="hljs-string">failed</span> <span class="hljs-string">and</span> <span class="hljs-string">still</span> <span class="hljs-string">in</span> <span class="hljs-string">a</span> <span class="hljs-string">unschedulabe</span> <span class="hljs-string">status</span>
-	<span class="hljs-string">//</span> <span class="hljs-string">over</span> <span class="hljs-string">RescheduleCriticalSeconds</span> <span class="hljs-string">duration,</span> <span class="hljs-string">the</span> <span class="hljs-string">controller</span> <span class="hljs-string">will</span> <span class="hljs-string">reschedule</span> <span class="hljs-string">it</span> <span class="hljs-string">to</span> <span class="hljs-string">a</span> <span class="hljs-string">suitable</span> <span class="hljs-string">subset.</span>
-	<span class="hljs-string">//</span> <span class="hljs-string">+optional</span>
-	<span class="hljs-string">RescheduleCriticalSeconds</span> <span class="hljs-string">*int32</span> <span class="hljs-string">`json:"rescheduleCriticalSeconds,omitempty"`</span>
-<span class="hljs-string">}</span>
-</code></pre>
-<p><strong>SimulateSchedule</strong>: Kruise will simply filter the Node resources of the <code>subset</code>. If the resources are insufficient, it will be scheduled to the next Subset.</p>
-<p><strong>Reschedule</strong> Kruise will check the Pods of <code>subset</code> were scheduled failed. If it exceeds the defined duration, the failed Pods will be rescheduled to other <code>subset</code>.</p>
+<p><strong>Reschedule</strong>: Kruise will check the Pods of <code>subset</code> were scheduled failed. If it exceeds the defined duration, the failed Pods will be rescheduled to other <code>subset</code>.</p>
 <h2 id="required">Required <a class="header-anchor" href="#required">#</a></h2>
 <h3 id="pod-webhook">Pod Webhook <a class="header-anchor" href="#pod-webhook">#</a></h3>
-<p>WorkloadSpread uses <code>webhook</code> to inject fault domain rules and cares about delete and eviction event of Pod.</p>
+<p>WorkloadSpread uses <code>webhook</code> to inject fault domain rules.</p>
 <p>If the <code>PodWebhook</code> feature-gate is set to false, WorkloadSpread will also be disabled.</p>
 <h3 id="deletion-cost-feature">deletion-cost feature <a class="header-anchor" href="#deletion-cost-feature">#</a></h3>
-<p>CloneSet has supported deletion-cost feature in the latest versions.</p>
+<p><code>CloneSet</code> has supported deletion-cost feature in the latest versions.</p>
 <p>The other native workload need kubernetes version &gt;= 1.21. (In 1.21, users need to enable PodDeletionCost feature-gate, and since 1.22 it will be enabled by default)</p>
 <h2 id="scale-order%3A">Scale order: <a class="header-anchor" href="#scale-order%3A">#</a></h2>
+<p>The workload managed by WorkloadSpread will scale according to the defined order in <code>spec.subsets</code>.</p>
+<p><strong>The order of <code>subset</code> in <code>spec.subsets</code> can be changed</strong>, which can adjust the scale order of workload.</p>
 <h3 id="scale-out">Scale out <a class="header-anchor" href="#scale-out">#</a></h3>
 <ul>
 <li>The Pods are scheduled in the subset order defined in the <code>spec.subsets</code>. It will be scheduled in the next <code>subset</code> while the replica number reaches the maxReplicas of <code>subset</code></li>
@@ -127,10 +161,24 @@ WorkloadSpread injects the domain config into the Pod by Webhook, and it also co
 <h3 id="scale-in">Scale in <a class="header-anchor" href="#scale-in">#</a></h3>
 <ul>
 <li>When the replica number of the <code>subset</code> is greater than the <code>maxReplicas</code>, the extra Pods will be removed in a high priority.</li>
-<li>According to the <code>subset</code> order in the <code>spec.subsets</code>, the Pods of the <code>subset</code> at the back are deleted before the Pods at the front <code>subset</code>.</li>
+<li>According to the <code>subset</code> order in the <code>spec.subsets</code>, the Pods of the <code>subset</code> at the back are deleted before the Pods at the front.</li>
 </ul>
+<pre><code class="language-yaml"><span class="hljs-comment">#             subset-a   subset-b  subset-c</span>
+<span class="hljs-comment"># maxReplicas    10          10        nil</span>
+<span class="hljs-comment"># pods number    10          10        10</span>
+<span class="hljs-comment"># deletion order: c -&gt; b -&gt; a</span>
+
+<span class="hljs-comment">#             subset-a   subset-b  subset-c</span>
+<span class="hljs-comment"># maxReplicas    10          10        nil</span>
+<span class="hljs-comment"># pods number    20          20        20</span>
+<span class="hljs-comment"># deletion order: b -&gt; a -&gt; c</span>
+</code></pre>
+<h2 id="feature-gates">feature-gates <a class="header-anchor" href="#feature-gates">#</a></h2>
+<p>WorkloadSpread feature is turned off by default, if you want to turn it on set feature-gates <em>WorkloadSpread</em>.</p>
+<pre><code class="language-bash">$ helm install kruise https://... --<span class="hljs-built_in">set</span> featureGates=<span class="hljs-string">"WorkloadSpread=true"</span>
+</code></pre>
 <h2 id="example">Example <a class="header-anchor" href="#example">#</a></h2>
-<h3 id="elastic-deploy">Elastic deploy <a class="header-anchor" href="#elastic-deploy">#</a></h3>
+<h3 id="elastic-deployment">Elastic deployment <a class="header-anchor" href="#elastic-deployment">#</a></h3>
 <p><code>zone-a</code>(ACK) holds 100 Pods, <code>zone-b</code>(ECI) as an elastic zone holds additional Pods.</p>
 <ol>
 <li>Create a WorkloadSpread instance.</li>
@@ -179,7 +227,7 @@ WorkloadSpread injects the domain config into the Pod by Webhook, and it also co
 <li>When the number of <code>replicas</code> &gt; 100, the 100 Pods are in <code>ACK</code> zone, the extra Pods are scheduled in <code>ECI</code> zone.</li>
 <li>The Pods in <code>ECI</code> elastic zone are removed first when scaling in.</li>
 </ul>
-<h3 id="multi-domain-deploy">Multi-domain deploy <a class="header-anchor" href="#multi-domain-deploy">#</a></h3>
+<h3 id="multi-domain-deployment">Multi-domain deployment <a class="header-anchor" href="#multi-domain-deployment">#</a></h3>
 <p>Deploy 100 Pods to two <code>zone</code>(zone-a, zone-b) separately.</p>
 <ol>
 <li>Create a WorkloadSpread instance.</li>
@@ -206,7 +254,7 @@ WorkloadSpread injects the domain config into the Pod by Webhook, and it also co
     <span class="hljs-attr">patch:</span>
       <span class="hljs-attr">metadata:</span>
         <span class="hljs-attr">labels:</span>
-          <span class="hljs-attr">deploy/zone:</span> <span class="hljs-string">zonb-a</span>
+          <span class="hljs-attr">deploy/zone:</span> <span class="hljs-string">zone-a</span>
   <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">subset-b</span>
     <span class="hljs-attr">requiredNodeSelectorTerm:</span>
       <span class="hljs-attr">matchExpressions:</span>

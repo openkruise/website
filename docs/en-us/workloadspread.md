@@ -3,79 +3,117 @@ title: WorkloadSpread
 ---
 # WorkloadSpread
 
-WorkloadSpread can be used to constrain the spread of stateless workload, which empower single workload the abilities for
-multi-domain deploy and elastic deploy.
+**FEATURE STATE:** Kruise v0.10.0
 
-The feature of WorkloadSpread is similar with UnitedDeployment in Kruise community. Each WorkloadSpread defines multi-domain
-called `subset`. Each domain should at least provide the capacity to run the replicas number of pods called `maxReplicas`.
-WorkloadSpread injects the domain config into the Pod by Webhook, and it also controls the order of scale in and scale out.
+WorkloadSpread can distribute Pods of workload to different types of Node according to some polices, which empowers single workload the abilities for
+multi-domain deployment and elastic deployment.
+
+Some common policies include:
+- fault toleration spread (for example, spread evenly among hosts, az, etc)
+- spread according to the specified ratio (for example, deploy Pod to several specified az according to the proportion)
+- subset management with priority, such as
+  - deploy Pods to ecs first, and then deploy to eci when its resources are insufficient.
+  - deploy a fixed number of Pods to ecs first, and the rest Pods are deployed to eci.
+- subset management with customization, such as
+  - control how many pods in a workload are deployed in different cpu arch
+  - enable pods in different cpu arch to have different resource requirements
+
+The feature of WorkloadSpread is similar with UnitedDeployment in OpenKruise community. Each WorkloadSpread defines multi-domain
+called `subset`. Each domain may provide the limit to run the replicas number of pods called `maxReplicas`.
+WorkloadSpread injects the domain configuration into the Pod by Webhook, and it also controls the order of scale in and scale out.
 
 Currently, supported workload: `CloneSet`、`Deployment`、`ReplicaSet`.
 
-API definition：https://github.com/openkruise/kruise/blob/819125ddbd4fb4ffb5f3b1ecf03490349a8f6727/apis/apps/v1alpha1/workloadspread_types.go
-
-## WorkloadSpread Spec
+## WorkloadSpread Demo
 
 ```yaml
-// WorkloadSpreadSpec defines the desired state of WorkloadSpread.
-type WorkloadSpreadSpec struct {
-	// TargetReference is the target workload that WorkloadSpread want to control.
-	TargetReference *TargetReference `json:"targetRef"`
-
-	// Subsets describes the pods distribution details between each of subsets.
-	Subsets []WorkloadSpreadSubset `json:"subsets"`
-
-	// ScheduleStrategy indicates the strategy the WorkloadSpread used to preform the schedule between each of subsets.
-	// +optional
-	ScheduleStrategy WorkloadSpreadScheduleStrategy `json:"scheduleStrategy,omitempty"`
-}
-```
-**Caution**：`targetRef`can not be mutated，and one workload can only correspond to one WorkloadSpread.
-
-### Subset
-
-```yaml
-// WorkloadSpreadSubset defines the details of a subset.
-type WorkloadSpreadSubset struct {
-	// Name should be unique between all of the subsets under one WorkloadSpread.
-	Name string `json:"name"`
-
-	// Indicates the node required selector to form the subset.
-	// +optional
-	RequiredNodeSelectorTerm *corev1.NodeSelectorTerm `json:"requiredNodeSelectorTerm,omitempty"`
-
-	// Indicates the node preferred selector to form the subset.
-	// +optional
-	PreferredNodeSelectorTerms []corev1.PreferredSchedulingTerm `json:"preferredNodeSelectorTerms,omitempty"`
-
-	// Indicates the tolerations the pods under this subset have.
-	// +optional
-	Tolerations []corev1.Toleration `json:"tolerations,omitempty"`
-
-	// MaxReplicas indicates the desired max replicas of this subset.
-	// +optional
-	MaxReplicas *intstr.IntOrString `json:"maxReplicas,omitempty"`
-
-	// Patch indicates patching podTemplate to the Pod.
-	// +optional
-	Patch runtime.RawExtension `json:"patch,omitempty"`
-}
+apiVersion: apps.kruise.io/v1alpha1
+kind: WorkloadSpread
+metadata:
+  name: workloadspread-demo
+spec:
+  targetRef:
+    apiVersion: apps/v1 | apps.kruise.io/v1alpha1
+    kind: Deployment | CloneSet
+    name: workload-xxx
+  subsets:
+    - name: subset-a
+      requiredNodeSelectorTerm:
+        matchExpressions:
+          - key: topology.kubernetes.io/zone
+            operator: In
+            values:
+              - zone-a
+    preferredNodeSelectorTerms:
+      - weight: 1
+        preference:
+        matchExpressions:
+          - key: another-node-label-key
+            operator: In
+            values:
+              - another-node-label-value
+      maxReplicas: 3
+      tolertions: []
+      patch:
+        metadata:
+          labels:
+            xxx-specific-label: xxx
+    - name: subset-b
+      requiredNodeSelectorTerm:
+        matchExpressions:
+          - key: topology.kubernetes.io/zone
+            operator: In
+            values:
+              - zone-b
+  scheduleStrategy:
+    type: Adaptive | Fixed
+    adaptive:
+      rescheduleCriticalSeconds: 30
 ```
 
-`MaxReplicas`: the format of percentage is not supported in current version; It can be nil, which means there is no replicas limits in this subset.
+`targetRef`: specify the target workload. Can not be mutated，and one workload can only correspond to one WorkloadSpread.
 
-`Patch`: the customized config of Pod in subset, such as Annotations、Labels、Env.
+## spec.subsets
+
+`subsets` consists of multiple domain called `subset`, and each topology has different configuration.
+
+### subset sub-fields
+
+- `name`: the name of `subset`, it is distinct in a WorkloadSpread, which represents a topology.
+
+- `maxReplicas`：the replicas limit of `subset`, and must be Integer and >= 0. There is no replicas limit while the `maxReplicas` is nil.
+> Don't support percentage type in current version.
+
+- `requiredNodeSelectorTerm`: match zone hardly。
+
+- `preferredNodeSelectorTerms`: match zone softly。
+
+**Caution**：`requiredNodeSelectorTerm` corresponds the `requiredDuringSchedulingIgnoredDuringExecution` of nodeAffinity.
+`preferredNodeSelectorTerms` corresponds the `preferredDuringSchedulingIgnoredDuringExecution` of nodeAffinity.
+
+- `tolerations`: the tolerations of Pod in `subset`.
+```yaml
+tolerations:
+- key: "key1"
+  operator: "Equal"
+  value: "value1"
+  effect: "NoSchedule"
+```
+
+- `patch`: customize the Pod configuration of `subset`, such as Annotations, Labels, Env. 
+
+Example:
 
 ```yaml
-# patch metadata:
+# patch pod with a topology label:
 patch:
   metadata:
     labels:
-      xxx-specific-label: xxx
+      topology.application.deploy/zone: "zone-a"
 ```
 
 ```yaml
-# patch container resources:
+# patch pod container resources:
 patch:
   spec:
     containers:
@@ -87,19 +125,19 @@ patch:
 ```
 
 ```yaml
-# patch container environments:
+# patch pod container env with a zone name:
 patch:
   spec:
     containers:
     - name: main
       env:
-      - name: K8S_CONTAINER_NAME
-        value: main
+      - name: K8S_AZ_NAME
+        value: zone-a
 ```
 
-## SimulateSchedule & Reschedule
+## Schedule strategy
 
-WorkloadSpread provides two kind strategies, the default strategy is 'Fixed'.
+WorkloadSpread provides two kind strategies, the default strategy is `Fixed`.
 
 ### Fixed: 
 
@@ -107,53 +145,57 @@ Workload is strictly spread according to the definition of the subset.
   
 ### Adaptive
 
-```yaml
-// AdaptiveWorkloadSpreadStrategy is used to communicate parameters when Type is AdaptiveWorkloadSpreadScheduleStrategyType.
-type AdaptiveWorkloadSpreadStrategy struct {
-	// DisableSimulationSchedule indicates whether to disable the feature of simulation schedule.
-	// Default is false.
-	// Webhook can take a simple general predicates to check whether Pod can be scheduled into this subset,
-	// but it just considers the Node resource and cannot replace scheduler to do richer predicates practically.
-	// +optional
-	DisableSimulationSchedule bool `json:"disableSimulationSchedule,omitempty"`
-
-	// RescheduleCriticalSeconds indicates how long controller will reschedule a schedule failed Pod to the subset that has
-	// redundant capacity after the subset where the Pod lives. If a Pod was scheduled failed and still in a unschedulabe status
-	// over RescheduleCriticalSeconds duration, the controller will reschedule it to a suitable subset.
-	// +optional
-	RescheduleCriticalSeconds *int32 `json:"rescheduleCriticalSeconds,omitempty"`
-}
-```
-
-**SimulateSchedule**: Kruise will simply filter the Node resources of the `subset`. If the resources are insufficient, it will be scheduled to the next Subset.
-
-**Reschedule** Kruise will check the Pods of `subset` were scheduled failed. If it exceeds the defined duration, the failed Pods will be rescheduled to other `subset`.
+**Reschedule**: Kruise will check the unschedulable Pods of subset. If it exceeds the defined duration, the failed Pods will be rescheduled to the other `subset`.
 
 ## Required
 
 ### Pod Webhook
-WorkloadSpread uses `webhook` to inject fault domain rules and cares about delete and eviction event of Pod.
+WorkloadSpread uses `webhook` to inject fault domain rules.
 
 If the `PodWebhook` feature-gate is set to false, WorkloadSpread will also be disabled.
 
 ### deletion-cost feature
-CloneSet has supported deletion-cost feature in the latest versions.
+`CloneSet` has supported deletion-cost feature in the latest versions.
 
 The other native workload need kubernetes version >= 1.21. (In 1.21, users need to enable PodDeletionCost feature-gate, and since 1.22 it will be enabled by default)
 
 ## Scale order:
 
+The workload managed by WorkloadSpread will scale according to the defined order in `spec.subsets`.
+
+**The order of `subset` in `spec.subsets` can be changed**, which can adjust the scale order of workload.
+
 ### Scale out
+
 - The Pods are scheduled in the subset order defined in the `spec.subsets`. It will be scheduled in the next `subset` while the replica number reaches the maxReplicas of `subset` 
   
 ### Scale in
 
 - When the replica number of the `subset` is greater than the `maxReplicas`, the extra Pods will be removed in a high priority.
-- According to the `subset` order in the `spec.subsets`, the Pods of the `subset` at the back are deleted before the Pods at the front `subset`.
+- According to the `subset` order in the `spec.subsets`, the Pods of the `subset` at the back are deleted before the Pods at the front.
+
+```yaml
+#             subset-a   subset-b  subset-c
+# maxReplicas    10          10        nil
+# pods number    10          10        10
+# deletion order: c -> b -> a
+
+#             subset-a   subset-b  subset-c
+# maxReplicas    10          10        nil
+# pods number    20          20        20
+# deletion order: b -> a -> c
+```
+
+## feature-gates
+WorkloadSpread feature is turned off by default, if you want to turn it on set feature-gates *WorkloadSpread*.
+
+```bash
+$ helm install kruise https://... --set featureGates="WorkloadSpread=true"
+```
 
 ## Example
 
-### Elastic deploy
+### Elastic deployment
 
 `zone-a`(ACK) holds 100 Pods, `zone-b`(ECI) as an elastic zone holds additional Pods.
 
@@ -202,7 +244,7 @@ spec:
 - When the number of `replicas` > 100, the 100 Pods are in `ACK` zone, the extra Pods are scheduled in `ECI` zone.
 - The Pods in `ECI` elastic zone are removed first when scaling in.
 
-### Multi-domain deploy
+### Multi-domain deployment
 
 Deploy 100 Pods to two `zone`(zone-a, zone-b) separately.
 
@@ -230,7 +272,7 @@ spec:
     patch:
       metadata:
         labels:
-          deploy/zone: zonb-a
+          deploy/zone: zone-a
   - name: subset-b
     requiredNodeSelectorTerm:
       matchExpressions:

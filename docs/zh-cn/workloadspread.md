@@ -3,77 +3,115 @@ title: WorkloadSpread
 ---
 # WorkloadSpread
 
-WorkloadSpread可以用来约束无状态Workload的区域分布，赋予单一workload的多域部署和弹性部署的能力。
+**FEATURE STATE:** Kruise v0.10.0
 
-WorkloadSpread与Kruise社区的UnitedDeployment功能相似，每一个WorkloadSpread定义多个区域（定义为`subset`），
-`subset`对应一个`maxReplicas`数量。WorkloadSpread利用Webhook注入`subset`定义的域信息，且控制Pod的扩缩容顺序。
+WorkloadSpread能够将workload的Pod按一定规则分布到不同类型的Node节点上，赋予单一workload多区域部署和弹性部署的能力。
 
-目前支持的Workload类型：`CloneSet`、`Deployment`、`ReplicaSet`。
+常见的一些规则包括：
+- 水平打散（比如按host、az等维度的平均打散）。
+- 按指定比例打散（比如按比例部署Pod到几个指定的 az 中）。
+- 带优先级的分区管理，比如：
+  - 优先部署到ecs，资源不足时部署到eci。
+  - 优先部署固定数量个pod到ecs，其余到eci。
+- 定制化分区管理，比如：
+  - 控制workload部署不同数量的Pod到不同的cpu架构上。
+  - 确保不同的cpu架构上的Pod配有不同的资源配额。
 
-API定义：https://github.com/openkruise/kruise/blob/819125ddbd4fb4ffb5f3b1ecf03490349a8f6727/apis/apps/v1alpha1/workloadspread_types.go
+WorkloadSpread与OpenKruise社区的UnitedDeployment功能相似，每一个WorkloadSpread定义多个区域（定义为`subset`），
+每个`subset`对应一个`maxReplicas`数量。WorkloadSpread利用Webhook注入`subset`定义的域信息，同时控制Pod的扩缩容顺序。
+与UnitedDeployment**不同**的是，UnitedDeployment是帮助用户创建并管理多个workload，WorkloadSpread仅作用在单个workload之上，用户提供workload即可。
 
-## WorkloadSpread Spec
+当前支持的workload类型：`CloneSet`、`Deployment`、`ReplicaSet`。
+
+## WorkloadSpread Demo
 
 ```yaml
-// WorkloadSpreadSpec defines the desired state of WorkloadSpread.
-type WorkloadSpreadSpec struct {
-	// TargetReference is the target workload that WorkloadSpread want to control.
-	TargetReference *TargetReference `json:"targetRef"`
-
-	// Subsets describes the pods distribution details between each of subsets.
-	Subsets []WorkloadSpreadSubset `json:"subsets"`
-
-	// ScheduleStrategy indicates the strategy the WorkloadSpread used to preform the schedule between each of subsets.
-	// +optional
-	ScheduleStrategy WorkloadSpreadScheduleStrategy `json:"scheduleStrategy,omitempty"`
-}
+apiVersion: apps.kruise.io/v1alpha1
+kind: WorkloadSpread
+metadata:
+  name: workloadspread-demo
+spec:
+  targetRef:
+    apiVersion: apps/v1 | apps.kruise.io/v1alpha1
+    kind: Deployment | CloneSet
+    name: workload-xxx
+  subsets:
+  - name: subset-a
+    requiredNodeSelectorTerm:
+      matchExpressions:
+      - key: topology.kubernetes.io/zone
+        operator: In
+        values:
+        - zone-a
+   preferredNodeSelectorTerms:
+   - weight: 1
+     preference:
+     matchExpressions:
+     - key: another-node-label-key
+       operator: In
+       values:
+       - another-node-label-value
+    maxReplicas: 3
+    tolertions: []
+    patch:
+      metadata:
+        labels:
+          xxx-specific-label: xxx
+  - name: subset-b
+    requiredNodeSelectorTerm:
+      matchExpressions:
+      - key: topology.kubernetes.io/zone
+        operator: In
+        values:
+        - zone-b
+  scheduleStrategy:
+    type: Adaptive | Fixed
+    adaptive:
+      rescheduleCriticalSeconds: 30
 ```
-**注意**：`targetRef`不可以变更，且一个Workload只能对应一个WorkloadSpread。
 
-### Subset
+`targetRef`: 指定WorkloadSpread管理的workload。不可以变更，且一个workload只能对应一个WorkloadSpread。
 
+## spec.subsets
+`subsets`定义了多个区域(`subset`),每个区域配置不同的subset信息
+
+### subset字段说明
+
+- `name`: subset的名称，在同一个WorkloadSpread下name唯一，代表一个topology区域。
+  
+- `maxReplicas`：该subset所期望调度的最大副本数，需为 >= 0的整数。若设置为空，代表不限制subset的副本数。
+> 当前版本暂不支持百分比类型。
+
+- `requiredNodeSelectorTerm`: 强制匹配到某个zone。
+  
+- `preferredNodeSelectorTerms`: 尽量匹配到某个zone。
+
+**注意**：requiredNodeSelectorTerm对应k8s nodeAffinity的requiredDuringSchedulingIgnoredDuringExecution。
+preferredNodeSelectorTerms对应nodeAffinity preferredDuringSchedulingIgnoredDuringExecution。
+
+- `tolerations`: `subset`Pod的Node容忍度。
 ```yaml
-// WorkloadSpreadSubset defines the details of a subset.
-type WorkloadSpreadSubset struct {
-	// Name should be unique between all of the subsets under one WorkloadSpread.
-	Name string `json:"name"`
-
-	// Indicates the node required selector to form the subset.
-	// +optional
-	RequiredNodeSelectorTerm *corev1.NodeSelectorTerm `json:"requiredNodeSelectorTerm,omitempty"`
-
-	// Indicates the node preferred selector to form the subset.
-	// +optional
-	PreferredNodeSelectorTerms []corev1.PreferredSchedulingTerm `json:"preferredNodeSelectorTerms,omitempty"`
-
-	// Indicates the tolerations the pods under this subset have.
-	// +optional
-	Tolerations []corev1.Toleration `json:"tolerations,omitempty"`
-
-	// MaxReplicas indicates the desired max replicas of this subset.
-	// +optional
-	MaxReplicas *intstr.IntOrString `json:"maxReplicas,omitempty"`
-
-	// Patch indicates patching podTemplate to the Pod.
-	// +optional
-	Patch runtime.RawExtension `json:"patch,omitempty"`
-}
+tolerations:
+- key: "key1"
+  operator: "Equal"
+  value: "value1"
+  effect: "NoSchedule"
 ```
 
-`MaxReplicas`：当前版本暂不支持百分比；若设置为空，代表不限制subset的副本数。
+- `patch`: 定制`subset`中的Pod配置，可以是Annotations、Labels、Env等。
 
-`Patch`: 自定义`subset`的Pod配置，可以是Annotations、Labels、Env等。
+例子：
 
 ```yaml
-# patch metadata:
+# patch pod with a topology label:
 patch:
   metadata:
     labels:
-      xxx-specific-label: xxx
+      topology.application.deploy/zone: "zone-a"
 ```
 
 ```yaml
-# patch container resources:
+# patch pod container resources:
 patch:
   spec:
     containers:
@@ -85,67 +123,80 @@ patch:
 ```
 
 ```yaml
-# patch container environments:
+# patch pod container env with a zone name:
 patch:
   spec:
     containers:
     - name: main
       env:
-      - name: K8S_CONTAINER_NAME
-        value: main
+      - name: K8S_AZ_NAME
+        value: zone-a
 ```
 
-## 模拟调度和Reschedule
+## 调度策略
 
 WorkloadSpread提供了两种调度策略，默认为`Fixed`:
 
+```yaml
+scheduleStrategy:
+    type: Adaptive | Fixed
+    adaptive:
+      rescheduleCriticalSeconds: 30
+```
+
 ### Fixed: 
 
-Workload严格按照`subset`定义分布。
+workload严格按照`subsets`定义分布。
   
 ### Adaptive
-
-```yaml
-// AdaptiveWorkloadSpreadStrategy is used to communicate parameters when Type is AdaptiveWorkloadSpreadScheduleStrategyType.
-type AdaptiveWorkloadSpreadStrategy struct {
-	// DisableSimulationSchedule indicates whether to disable the feature of simulation schedule.
-	// Default is false.
-	// Webhook can take a simple general predicates to check whether Pod can be scheduled into this subset,
-	// but it just considers the Node resource and cannot replace scheduler to do richer predicates practically.
-	// +optional
-	DisableSimulationSchedule bool `json:"disableSimulationSchedule,omitempty"`
-
-	// RescheduleCriticalSeconds indicates how long controller will reschedule a schedule failed Pod to the subset that has
-	// redundant capacity after the subset where the Pod lives. If a Pod was scheduled failed and still in a unschedulabe status
-	// over RescheduleCriticalSeconds duration, the controller will reschedule it to a suitable subset.
-	// +optional
-	RescheduleCriticalSeconds *int32 `json:"rescheduleCriticalSeconds,omitempty"`
-}
-```
   
-**模拟调度**： Kruise会对`subset`的Node资源做简单过滤，若资源不足会调度到下一个`subset`。
-  
-**Reschedule**：Kruise检查`subset`调度失败的Pod，若超过用户定义的时间就调度到其他`subset`。
+**Reschedule**：Kruise检查`subset`中调度失败的Pod，若超过用户定义的时间就将其调度到其他有可用的`subset`上。
 
 ## 环境要求
 
 ### Pod Webhook
-WorkloadSpread利用`webhook`向Pod注入域规则并且关心Pod的驱逐和删除事件。
+WorkloadSpread利用`webhook`向Pod注入域规则。
 
 如果`PodWebhook` feature-gate被设置为`false`，WorkloadSpread也将不可用。
 
 ### deletion-cost feature
-CloneSet已经支持该特性。
+`CloneSet`已经支持该特性。
 
 其他native workload需kubernetes version >= 1.21。1.21版本需要开启 `PodDeletionCost` feature-gate。自1.22起默认开启。
 
 ## 扩缩容顺序：
+
+WorkloadSpread所管理的workload会按照`subsets`中定义的顺序扩缩容，**`subset`的顺序允许改变**，即通过改变`subset`的顺序来调整扩缩容的顺序。
+
+规则如下：
+
 ### 扩容
-- 按照`spec.subsets`中`subset`定义的顺序调度Pod，当前`subset`的Pod数量达到`maxReplicas`时再调度到下一个`subset`。
+- 按照`spec.subsets`中`subset`定义的顺序调度Pod，当前`subset`的active Pod数量达到`maxReplicas`时再调度到下一个`subset`。
   
 ### 缩容
-- 当`subset`的副本数大于定义的maxReplicas时，优先缩容多余的Pod。
-- 按照`spec.subsets`中`subset`定义的顺序，后面的`subset`的Pod先于前面的被删除。
+- 当`subset`的副本数(active)大于定义的maxReplicas时，优先缩容多余的Pod。
+- 依据`spec.subsets`中`subset`定义的顺序，后面`subset`的Pod先于前面的被删除。
+
+例如：
+
+```yaml
+#             subset-a   subset-b  subset-c
+# maxReplicas    10          10        nil
+# pods number    10          10        10
+# 删除顺序为: c -> b -> a
+
+#             subset-a   subset-b  subset-c
+# maxReplicas    10          10        nil
+# pods number    20          20        20
+# 删除顺序为: b -> a -> c
+```
+
+## feature-gates
+WorkloadSpread默认是关闭的，如果要开启请通过设置 feature-gates *WorkloadSpread*.
+
+```bash
+$ helm install kruise https://... --set featureGates="WorkloadSpread=true"
+```
 
 ## 例子
 
@@ -164,7 +215,7 @@ spec:
   targetRef: # 相同namespace下的workload
     apiVersion: apps.kruise.io/v1alpha1
     kind: CloneSet
-    name: workload-xxx
+    name: cs-demo
   subsets:
   - name: ack # zone ack，最多100个副本。
     requiredNodeSelectorTerm:
@@ -177,7 +228,7 @@ spec:
     patch: # 注入label
       metadata:
         labels:
-          deploy/zone: ack
+          topology.application.deploy/zone: ack
   - name: eci # 弹性区域eci，副本数量不限。
     requiredNodeSelectorTerm:
       matchExpressions:
@@ -188,7 +239,7 @@ spec:
     patch:
       metadata:
         labels:
-          deploy/zone: eci
+          topology.application.deploy/zone: eci
 ```
 2. 创建workload，副本数可以自由调整。
 
@@ -212,7 +263,7 @@ spec:
   targetRef: # 相同namespace下的workload
     apiVersion: apps.kruise.io/v1alpha1
     kind: CloneSet
-    name: workload-xxx
+    name: cs-demo
   subsets:
   - name: subset-a # 区域A，100个副本。
     requiredNodeSelectorTerm:
@@ -225,7 +276,7 @@ spec:
     patch:
       metadata:
         labels:
-          deploy/zone: zonb-a
+          topology.application.deploy/zone: zone-a
   - name: subset-b # 区域B，100个副本。
     requiredNodeSelectorTerm:
       matchExpressions:
@@ -237,9 +288,9 @@ spec:
     patch:
       metadata:
         labels:
-          deploy/zone: zone-b
+          topology.application.deploy/zone: zone-b
 ```
 
-2. 创建200副本的workload，或者对已有的workload执行滚动更新。
+2. 创建一个200副本的新`CloneSet`，或者对现有的`CloneSet`执行滚动更新。
 
-3. 如zone副本分布需要变动，先调整对应`subset`的`maxReplicas`，再调整workload副本数。
+3. 若`subset`副本分布需要变动，先调整对应`subset`的`maxReplicas`，再调整workload副本数。
