@@ -17,12 +17,18 @@
 <p>WorkloadSpread能够将workload的Pod按一定规则分布到不同类型的Node节点上，赋予单一workload多区域部署和弹性部署的能力。</p>
 <p>常见的一些规则包括：</p>
 <ul>
-<li>水平打散（比如按host、az等维度的平均打散）</li>
-<li>按指定比例打散（比如按比例部署Pod到几个指定的 az 中）</li>
-<li>带优先级的不同分区管理，比如
+<li>水平打散（比如按host、az等维度的平均打散）。</li>
+<li>按指定比例打散（比如按比例部署Pod到几个指定的 az 中）。</li>
+<li>带优先级的分区管理，比如：
 <ul>
-<li>优先部署到ecs，资源不足到eci</li>
-<li>优先部署固定数量个pod到ecs，其余到eci</li>
+<li>优先部署到ecs，资源不足时部署到eci。</li>
+<li>优先部署固定数量个pod到ecs，其余到eci。</li>
+</ul>
+</li>
+<li>定制化分区管理，比如：
+<ul>
+<li>控制workload部署不同数量的Pod到不同的cpu架构上。</li>
+<li>确保不同的cpu架构上的Pod配有不同的资源配额。</li>
 </ul>
 </li>
 </ul>
