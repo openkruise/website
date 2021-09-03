@@ -76,6 +76,7 @@ spec:
 - `name`: subset的名称，在同一个WorkloadSpread下name唯一，代表一个topology区域。
   
 - `maxReplicas`：该subset所期望调度的最大副本数，需为 >= 0的整数。若设置为空，代表不限制subset的副本数。
+> 当前版本暂不支持百分比类型。
 
 - `requiredNodeSelectorTerm`: 强制匹配到某个zone。
   

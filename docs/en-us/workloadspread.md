@@ -76,7 +76,8 @@ spec:
 
 - `name`: the name of `subset`, it is distinct in a WorkloadSpread, which represents a topology.
 
-- `maxReplicas`：the capacity of `subset`, and must be Int, >= 0。 There is no replicas limit while the `maxReplicas` is nil.
+- `maxReplicas`：the capacity of `subset`, and must be Integer and >= 0. There is no replicas limit while the `maxReplicas` is nil.
+> Don't support percentage type in current version.
 
 - `requiredNodeSelectorTerm`: match zone hardly。
 
