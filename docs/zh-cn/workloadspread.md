@@ -3,7 +3,9 @@ title: WorkloadSpread
 ---
 # WorkloadSpread
 
-WorkloadSpread能够workload的Pod按一定规则分布到不同类型的Node节点上，赋予单一workload多区域部署和弹性部署的能力。
+**FEATURE STATE:** Kruise v0.10.0
+
+WorkloadSpread能够将workload的Pod按一定规则分布到不同类型的Node节点上，赋予单一workload多区域部署和弹性部署的能力。
 
 常见的一些规则包括：
 - 水平打散（比如按host、az等维度的平均打散）

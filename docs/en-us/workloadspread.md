@@ -3,6 +3,8 @@ title: WorkloadSpread
 ---
 # WorkloadSpread
 
+**FEATURE STATE:** Kruise v0.10.0
+
 WorkloadSpread can distribute Pods of workload to different types of Node according to some rules, which empowers single workload the abilities for
 multi-domain deployment and elastic deployment.
 
