@@ -3,20 +3,20 @@ title: Installation
 ---
 # Install OpenKruise
 
-OpenKruise requires Kubernetes version >= `1.13+` because of CRD conversion.
+Although OpenKruise now can work with Kubernetes version >= `1.13`, we strongly recommend you to use Kruise with **Kubernetes version >= 1.16**. 
 
 Note that for Kubernetes 1.13 and 1.14, users must enable `CustomResourceWebhookConversion` feature-gate in kube-apiserver before install or upgrade Kruise.
 
 ## Install with helm charts
 
-It is recommended that you should install Kruise with helm v3.1+, which is a simple command-line tool and you can get it from [here](https://github.com/helm/helm/releases).
+Kruise can be simply installed by helm v3.1+, which is a simple command-line tool and you can get it from [here](https://github.com/helm/helm/releases).
 
 ```bash
 # Kubernetes 1.13 and 1.14
-helm install kruise https://github.com/openkruise/kruise/releases/download/v0.9.0/kruise-chart.tgz --disable-openapi-validation
+helm install kruise https://github.com/openkruise/kruise/releases/download/v0.10.0/kruise-chart.tgz --disable-openapi-validation
 
 # Kubernetes 1.15 and newer versions
-helm install kruise https://github.com/openkruise/kruise/releases/download/v0.9.0/kruise-chart.tgz
+helm install kruise https://github.com/openkruise/kruise/releases/download/v0.10.0/kruise-chart.tgz
 ```
 
 ## Upgrade with helm charts
@@ -25,10 +25,10 @@ If you are using Kruise with an old version, it is recommended that you should u
 
 ```bash
 # Kubernetes 1.13 and 1.14
-helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.9.0/kruise-chart.tgz --disable-openapi-validation
+helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.10.0/kruise-chart.tgz --disable-openapi-validation
 
 # Kubernetes 1.15 and newer versions
-helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.9.0/kruise-chart.tgz
+helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.10.0/kruise-chart.tgz
 ```
 
 Note that:
@@ -55,7 +55,7 @@ The following table lists the configurable parameters of the chart and their def
 | `manager.log.level`                       | Log level that kruise-manager printed                        | `4`                           |
 | `manager.replicas`                        | Replicas of kruise-controller-manager deployment             | `2`                           |
 | `manager.image.repository`                | Repository for kruise-manager image                          | `openkruise/kruise-manager`   |
-| `manager.image.tag`                       | Tag for kruise-manager image                                 | `v0.9.0`                      |
+| `manager.image.tag`                       | Tag for kruise-manager image                                 | `v0.10.0`                     |
 | `manager.resources.limits.cpu`            | CPU resource limit of kruise-manager container               | `100m`                        |
 | `manager.resources.limits.memory`         | Memory resource limit of kruise-manager container            | `256Mi`                       |
 | `manager.resources.requests.cpu`          | CPU resource request of kruise-manager container             | `100m`                        |
@@ -87,13 +87,16 @@ Feature-gate controls some influential features in Kruise:
 | ---------------------- | ------------------------------------------------------------ | ------- | --------------------------------------
 | `PodWebhook`           | Whether to open a webhook for Pod **create**                 | `true`  | SidecarSet/KruisePodReadinessGate disabled    |
 | `KruiseDaemon`         | Whether to deploy `kruise-daemon` DaemonSet                  | `true`  | ImagePulling/ContainerRecreateRequest disabled |
+| `DaemonWatchingPod`    | Should each `kruise-daemon` watch pods on the same node      | `true`  | For in-place update with same imageID or env from labels/annotations |
 | `CloneSetShortHash`    | Enables CloneSet controller only set revision hash name to pod label | `false` | CloneSet name can not be longer than 54 characters |
 | `KruisePodReadinessGate` | Enables Kruise webhook to inject 'KruisePodReady' readiness-gate to all Pods during creation | `false` | The readiness-gate will only be injected to Pods created by Kruise workloads |
 | `PreDownloadImageForInPlaceUpdate` | Enables CloneSet controller to create ImagePullJobs to pre-download images for in-place update | `false` | No image pre-download for in-place update |
 | `CloneSetPartitionRollback` | Enables CloneSet controller to rollback Pods to currentRevision when number of updateRevision pods is bigger than (replicas - partition) | `false` | CloneSet will only update Pods to updateRevision |
 | `ResourcesDeletionProtection` | Enables protection for resources deletion              | `false` | No protection for resources deletion |
-| `PodUnavailableBudgetDeleteGate` | Enables protection for pod deletion, eviction              | `false` | No protection for pod deletion, eviction |
-| `PodUnavailableBudgetUpdateGate` | Enables protection for pod.Spec update              | `false` | No protection for pod.Spec update |
+| `TemplateNoDefaults` | Whether to disable defaults injection for pod/pvc template in workloads | `false` | Should not close this feature if it has open |
+| `PodUnavailableBudgetDeleteGate` | Enables PodUnavailableBudget for pod deletion, eviction              | `false` | No protection for pod deletion, eviction |
+| `PodUnavailableBudgetUpdateGate` | Enables PodUnavailableBudget for pod.Spec update              | `false` | No protection for in-place update |
+| `WorkloadSpread`                 | Enables WorkloadSpread to manage multi-domain and elastic deploy  | `false` | WorkloadSpread disabled | 
 
 If you want to configure the feature-gate, just set the parameter when install or upgrade. Such as:
 

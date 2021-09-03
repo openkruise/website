@@ -3,7 +3,9 @@ title: 安装
 ---
 # 安装 OpenKruise
 
-OpenKruise 要求 Kubernetes 版本高于 1.13+，注意在 1.13 和 1.14 版本中必须先在 kube-apiserver 中打开 `CustomResourceWebhookConversion` feature-gate。
+尽管目前 OpenKruise 能够兼容 Kubernetes >= 1.13 版本的集群，但我们强烈建议在 **Kubernetes >= 1.16** 以上版本的集群中使用。
+
+注意在 1.13 和 1.14 版本中必须先在 kube-apiserver 中打开 `CustomResourceWebhookConversion` feature-gate。
 
 ## 通过 helm charts 安装
 
@@ -11,10 +13,10 @@ OpenKruise 要求 Kubernetes 版本高于 1.13+，注意在 1.13 和 1.14 版本
 
 ```bash
 # Kubernetes 1.13 或 1.14 版本
-helm install kruise https://github.com/openkruise/kruise/releases/download/v0.9.0/kruise-chart.tgz --disable-openapi-validation
+helm install kruise https://github.com/openkruise/kruise/releases/download/v0.10.0/kruise-chart.tgz --disable-openapi-validation
 
 # Kubernetes 1.15 和更新的版本
-helm install kruise https://github.com/openkruise/kruise/releases/download/v0.9.0/kruise-chart.tgz
+helm install kruise https://github.com/openkruise/kruise/releases/download/v0.10.0/kruise-chart.tgz
 ```
 
 ## 通过 helm charts 升级
@@ -23,10 +25,10 @@ helm install kruise https://github.com/openkruise/kruise/releases/download/v0.9.
 
 ```bash
 # Kubernetes 1.13 and 1.14
-helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.9.0/kruise-chart.tgz --disable-openapi-validation
+helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.10.0/kruise-chart.tgz --disable-openapi-validation
 
 # Kubernetes 1.15 and newer versions
-helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.9.0/kruise-chart.tgz
+helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.10.0/kruise-chart.tgz
 ```
 
 注意：
@@ -49,7 +51,7 @@ helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.9.
 | `manager.log.level`                       | kruise-manager 日志输出级别                                    | `4`                           |
 | `manager.replicas`                        | kruise-manager 的期望副本数                                    | `2`                           |
 | `manager.image.repository`                | kruise-manager/kruise-daemon 镜像仓库                         | `openkruise/kruise-manager`   |
-| `manager.image.tag`                       | kruise-manager/kruise-daemon 镜像版本                         | `v0.9.0`                      |
+| `manager.image.tag`                       | kruise-manager/kruise-daemon 镜像版本                         | `v0.10.0`                     |
 | `manager.resources.limits.cpu`            | kruise-manager 的 limit CPU 资源                              | `100m`                        |
 | `manager.resources.limits.memory`         | kruise-manager 的 limit memory 资源                           | `256Mi`                       |
 | `manager.resources.requests.cpu`          | kruise-manager 的 request CPU 资源                            | `100m`                        |
@@ -81,13 +83,16 @@ Feature-gate 控制了 Kruise 中一些有影响性的功能：
 | ---------------------- | ------------------------------------------------------------ | ------- | -----------------------------------------
 | `PodWebhook`           | 启用对于 Pod **创建** 的 webhook (不建议关闭)                 | `true`  | SidecarSet/KruisePodReadinessGate 不可用    |
 | `KruiseDaemon`         | 启用 `kruise-daemon` DaemonSet (不建议关闭)                 | `true`  | 镜像预热/容器重启 不可用                       |
+| `DaemonWatchingPod`    | 每个 `kruise-daemon` 会 watch 与自己同节点的 pod （不建议关闭）  | `true`  | 同 imageID 的原地升级，以及支持 env from labels/annotation 原地升级 不可用 |
 | `CloneSetShortHash`    | 启用 CloneSet controller 只在 pod label 中设置短 hash 值     | `false` | CloneSet 名字不能超过 54 个字符（默认行为）     |
 | `KruisePodReadinessGate` | 启用 Kruise webhook 将 'KruisePodReady' readiness-gate 在所有 Pod 创建时注入 | `false` | 只会注入到 Kruise workloads 创建的 Pod 中 |
 | `PreDownloadImageForInPlaceUpdate` | 启用 CloneSet 自动为原地升级的过程创建 ImagePullJob 来预热镜像 | `false` | 原地升级无镜像提前预热 |
 | `CloneSetPartitionRollback` | 启用如果 partition 被调大， CloneSet controller 会回滚 Pod 到 currentRevision 老版本 | `false` | CloneSet 只会正向发布 Pod 到 updateRevision |
-| `ResourcesDeletionProtection` | Enables protection for resources deletion              | `false` | 资源删除无保护 |
-| `PodUnavailableBudgetDeleteGate` | Enables protection for pod deletion, eviction   | `false` | Pod删除、Eviction无保护 |
-| `PodUnavailableBudgetUpdateGate` | Enables protection for pod in-place update   | `false` | Pod原地升级无保护 |
+| `ResourcesDeletionProtection` | 资源删除防护           | `false` | 资源删除无保护 |
+| `TemplateNoDefaults` | 是否取消对 workload 中 pod/pvc template 的默认值注入 | `false` | Should not close this feature if it has open |
+| `PodUnavailableBudgetDeleteGate` | 启用 PodUnavailableBudget 保护 pod 删除、驱逐   | `false` | 不防护 pod 删除、驱逐 |
+| `PodUnavailableBudgetUpdateGate` | 启用 PodUnavailableBudget 保护 pod 原地升级   | `false` | 不防护 pod 原地升级 |
+| `WorkloadSpread`                 | 启用 WorkloadSpread 管理应用多分区弹性与拓扑部署 | `false` | 不支持 WorkloadSpread | 
 
 如果你要配置 feature-gate，只要在安装或升级时配置参数即可，比如：
 

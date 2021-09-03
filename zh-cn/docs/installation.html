@@ -13,22 +13,23 @@
 </head>
 <body>
 	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/zh-cn/index.html"><img class="logo" src="/img/kruise_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">En</span><div class="header-menu"><img class="header-menu-toggle" src="/img/system/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/zh-cn/index.html" target="_self">首页</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/zh-cn/docs/what_is_openkruise.html" target="_self">文档</a></li><li class="menu-item menu-item-normal"><a href="/zh-cn/blog/index.html" target="_self">博客</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/img/system/docs.png" class="front-img"/><span>文档</span><img src="/img/system/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span>快速开始</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/what_is_openkruise.html" target="_self">OpenKruise 是什么</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/installation.html" target="_self">安装</a></li></ul></li><li class="menu-item menu-item-level-1"><span>基础说明</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/cloneset.html" target="_self">CloneSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advanced_statefulset.html" target="_self">Advanced StatefulSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/sidecarset.html" target="_self">SidecarSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advanced_daemonset.html" target="_self">Advanced DaemonSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/workloadspread.html" target="_self">WorkloadSpread</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/uniteddeployment.html" target="_self">UnitedDeployment</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/broadcastjob.html" target="_self">BroadcastJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/advancedcronjob.html" target="_self">AdvancedCronJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/imagepulljob.html" target="_self">ImagePullJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/containerrecreaterequest.html" target="_self">ContainerRecreateRequest</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/deletion_protection.html" target="_self">Deletion Protection</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/podunavailablebudget.html" target="_self">PodUnavailableBudget</a></li></ul></li><li class="menu-item menu-item-level-1"><span>参考</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/components.html" target="_self">组件</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/zh-cn/docs/go_client.html" target="_self">Golang 客户端</a></li></ul></li><li class="menu-item menu-item-level-1"><span>贡献</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="https://github.com/openkruise/kruise/blob/master/CONTRIBUTING.md" target="_self">指引手册</a></li></ul></li></ul></div><div class="doc-content markdown-body"><h1 id="%E5%AE%89%E8%A3%85-openkruise">安装 OpenKruise <a class="header-anchor" href="#%E5%AE%89%E8%A3%85-openkruise">#</a></h1>
-<p>OpenKruise 要求 Kubernetes 版本高于 1.13+，注意在 1.13 和 1.14 版本中必须先在 kube-apiserver 中打开 <code>CustomResourceWebhookConversion</code> feature-gate。</p>
+<p>尽管目前 OpenKruise 能够兼容 Kubernetes &gt;= 1.13 版本的集群，但我们强烈建议在 <strong>Kubernetes &gt;= 1.16</strong> 以上版本的集群中使用。</p>
+<p>注意在 1.13 和 1.14 版本中必须先在 kube-apiserver 中打开 <code>CustomResourceWebhookConversion</code> feature-gate。</p>
 <h2 id="%E9%80%9A%E8%BF%87-helm-charts-%E5%AE%89%E8%A3%85">通过 helm charts 安装 <a class="header-anchor" href="#%E9%80%9A%E8%BF%87-helm-charts-%E5%AE%89%E8%A3%85">#</a></h2>
 <p>建议采用 helm v3.1+ 来安装 Kruise，helm 是一个简单的命令行工具可以从 <a href="https://github.com/helm/helm/releases">这里</a> 获取。</p>
 <pre><code class="language-bash"><span class="hljs-comment"># Kubernetes 1.13 或 1.14 版本</span>
-helm install kruise https://github.com/openkruise/kruise/releases/download/v0.9.0/kruise-chart.tgz --<span class="hljs-built_in">disable</span>-openapi-validation
+helm install kruise https://github.com/openkruise/kruise/releases/download/v0.10.0/kruise-chart.tgz --<span class="hljs-built_in">disable</span>-openapi-validation
 
 <span class="hljs-comment"># Kubernetes 1.15 和更新的版本</span>
-helm install kruise https://github.com/openkruise/kruise/releases/download/v0.9.0/kruise-chart.tgz
+helm install kruise https://github.com/openkruise/kruise/releases/download/v0.10.0/kruise-chart.tgz
 </code></pre>
 <h2 id="%E9%80%9A%E8%BF%87-helm-charts-%E5%8D%87%E7%BA%A7">通过 helm charts 升级 <a class="header-anchor" href="#%E9%80%9A%E8%BF%87-helm-charts-%E5%8D%87%E7%BA%A7">#</a></h2>
 <p>如果你在使用旧版本的 Kruise，建议为了安全性和更丰富的功能，升级到最新版本：</p>
 <pre><code class="language-bash"><span class="hljs-comment"># Kubernetes 1.13 and 1.14</span>
-helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.9.0/kruise-chart.tgz --<span class="hljs-built_in">disable</span>-openapi-validation
+helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.10.0/kruise-chart.tgz --<span class="hljs-built_in">disable</span>-openapi-validation
 
 <span class="hljs-comment"># Kubernetes 1.15 and newer versions</span>
-helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.9.0/kruise-chart.tgz
+helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.10.0/kruise-chart.tgz
 </code></pre>
 <p>注意：</p>
 <ol>
@@ -76,7 +77,7 @@ helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.9.
 <tr>
 <td><code>manager.image.tag</code></td>
 <td>kruise-manager/kruise-daemon 镜像版本</td>
-<td><code>v0.9.0</code></td>
+<td><code>v0.10.0</code></td>
 </tr>
 <tr>
 <td><code>manager.resources.limits.cpu</code></td>
@@ -206,6 +207,12 @@ helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.9.
 <td>镜像预热/容器重启 不可用</td>
 </tr>
 <tr>
+<td><code>DaemonWatchingPod</code></td>
+<td>每个 <code>kruise-daemon</code> 会 watch 与自己同节点的 pod （不建议关闭）</td>
+<td><code>true</code></td>
+<td>同 imageID 的原地升级，以及支持 env from labels/annotation 原地升级 不可用</td>
+</tr>
+<tr>
 <td><code>CloneSetShortHash</code></td>
 <td>启用 CloneSet controller 只在 pod label 中设置短 hash 值</td>
 <td><code>false</code></td>
@@ -231,21 +238,33 @@ helm upgrade kruise https://github.com/openkruise/kruise/releases/download/v0.9.
 </tr>
 <tr>
 <td><code>ResourcesDeletionProtection</code></td>
-<td>Enables protection for resources deletion</td>
+<td>资源删除防护</td>
 <td><code>false</code></td>
 <td>资源删除无保护</td>
 </tr>
 <tr>
-<td><code>PodUnavailableBudgetDeleteGate</code></td>
-<td>Enables protection for pod deletion, eviction</td>
+<td><code>TemplateNoDefaults</code></td>
+<td>是否取消对 workload 中 pod/pvc template 的默认值注入</td>
 <td><code>false</code></td>
-<td>Pod删除、Eviction无保护</td>
+<td>Should not close this feature if it has open</td>
+</tr>
+<tr>
+<td><code>PodUnavailableBudgetDeleteGate</code></td>
+<td>启用 PodUnavailableBudget 保护 pod 删除、驱逐</td>
+<td><code>false</code></td>
+<td>不防护 pod 删除、驱逐</td>
 </tr>
 <tr>
 <td><code>PodUnavailableBudgetUpdateGate</code></td>
-<td>Enables protection for pod in-place update</td>
+<td>启用 PodUnavailableBudget 保护 pod 原地升级</td>
 <td><code>false</code></td>
-<td>Pod原地升级无保护</td>
+<td>不防护 pod 原地升级</td>
+</tr>
+<tr>
+<td><code>WorkloadSpread</code></td>
+<td>启用 WorkloadSpread 管理应用多分区弹性与拓扑部署</td>
+<td><code>false</code></td>
+<td>不支持 WorkloadSpread</td>
 </tr>
 </tbody>
 </table>
