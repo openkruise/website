@@ -14,21 +14,27 @@
 <body>
 	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/en-us/index.html"><img class="logo" src="/img/kruise_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">中</span><div class="header-menu"><img class="header-menu-toggle" src="/img/system/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/en-us/index.html" target="_self">HOME</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/en-us/docs/what_is_openkruise.html" target="_self">DOCS</a></li><li class="menu-item menu-item-normal"><a href="/en-us/blog/index.html" target="_self">BLOG</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/img/system/docs.png" class="front-img"/><span>Documentation</span><img src="/img/system/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span>Quick start</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/what_is_openkruise.html" target="_self">What is OpenKruise</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/installation.html" target="_self">Installation</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Basic</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/cloneset.html" target="_self">CloneSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/advanced_statefulset.html" target="_self">Advanced StatefulSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/sidecarset.html" target="_self">SidecarSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/advanced_daemonset.html" target="_self">Advanced DaemonSet</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/workloadspread.html" target="_self">WorkloadSpread</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/uniteddeployment.html" target="_self">UnitedDeployment</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/broadcastjob.html" target="_self">BroadcastJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/advancedcronjob.html" target="_self">AdvancedCronJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/imagepulljob.html" target="_self">ImagePullJob</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/containerrecreaterequest.html" target="_self">ContainerRecreateRequest</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/deletion_protection.html" target="_self">Deletion Protection</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/podunavailablebudget.html" target="_self">PodUnavailableBudget</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Reference</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/components.html" target="_self">Components</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/en-us/docs/go_client.html" target="_self">Golang Client</a></li></ul></li><li class="menu-item menu-item-level-1"><span>Contribution</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="https://github.com/openkruise/kruise/blob/master/CONTRIBUTING.md" target="_self">Guidebook</a></li></ul></li></ul></div><div class="doc-content markdown-body"><h1 id="workloadspread">WorkloadSpread <a class="header-anchor" href="#workloadspread">#</a></h1>
 <p><strong>FEATURE STATE:</strong> Kruise v0.10.0</p>
-<p>WorkloadSpread can distribute Pods of workload to different types of Node according to some rules, which empowers single workload the abilities for
+<p>WorkloadSpread can distribute Pods of workload to different types of Node according to some polices, which empowers single workload the abilities for
 multi-domain deployment and elastic deployment.</p>
-<p>Some common rules include:</p>
+<p>Some common policies include:</p>
 <ul>
-<li>Horizontal spread (for example, average spread in dimensions such as host, az, etc.)</li>
-<li>Spread according to the specified ratio (for example, deploy Pod to several specified az according to the proportion)</li>
-<li>Different subset management with priority, such as
+<li>fault toleration spread (for example, spread evenly among hosts, az, etc)</li>
+<li>spread according to the specified ratio (for example, deploy Pod to several specified az according to the proportion)</li>
+<li>subset management with priority, such as
 <ul>
-<li>deploy Pods to ecs first, and deploy to eci when its resources are insufficient.</li>
+<li>deploy Pods to ecs first, and then deploy to eci when its resources are insufficient.</li>
 <li>deploy a fixed number of Pods to ecs first, and the rest Pods are deployed to eci.</li>
+</ul>
+</li>
+<li>subset management with customization, such as
+<ul>
+<li>control how many pods in a workload are deployed in different cpu arch</li>
+<li>enable pods in different cpu arch to have different resource requirements</li>
 </ul>
 </li>
 </ul>
 <p>The feature of WorkloadSpread is similar with UnitedDeployment in OpenKruise community. Each WorkloadSpread defines multi-domain
-called <code>subset</code>. Each domain should at least provide the capacity to run the replicas number of pods called <code>maxReplicas</code>.
+called <code>subset</code>. Each domain may provide the limit to run the replicas number of pods called <code>maxReplicas</code>.
 WorkloadSpread injects the domain configuration into the Pod by Webhook, and it also controls the order of scale in and scale out.</p>
 <p>Currently, supported workload: <code>CloneSet</code>、<code>Deployment</code>、<code>ReplicaSet</code>.</p>
 <h2 id="workloadspread-demo">WorkloadSpread Demo <a class="header-anchor" href="#workloadspread-demo">#</a></h2>
@@ -84,7 +90,7 @@ WorkloadSpread injects the domain configuration into the Pod by Webhook, and it 
 <p><code>name</code>: the name of <code>subset</code>, it is distinct in a WorkloadSpread, which represents a topology.</p>
 </li>
 <li>
-<p><code>maxReplicas</code>：the capacity of <code>subset</code>, and must be Integer and &gt;= 0. There is no replicas limit while the <code>maxReplicas</code> is nil.</p>
+<p><code>maxReplicas</code>：the replicas limit of <code>subset</code>, and must be Integer and &gt;= 0. There is no replicas limit while the <code>maxReplicas</code> is nil.</p>
 </li>
 </ul>
 <blockquote>
@@ -143,7 +149,7 @@ WorkloadSpread injects the domain configuration into the Pod by Webhook, and it 
 <h3 id="fixed%3A">Fixed: <a class="header-anchor" href="#fixed%3A">#</a></h3>
 <p>Workload is strictly spread according to the definition of the subset.</p>
 <h3 id="adaptive">Adaptive <a class="header-anchor" href="#adaptive">#</a></h3>
-<p><strong>Reschedule</strong>: Kruise will check the Pods of <code>subset</code> were scheduled failed. If it exceeds the defined duration, the failed Pods will be rescheduled to other <code>subset</code>.</p>
+<p><strong>Reschedule</strong>: Kruise will check the unschedulable Pods of subset. If it exceeds the defined duration, the failed Pods will be rescheduled to the other <code>subset</code>.</p>
 <h2 id="required">Required <a class="header-anchor" href="#required">#</a></h2>
 <h3 id="pod-webhook">Pod Webhook <a class="header-anchor" href="#pod-webhook">#</a></h3>
 <p>WorkloadSpread uses <code>webhook</code> to inject fault domain rules.</p>
