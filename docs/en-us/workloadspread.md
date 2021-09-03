@@ -3,15 +3,21 @@ title: WorkloadSpread
 ---
 # WorkloadSpread
 
-WorkloadSpread can be used to constrain the spread of stateless workload, which empower single workload the abilities for
-multi-domain deploy and elastic deploy.
+WorkloadSpread can distribute Pods of workload to different types of Node according to some rules, which empowers single workload the abilities for
+multi-domain deployment and elastic deployment.
 
-The feature of WorkloadSpread is similar with UnitedDeployment in Kruise community. Each WorkloadSpread defines multi-domain
+Some common rules include:
+- Horizontal spread (for example, average spread in dimensions such as host, az, etc.)
+- Spread according to the specified ratio (for example, deploy Pod to several specified az according to the proportion)
+- Different subset management with priority, such as
+  - deploy Pods to ecs first, and deploy to eci when its resources are insufficient.
+  - deploy a fixed number of Pods to ecs first, and the rest Pods are deployed to eci.
+
+The feature of WorkloadSpread is similar with UnitedDeployment in OpenKruise community. Each WorkloadSpread defines multi-domain
 called `subset`. Each domain should at least provide the capacity to run the replicas number of pods called `maxReplicas`.
 WorkloadSpread injects the domain configuration into the Pod by Webhook, and it also controls the order of scale in and scale out.
 
 Currently, supported workload: `CloneSet`、`Deployment`、`ReplicaSet`.
-
 
 ## WorkloadSpread Demo
 
@@ -176,7 +182,7 @@ The workload managed by WorkloadSpread will scale according to the defined order
 
 ## Example
 
-### Elastic deploy
+### Elastic deployment
 
 `zone-a`(ACK) holds 100 Pods, `zone-b`(ECI) as an elastic zone holds additional Pods.
 
@@ -225,7 +231,7 @@ spec:
 - When the number of `replicas` > 100, the 100 Pods are in `ACK` zone, the extra Pods are scheduled in `ECI` zone.
 - The Pods in `ECI` elastic zone are removed first when scaling in.
 
-### Multi-domain deploy
+### Multi-domain deployment
 
 Deploy 100 Pods to two `zone`(zone-a, zone-b) separately.
 
@@ -253,7 +259,7 @@ spec:
     patch:
       metadata:
         labels:
-          deploy/zone: zonb-a
+          deploy/zone: zone-a
   - name: subset-b
     requiredNodeSelectorTerm:
       matchExpressions:

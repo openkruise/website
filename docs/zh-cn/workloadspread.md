@@ -3,12 +3,21 @@ title: WorkloadSpread
 ---
 # WorkloadSpread
 
-WorkloadSpread可以用来约束无状态workload的区域分布，赋予单一workload的多域部署和弹性部署的能力。
+WorkloadSpread能够workload的Pod按一定规则分布到不同类型的Node节点上，赋予单一workload多区域部署和弹性部署的能力。
 
-WorkloadSpread与Kruise社区的UnitedDeployment功能相似，每一个WorkloadSpread定义多个区域（定义为`subset`），
-`subset`对应一个`maxReplicas`数量。WorkloadSpread利用Webhook注入`subset`定义的域信息，且控制Pod的扩缩容顺序。
+常见的一些规则包括：
+- 水平打散（比如按host、az等维度的平均打散）
+- 按指定比例打散（比如按比例部署Pod到几个指定的 az 中）
+- 带优先级的不同分区管理，比如
+  - 优先部署到ecs，资源不足到eci
+  - 优先部署固定数量个pod到ecs，其余到eci
+  
 
-目前支持的workload类型：`CloneSet`、`Deployment`、`ReplicaSet`。
+WorkloadSpread与OpenKruise社区的UnitedDeployment功能相似，每一个WorkloadSpread定义多个区域（定义为`subset`），
+每个`subset`对应一个`maxReplicas`数量。WorkloadSpread利用Webhook注入`subset`定义的域信息，同时控制Pod的扩缩容顺序。
+与UnitedDeployment**不同**的是，UnitedDeployment是帮助用户创建并管理多个workload，WorkloadSpread仅作用在单个workload之上，用户提供workload即可。
+
+当前支持的workload类型：`CloneSet`、`Deployment`、`ReplicaSet`。
 
 ## WorkloadSpread Demo
 
@@ -157,7 +166,7 @@ WorkloadSpread所管理的workload会按照`subsets`中定义的顺序扩缩容�
 规则如下：
 
 ### 扩容
-- 按照`spec.subsets`中`subset`定义的顺序调度Pod，当前`subset`的Pod数量达到`maxReplicas`时再调度到下一个`subset`。
+- 按照`spec.subsets`中`subset`定义的顺序调度Pod，当前`subset`的active Pod数量达到`maxReplicas`时再调度到下一个`subset`。
   
 ### 缩容
 - 当`subset`的副本数(active)大于定义的maxReplicas时，优先缩容多余的Pod。
@@ -194,7 +203,7 @@ spec:
   targetRef: # 相同namespace下的workload
     apiVersion: apps.kruise.io/v1alpha1
     kind: CloneSet
-    name: workload-xxx
+    name: cs-demo
   subsets:
   - name: ack # zone ack，最多100个副本。
     requiredNodeSelectorTerm:
@@ -242,7 +251,7 @@ spec:
   targetRef: # 相同namespace下的workload
     apiVersion: apps.kruise.io/v1alpha1
     kind: CloneSet
-    name: workload-xxx
+    name: cs-demo
   subsets:
   - name: subset-a # 区域A，100个副本。
     requiredNodeSelectorTerm:
@@ -255,7 +264,7 @@ spec:
     patch:
       metadata:
         labels:
-          topology.application.deploy/zone: zonb-a
+          topology.application.deploy/zone: zone-a
   - name: subset-b # 区域B，100个副本。
     requiredNodeSelectorTerm:
       matchExpressions:
@@ -270,6 +279,6 @@ spec:
           topology.application.deploy/zone: zone-b
 ```
 
-2. 创建200副本的新`CloneSet`，或者对现有的`CloneSet`执行滚动更新。
+2. 创建一个200副本的新`CloneSet`，或者对现有的`CloneSet`执行滚动更新。
 
 3. 若`subset`副本分布需要变动，先调整对应`subset`的`maxReplicas`，再调整workload副本数。
