@@ -5,18 +5,21 @@ title: WorkloadSpread
 
 **FEATURE STATE:** Kruise v0.10.0
 
-WorkloadSpread can distribute Pods of workload to different types of Node according to some rules, which empowers single workload the abilities for
+WorkloadSpread can distribute Pods of workload to different types of Node according to some polices, which empowers single workload the abilities for
 multi-domain deployment and elastic deployment.
 
-Some common rules include:
-- Horizontal spread (for example, average spread in dimensions such as host, az, etc.)
-- Spread according to the specified ratio (for example, deploy Pod to several specified az according to the proportion)
-- Different subset management with priority, such as
-  - deploy Pods to ecs first, and deploy to eci when its resources are insufficient.
+Some common policies include:
+- fault toleration spread (for example, spread evenly among hosts, az, etc)
+- spread according to the specified ratio (for example, deploy Pod to several specified az according to the proportion)
+- subset management with priority, such as
+  - deploy Pods to ecs first, and then deploy to eci when its resources are insufficient.
   - deploy a fixed number of Pods to ecs first, and the rest Pods are deployed to eci.
+- subset management with customization, such as
+  - control how many pods in a workload are deployed in different cpu arch
+  - enable pods in different cpu arch to have different resource requirements
 
 The feature of WorkloadSpread is similar with UnitedDeployment in OpenKruise community. Each WorkloadSpread defines multi-domain
-called `subset`. Each domain should at least provide the capacity to run the replicas number of pods called `maxReplicas`.
+called `subset`. Each domain may provide the limit to run the replicas number of pods called `maxReplicas`.
 WorkloadSpread injects the domain configuration into the Pod by Webhook, and it also controls the order of scale in and scale out.
 
 Currently, supported workload: `CloneSet`、`Deployment`、`ReplicaSet`.
@@ -78,7 +81,7 @@ spec:
 
 - `name`: the name of `subset`, it is distinct in a WorkloadSpread, which represents a topology.
 
-- `maxReplicas`：the capacity of `subset`, and must be Integer and >= 0. There is no replicas limit while the `maxReplicas` is nil.
+- `maxReplicas`：the replicas limit of `subset`, and must be Integer and >= 0. There is no replicas limit while the `maxReplicas` is nil.
 > Don't support percentage type in current version.
 
 - `requiredNodeSelectorTerm`: match zone hardly。
@@ -142,7 +145,7 @@ Workload is strictly spread according to the definition of the subset.
   
 ### Adaptive
 
-**Reschedule**: Kruise will check the Pods of `subset` were scheduled failed. If it exceeds the defined duration, the failed Pods will be rescheduled to other `subset`.
+**Reschedule**: Kruise will check the unschedulable Pods of subset. If it exceeds the defined duration, the failed Pods will be rescheduled to the other `subset`.
 
 ## Required
 

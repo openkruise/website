@@ -8,12 +8,14 @@ title: WorkloadSpread
 WorkloadSpread能够将workload的Pod按一定规则分布到不同类型的Node节点上，赋予单一workload多区域部署和弹性部署的能力。
 
 常见的一些规则包括：
-- 水平打散（比如按host、az等维度的平均打散）
-- 按指定比例打散（比如按比例部署Pod到几个指定的 az 中）
-- 带优先级的不同分区管理，比如
-  - 优先部署到ecs，资源不足到eci
-  - 优先部署固定数量个pod到ecs，其余到eci
-  
+- 水平打散（比如按host、az等维度的平均打散）。
+- 按指定比例打散（比如按比例部署Pod到几个指定的 az 中）。
+- 带优先级的分区管理，比如：
+  - 优先部署到ecs，资源不足时部署到eci。
+  - 优先部署固定数量个pod到ecs，其余到eci。
+- 定制化分区管理，比如：
+  - 控制workload部署不同的Pod数量在不同的cpu架构上。
+  - 确保不同的cpu架构上配置不同的资源配额。
 
 WorkloadSpread与OpenKruise社区的UnitedDeployment功能相似，每一个WorkloadSpread定义多个区域（定义为`subset`），
 每个`subset`对应一个`maxReplicas`数量。WorkloadSpread利用Webhook注入`subset`定义的域信息，同时控制Pod的扩缩容顺序。
