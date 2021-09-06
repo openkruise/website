@@ -150,7 +150,10 @@ WorkloadSpread injects the domain configuration into the Pod by Webhook, and it 
 <p>Workload is strictly spread according to the definition of the subset.</p>
 <h3 id="adaptive">Adaptive <a class="header-anchor" href="#adaptive">#</a></h3>
 <p><strong>Reschedule</strong>: Kruise will check the unschedulable Pods of subset. If it exceeds the defined duration, the failed Pods will be rescheduled to the other <code>subset</code>.</p>
-<h2 id="required">Required <a class="header-anchor" href="#required">#</a></h2>
+<h2 id="requirements">Requirements <a class="header-anchor" href="#requirements">#</a></h2>
+<p>WorkloadSpread defaults to be disabled. You have to configure the feature-gate <em>WorkloadSpread</em> when install or upgrade Kruise:</p>
+<pre><code class="language-bash">$ helm install kruise https://... --<span class="hljs-built_in">set</span> featureGates=<span class="hljs-string">"WorkloadSpread=true"</span>
+</code></pre>
 <h3 id="pod-webhook">Pod Webhook <a class="header-anchor" href="#pod-webhook">#</a></h3>
 <p>WorkloadSpread uses <code>webhook</code> to inject fault domain rules.</p>
 <p>If the <code>PodWebhook</code> feature-gate is set to false, WorkloadSpread will also be disabled.</p>

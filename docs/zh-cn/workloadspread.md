@@ -152,7 +152,13 @@ workload严格按照`subsets`定义分布。
   
 **Reschedule**：Kruise检查`subset`中调度失败的Pod，若超过用户定义的时间就将其调度到其他有可用的`subset`上。
 
-## 环境要求
+## 配置要求
+
+WorkloadSpread 功能默认是关闭的，你需要在 安装/升级 Kruise 的时候打开 feature-gate：*WorkloadSpread*
+
+```bash
+$ helm install kruise https://... --set featureGates="WorkloadSpread=true"
+```
 
 ### Pod Webhook
 WorkloadSpread利用`webhook`向Pod注入域规则。
