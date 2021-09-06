@@ -45,10 +45,6 @@ OpenKruise 是 Kubernetes 的一个标准扩展，它可以配合原生 Kubernet
 
     对 sidecar 容器做统一管理，在满足 selector 条件的 Pod 中注入指定的 sidecar 容器。
 
-- **WorkloadSpread**
-
-    约束无状态workload的区域分布，赋予单一workload的多域部署和弹性部署的能力。
-
 - **UnitedDeployment**
 
     通过多个 subset workload 将应用部署到多个可用区。
@@ -80,4 +76,8 @@ OpenKruise 是 Kubernetes 的一个标准扩展，它可以配合原生 Kubernet
 - **PodUnavailableBudget**
 
   对比Kubernetes PDB只提供针对Pod Eviction的防护，PUB能够防护Pod Deletion、Eviction、Update多种voluntary disruption场景。 
+
+- **WorkloadSpread**
+
+    约束无状态 workload 的区域分布，赋予单一 workload 的多区域和弹性部署的能力。
 
