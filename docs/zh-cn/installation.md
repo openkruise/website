@@ -5,7 +5,10 @@ title: 安装
 
 尽管目前 OpenKruise 能够兼容 Kubernetes >= 1.13 版本的集群，但我们强烈建议在 **Kubernetes >= 1.16** 以上版本的集群中使用。
 
-注意在 1.13 和 1.14 版本中必须先在 kube-apiserver 中打开 `CustomResourceWebhookConversion` feature-gate。
+注意:
+1. 在 1.13 和 1.14 版本中必须先在 kube-apiserver 中打开 `CustomResourceWebhookConversion` feature-gate。
+2. 由于 Kubernetes 1.22 版本中去除了 CRD/WebhookConfiguration 等资源的 v1beta1 版本，目前 Kruise 无法部署到该版本的集群中。
+   即将到来的 Kruise v1.0 会解决这个兼容性问题，并不再支持 Kubernetes 1.16 之前的版本。
 
 ## 通过 helm charts 安装
 

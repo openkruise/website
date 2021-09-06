@@ -5,7 +5,10 @@ title: Installation
 
 Although OpenKruise now can work with Kubernetes version >= `1.13`, we strongly recommend you to use Kruise with **Kubernetes version >= 1.16**. 
 
-Note that for Kubernetes 1.13 and 1.14, users must enable `CustomResourceWebhookConversion` feature-gate in kube-apiserver before install or upgrade Kruise.
+Note that:
+1. For Kubernetes 1.13 and 1.14, users must enable `CustomResourceWebhookConversion` feature-gate in kube-apiserver before install or upgrade Kruise.
+2. Currently Kruise can not be installed into Kubernetes 1.22, for it has dropped v1beta1 version of some resources like CRD/WebhookConfiguration.
+   The comming Kruise v1.0 will fix it and do not support Kubernetes version lower than 1.16 any more.
 
 ## Install with helm charts
 
