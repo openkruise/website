@@ -147,7 +147,13 @@ Workload is strictly spread according to the definition of the subset.
 
 **Reschedule**: Kruise will check the unschedulable Pods of subset. If it exceeds the defined duration, the failed Pods will be rescheduled to the other `subset`.
 
-## Required
+## Requirements
+
+WorkloadSpread defaults to be disabled. You have to configure the feature-gate *WorkloadSpread* when install or upgrade Kruise:
+
+```bash
+$ helm install kruise https://... --set featureGates="WorkloadSpread=true"
+```
 
 ### Pod Webhook
 WorkloadSpread uses `webhook` to inject fault domain rules.

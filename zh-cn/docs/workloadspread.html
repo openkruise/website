@@ -154,7 +154,10 @@ preferredNodeSelectorTerms对应nodeAffinity preferredDuringSchedulingIgnoredDur
 <p>workload严格按照<code>subsets</code>定义分布。</p>
 <h3 id="adaptive">Adaptive <a class="header-anchor" href="#adaptive">#</a></h3>
 <p><strong>Reschedule</strong>：Kruise检查<code>subset</code>中调度失败的Pod，若超过用户定义的时间就将其调度到其他有可用的<code>subset</code>上。</p>
-<h2 id="%E7%8E%AF%E5%A2%83%E8%A6%81%E6%B1%82">环境要求 <a class="header-anchor" href="#%E7%8E%AF%E5%A2%83%E8%A6%81%E6%B1%82">#</a></h2>
+<h2 id="%E9%85%8D%E7%BD%AE%E8%A6%81%E6%B1%82">配置要求 <a class="header-anchor" href="#%E9%85%8D%E7%BD%AE%E8%A6%81%E6%B1%82">#</a></h2>
+<p>WorkloadSpread 功能默认是关闭的，你需要在 安装/升级 Kruise 的时候打开 feature-gate：<em>WorkloadSpread</em></p>
+<pre><code class="language-bash">$ helm install kruise https://... --<span class="hljs-built_in">set</span> featureGates=<span class="hljs-string">"WorkloadSpread=true"</span>
+</code></pre>
 <h3 id="pod-webhook">Pod Webhook <a class="header-anchor" href="#pod-webhook">#</a></h3>
 <p>WorkloadSpread利用<code>webhook</code>向Pod注入域规则。</p>
 <p>如果<code>PodWebhook</code> feature-gate被设置为<code>false</code>，WorkloadSpread也将不可用。</p>
