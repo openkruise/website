@@ -1,6 +1,0 @@
-{
-  "filename": "introduction.md",
-  "__html": "<h1>OpenKruise</h1>\n<p>Welcome to OpenKruise!</p>\n<p>OpenKruise is a full set of standard extensions for Kubernetes. It works well with original Kubernetes and provides more powerful and efficient features for managing applications Pods, sidecar containers, and even images on Node.</p>\n<h2>Key features</h2>\n<ul>\n<li><strong>In-place update</strong></li>\n</ul>\n<h2>CRDs</h2>\n<ul>\n<li>CloneSet: CloneSet is a workload that mainly focuses on managing stateless applications. It provides full features for more efficient, deterministic and controlled deployment, such as inplace update, specified pod deletion, configurable priority/scatter update, preUpdate/postUpdate hooks.</li>\n<li>Advanced StatefulSet: An enhanced version of default StatefulSet with extra functionalities such as inplace-update, pause and MaxUnavailable.</li>\n<li>SidecarSet: A controller that injects sidecar containers into the Pod spec based on selectors and also is able to upgrade the sidecar containers.</li>\n<li>UnitedDeployment: This controller manages application pods spread in multiple fault domains by using multiple workloads.</li>\n<li>BroadcastJob: A job that runs Pods to completion across all the nodes in the cluster.</li>\n</ul>\n",
-  "link": "/en-us/docs/introduction.html",
-  "meta": {}
-}
