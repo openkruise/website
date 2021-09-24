@@ -1,9 +1,0 @@
-{
-  "filename": "blog3.md",
-  "__html": "<h1 id=\"uniteddeploymemt---%E6%94%AF%E6%8C%81%E5%A4%9A%E5%8F%AF%E7%94%A8%E5%8C%BA%E7%BB%9F%E4%B8%80%E7%AE%A1%E7%90%86\">UnitedDeploymemt - 支持多可用区统一管理 <a class=\"header-anchor\" href=\"#uniteddeploymemt---%E6%94%AF%E6%8C%81%E5%A4%9A%E5%8F%AF%E7%94%A8%E5%8C%BA%E7%BB%9F%E4%B8%80%E7%AE%A1%E7%90%86\">#</a></h1>\n<p>By FEI GUO (Alibaba), NOVEMBER 20 2019, 6 MINUTE READ</p>\n<blockquote>\n<p>非常抱歉，这篇博客暂时还没有提供中文版本。</p>\n</blockquote>\n<blockquote>\n<p>如果你有兴趣，我们非常欢迎你能参与编写或翻译博客。\n可以通过给 <a href=\"https://github.com/openkruise/website\">website</a> 提 Pull Request 来参与 OpenKruise 文档和博客的建设。</p>\n</blockquote>\n",
-  "link": "/zh-cn/blog/blog3.html",
-  "meta": {
-    "title": "UnitedDeploymemt -- 支持跨多个可用区的应用部署",
-    "keywords": "Kubernetes, controller"
-  }
-}

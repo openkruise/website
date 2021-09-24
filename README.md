@@ -1,28 +1,33 @@
-# Kruise Website
+# Website
 
-## Build
+This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
 
-- Install [docsite](https://github.com/txd-team/docsite): 
+### Installation
 
-```bash
-npm i -g docsite
+```
+$ yarn
 ```
 
-- Clone the website repository and local install:
+### Local Development
 
-```bash
-cd website
-npm i
+```
+$ yarn start
 ```
 
-- Local preview
+This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
 
-```bash
-docsite start
+### Build
+
+```
+$ yarn build
 ```
 
-- Build the website
+This command generates static content into the `build` directory and can be served using any static contents hosting service.
 
-```bash
-docsite build
+### Deployment
+
 ```
+$ GIT_USER=<Your GitHub username> USE_SSH=true yarn deploy
+```
+
+If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
