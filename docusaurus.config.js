@@ -12,7 +12,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/openkruise.ico',
   organizationName: 'openkruise',
-  projectName: 'openkruise.io',
+  projectName: 'website',
 
   presets: [
     [
